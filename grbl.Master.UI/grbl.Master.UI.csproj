@@ -94,5 +94,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\grbl.Master.Communication\grbl.Master.Communication.csproj">
+      <Project>{a54844ab-9ea2-43d7-91b4-ea483d25b20d}</Project>
+      <Name>grbl.Master.Communication</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using grbl.Master.Communication;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace grbl.Master.UI
 {
@@ -23,6 +11,17 @@ namespace grbl.Master.UI
         public MainWindow()
         {
             InitializeComponent();
+            COMService cs = new COMService();
+            var ports = cs.GetPortNames();
+
+            cs.DataReceived += Cs_DataReceived;
+
+            cs.Connect("COM6", 115200);
+        }
+
+        private void Cs_DataReceived(object sender, string e)
+        {
+            
         }
     }
 }
