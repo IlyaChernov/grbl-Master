@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.Communication",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.UI", "grbl.Master.UI\grbl.Master.UI.csproj", "{87BDE971-0324-4408-9286-68C369A8E7F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.Model", "grbl.Master.Model\grbl.Master.Model.csproj", "{650BD6AC-9360-4F4B-91B6-7EF3ADE59302}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.Test", "grbl.Master.Test\grbl.Master.Test.csproj", "{EFECD692-D40B-4095-B18F-FA68251C5E7A}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{87BDE971-0324-4408-9286-68C369A8E7F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87BDE971-0324-4408-9286-68C369A8E7F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87BDE971-0324-4408-9286-68C369A8E7F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{650BD6AC-9360-4F4B-91B6-7EF3ADE59302}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{650BD6AC-9360-4F4B-91B6-7EF3ADE59302}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{650BD6AC-9360-4F4B-91B6-7EF3ADE59302}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{650BD6AC-9360-4F4B-91B6-7EF3ADE59302}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EFECD692-D40B-4095-B18F-FA68251C5E7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EFECD692-D40B-4095-B18F-FA68251C5E7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFECD692-D40B-4095-B18F-FA68251C5E7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
