@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using grbl.Master.Communication;
+using grbl.Master.UI.Input;
+using grbl.Master.UI.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Windows;
-using Caliburn.Micro;
-using grbl.Master.Communication;
-using grbl.Master.UI.ViewModels;
+using System.Windows.Input;
 
 namespace grbl.Master.UI
 {
@@ -13,7 +15,6 @@ namespace grbl.Master.UI
 
         protected override object GetInstance(Type serviceType, string key)
         {
-            //return _container.GetInstance(serviceType, key);
             var instance = _container.GetInstance(serviceType, key);
             if (instance != null)
                 return instance;
@@ -48,6 +49,35 @@ namespace grbl.Master.UI
             _container.RegisterPerRequest(typeof(IWindowManager), null, typeof(WindowManager));
             _container.RegisterPerRequest(typeof(MasterViewModel), null, typeof(MasterViewModel));
             _container.RegisterPerRequest(typeof(COMConnectionViewModel), "COMConnectionViewModel", typeof(COMConnectionViewModel));
+
+            var defaultCreateTrigger = Parser.CreateTrigger;
+
+            Parser.CreateTrigger = (target, triggerText) =>
+            {
+                if (triggerText == null)
+                {
+                    return defaultCreateTrigger(target, null);
+                }
+
+                var triggerDetail = triggerText
+                    .Replace("[", string.Empty)
+                    .Replace("]", string.Empty);
+
+                var splits = triggerDetail.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+
+                switch (splits[0])
+                {
+                    case "Key":
+                        var key = (Key)Enum.Parse(typeof(Key), splits[1], true);
+                        return new KeyTrigger { Key = key };
+
+                    case "Gesture":
+                        var mkg = (MultiKeyGesture)(new MultiKeyGestureConverter()).ConvertFrom(splits[1]);
+                        return new KeyTrigger { Modifiers = mkg.KeySequences[0].Modifiers, Key = mkg.KeySequences[0].Keys[0] };
+                }
+
+                return defaultCreateTrigger(target, triggerText);
+            };
         }
     }
 }

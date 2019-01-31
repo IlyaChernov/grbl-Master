@@ -7,7 +7,6 @@ namespace grbl.Master.UI.ViewModels
     public class MasterViewModel : Screen
     {
         private ICOMService _comService;
-        //private BindableCollection<string> _receivedData = new BindableCollection<string>();
         private string _receivedData;
         private string _manualCommand;
 
@@ -16,6 +15,14 @@ namespace grbl.Master.UI.ViewModels
             COMConnectionViewModel = new COMConnectionViewModel(comService);
             _comService = comService;
             _comService.DataReceived += _comService_DataReceived;
+            _comService.ConnectionStateChanged += _comService_ConnectionStateChanged;
+        }
+
+        private void _comService_ConnectionStateChanged(object sender, EventArgs e)
+        {
+            NotifyOfPropertyChange(() => CanSendManualCommand);
+            NotifyOfPropertyChange(() => CanSendEnterCommand);
+
         }
 
         public COMConnectionViewModel COMConnectionViewModel
@@ -23,19 +30,6 @@ namespace grbl.Master.UI.ViewModels
             get;
             private set;
         }
-
-        //public BindableCollection<string> ReceivedData
-        //{
-        //    get
-        //    {
-        //        return _receivedData;
-        //    }
-        //    set
-        //    {
-        //        _receivedData = value;
-        //        NotifyOfPropertyChange(() => ReceivedData);
-        //    }
-        //}
 
         public string ReceivedData
         {
@@ -64,17 +58,23 @@ namespace grbl.Master.UI.ViewModels
             }
         }
 
-        public bool CanSendManualCommand => !string.IsNullOrWhiteSpace(ManualCommand) || _comService.IsConnected;
+        public bool CanSendManualCommand => !string.IsNullOrWhiteSpace(ManualCommand) && _comService.IsConnected;
 
         public void SendManualCommand()
         {
             _comService.Send(ManualCommand);
         }
 
+        public bool CanSendEnterCommand => _comService.IsConnected;
+
+        public void SendEnterCommand()
+        {
+            SendManualCommand();
+        }
+
         private void _comService_DataReceived(object sender, string e)
         {
             ReceivedData += e;
-            //ReceivedData.AddRange(e.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }

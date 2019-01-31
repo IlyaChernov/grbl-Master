@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
 using grbl.Master.Communication;
-using System;
+using System.Collections.Generic;
 
 namespace grbl.Master.UI.ViewModels
 {
@@ -9,7 +9,7 @@ namespace grbl.Master.UI.ViewModels
         private ICOMService _comService;
         private BindableCollection<string> _comPorts = new BindableCollection<string>();
         private BindableCollection<string> _receivedData = new BindableCollection<string>();
-        private string _selectedComPort;
+        private List<int> _baudRates = new List<int> { 9600, 115200 };
 
         public COMConnectionViewModel(ICOMService comService)
         {
@@ -21,6 +21,7 @@ namespace grbl.Master.UI.ViewModels
         private void _comService_ConnectionStateChanged(object sender, System.EventArgs e)
         {
             NotifyOfPropertyChange(() => ConnectButtonCaption);
+            NotifyOfPropertyChange(()=> CanChangePortBaud);
         }
 
         public BindableCollection<string> ComPorts
@@ -33,6 +34,21 @@ namespace grbl.Master.UI.ViewModels
             {
                 _comPorts = value;
                 NotifyOfPropertyChange(() => ComPorts);
+                NotifyOfPropertyChange(() => SelectedComPort);
+            }
+        }
+
+        public List<int> BaudRates
+        {
+            get
+            {
+                return _baudRates;
+            }
+            set
+            {
+                _baudRates = value;
+                NotifyOfPropertyChange(() => BaudRates);
+                NotifyOfPropertyChange(() => SelectedBaudRate);
             }
         }
 
@@ -49,15 +65,35 @@ namespace grbl.Master.UI.ViewModels
             }
         }
 
+        public int SelectedBaudRate
+        {
+            get
+            {
+                return Properties.Settings.Default.SelectedBaudRate;
+            }
+            set
+            {
+                Properties.Settings.Default.SelectedBaudRate = value;
+                Properties.Settings.Default.Save();
+                Properties.Settings.Default.Reload();
+
+                NotifyOfPropertyChange(() => SelectedBaudRate);
+                NotifyOfPropertyChange(() => CanConnect);
+            }
+        }
+
         public string SelectedComPort
         {
             get
             {
-                return _selectedComPort;
+                return Properties.Settings.Default.SelectedComPort;
             }
             set
             {
-                _selectedComPort = value;
+                Properties.Settings.Default.SelectedComPort = value;                
+                Properties.Settings.Default.Save();
+                Properties.Settings.Default.Reload();
+
                 NotifyOfPropertyChange(() => SelectedComPort);
                 NotifyOfPropertyChange(() => CanConnect);
             }
@@ -70,7 +106,9 @@ namespace grbl.Master.UI.ViewModels
             ComPorts = new BindableCollection<string>(_comService.GetPortNames());
         }
 
-        public bool CanConnect => !string.IsNullOrWhiteSpace(SelectedComPort) || _comService.IsConnected;
+        public bool CanChangePortBaud => !_comService.IsConnected;
+
+        public bool CanConnect => (!string.IsNullOrWhiteSpace(SelectedComPort) && SelectedBaudRate > 0) || _comService.IsConnected;
 
         public void Connect()
         {
@@ -80,7 +118,7 @@ namespace grbl.Master.UI.ViewModels
             }
             else
             {
-                _comService.Connect(SelectedComPort, 115200);
+                _comService.Connect(SelectedComPort, SelectedBaudRate);
             }
         }
     }
