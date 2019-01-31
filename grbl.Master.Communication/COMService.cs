@@ -85,5 +85,13 @@ namespace grbl.Master.Communication
                 sp.DtrEnable = false;
             }
         }
+
+        public void Send(string data)
+        {
+            if (sp.IsOpen)
+            {
+                sp.WriteLine(data);
+            }
+        }
     }
 }

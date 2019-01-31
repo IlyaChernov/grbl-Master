@@ -8,10 +8,20 @@
         mc:Ignorable="d"
         Title="grbl Master" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="26"/>
+            <RowDefinition Height="179"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ContentControl  x:Name="COMConnectionViewModel"/>
+        <ContentControl  x:Name="COMConnectionViewModel" />
+        <ListBox  Grid.Row="2" x:Name="ReceivedData" />
+        <TextBox x:Name="ManualCommand" Grid.Column="1"  />
+        <Button  Grid.Column="2" x:Name="SendManualCommand" >Send</Button>
     </Grid>
 </Window>

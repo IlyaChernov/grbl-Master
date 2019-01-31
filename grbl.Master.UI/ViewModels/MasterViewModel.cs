@@ -8,6 +8,7 @@ namespace grbl.Master.UI.ViewModels
     {
         private ICOMService _comService;
         private BindableCollection<string> _receivedData = new BindableCollection<string>();
+        private string _manualCommand;
 
         public MasterViewModel(ICOMService comService)
         {
@@ -33,6 +34,27 @@ namespace grbl.Master.UI.ViewModels
                 _receivedData = value;
                 NotifyOfPropertyChange(() => ReceivedData);
             }
+        }
+
+        public string ManualCommand
+        {
+            get
+            {
+                return _manualCommand;
+            }
+            set
+            {
+                _manualCommand = value;
+                NotifyOfPropertyChange(() => ManualCommand);
+                NotifyOfPropertyChange(() => CanSendManualCommand);
+            }
+        }
+
+        public bool CanSendManualCommand => !string.IsNullOrWhiteSpace(ManualCommand) || _comService.IsConnected;
+
+        public void SendManualCommand()
+        {
+            _comService.Send(ManualCommand);
         }
 
         private void _comService_DataReceived(object sender, string e)

@@ -13,6 +13,8 @@ namespace grbl.Master.Communication
 
         void Connect(string portName, int baudRate);
 
+        void Send(string data);
+
         void Disconnect();
 
         void ResetBoard();
