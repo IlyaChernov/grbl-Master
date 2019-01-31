@@ -5,12 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:grbl.Master.UI.Views"        
              mc:Ignorable="d" 
-             d:DesignHeight="26" d:DesignWidth="300">
+             d:DesignHeight="26" d:DesignWidth="195">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="26"/>
-            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <ComboBox x:Name="ComPorts" Margin="1" SelectedItem="{Binding Path=SelectedComPort, Mode=OneWayToSource}" />

@@ -7,7 +7,8 @@ namespace grbl.Master.UI.ViewModels
     public class MasterViewModel : Screen
     {
         private ICOMService _comService;
-        private BindableCollection<string> _receivedData = new BindableCollection<string>();
+        //private BindableCollection<string> _receivedData = new BindableCollection<string>();
+        private string _receivedData;
         private string _manualCommand;
 
         public MasterViewModel(ICOMService comService)
@@ -23,7 +24,20 @@ namespace grbl.Master.UI.ViewModels
             private set;
         }
 
-        public BindableCollection<string> ReceivedData
+        //public BindableCollection<string> ReceivedData
+        //{
+        //    get
+        //    {
+        //        return _receivedData;
+        //    }
+        //    set
+        //    {
+        //        _receivedData = value;
+        //        NotifyOfPropertyChange(() => ReceivedData);
+        //    }
+        //}
+
+        public string ReceivedData
         {
             get
             {
@@ -59,7 +73,8 @@ namespace grbl.Master.UI.ViewModels
 
         private void _comService_DataReceived(object sender, string e)
         {
-            ReceivedData.AddRange(e.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries));
+            ReceivedData += e;
+            //ReceivedData.AddRange(e.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }
