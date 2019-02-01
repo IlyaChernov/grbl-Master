@@ -109,8 +109,12 @@ namespace grbl.Master.UI.Input
                         var keyString = keyStrings[i];
                         if (keyString != null)
                         {
-                            var key = (Key)KeyConverter.ConvertFrom(keyString.Trim());
-                            keys.Add(key);
+                            var keyValue = KeyConverter.ConvertFrom(keyString.Trim());
+                            if (keyValue != null)
+                            {
+                                var key = (Key)keyValue;
+                                keys.Add(key);
+                            }
                         }
                     }
 

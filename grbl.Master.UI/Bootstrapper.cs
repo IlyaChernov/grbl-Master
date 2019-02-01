@@ -73,7 +73,13 @@ namespace grbl.Master.UI
 
                     case "Gesture":
                         var mkg = (MultiKeyGesture)(new MultiKeyGestureConverter()).ConvertFrom(splits[1]);
-                        return new KeyTrigger { Modifiers = mkg.KeySequences[0].Modifiers, Key = mkg.KeySequences[0].Keys[0] };
+
+                        if (mkg != null)
+                        {
+                            return new KeyTrigger { Modifiers = mkg.KeySequences[0].Modifiers, Key = mkg.KeySequences[0].Keys[0] };
+                        }
+
+                        break;
                 }
 
                 return defaultCreateTrigger(target, triggerText);
