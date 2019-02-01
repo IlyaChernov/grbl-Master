@@ -11,7 +11,7 @@ namespace grbl.Master.UI
 {
     public class Bootstrapper : BootstrapperBase
     {
-        private SimpleContainer _container = new SimpleContainer();
+        private readonly SimpleContainer _container = new SimpleContainer();
 
         protected override object GetInstance(Type serviceType, string key)
         {
@@ -45,7 +45,7 @@ namespace grbl.Master.UI
         protected override void Configure()
         {
             base.Configure();
-            _container.RegisterSingleton(typeof(ICOMService), null, typeof(COMService));
+            _container.RegisterSingleton(typeof(IComService), null, typeof(COMService));
             _container.RegisterPerRequest(typeof(IWindowManager), null, typeof(WindowManager));
             _container.RegisterPerRequest(typeof(MasterViewModel), null, typeof(MasterViewModel));
             _container.RegisterPerRequest(typeof(COMConnectionViewModel), "COMConnectionViewModel", typeof(COMConnectionViewModel));

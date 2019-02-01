@@ -6,37 +6,33 @@ namespace grbl.Master.UI.ViewModels
 {
     public class MasterViewModel : Screen
     {
-        private ICOMService _comService;
+        private readonly IComService _comService;
         private string _receivedData;
         private string _manualCommand;
 
-        public MasterViewModel(ICOMService comService)
+        public MasterViewModel(IComService comService)
         {
-            COMConnectionViewModel = new COMConnectionViewModel(comService);
+            this.ComConnectionViewModel = new COMConnectionViewModel(comService);
             _comService = comService;
-            _comService.DataReceived += _comService_DataReceived;
-            _comService.ConnectionStateChanged += _comService_ConnectionStateChanged;
+            _comService.DataReceived += this.ComServiceDataReceived;
+            _comService.ConnectionStateChanged += this.ComServiceConnectionStateChanged;
         }
 
-        private void _comService_ConnectionStateChanged(object sender, EventArgs e)
+        private void ComServiceConnectionStateChanged(object sender, EventArgs e)
         {
             NotifyOfPropertyChange(() => CanSendManualCommand);
             NotifyOfPropertyChange(() => CanSendEnterCommand);
 
         }
 
-        public COMConnectionViewModel COMConnectionViewModel
+        public COMConnectionViewModel ComConnectionViewModel
         {
             get;
-            private set;
         }
 
         public string ReceivedData
         {
-            get
-            {
-                return _receivedData;
-            }
+            get => _receivedData;
             set
             {
                 _receivedData = value;
@@ -46,10 +42,7 @@ namespace grbl.Master.UI.ViewModels
 
         public string ManualCommand
         {
-            get
-            {
-                return _manualCommand;
-            }
+            get => _manualCommand;
             set
             {
                 _manualCommand = value;
@@ -72,7 +65,7 @@ namespace grbl.Master.UI.ViewModels
             SendManualCommand();
         }
 
-        private void _comService_DataReceived(object sender, string e)
+        private void ComServiceDataReceived(object sender, string e)
         {
             ReceivedData += e;
         }

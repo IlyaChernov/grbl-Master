@@ -14,10 +14,10 @@ namespace grbl.Master.UI.Input
         /// <summary>
         ///   The maximum delay between key presses.
         /// </summary>
-        static readonly TimeSpan maximumDelay = TimeSpan.FromSeconds(1);
+        static readonly TimeSpan MaximumDelay = TimeSpan.FromSeconds(1);
 
         /// <summary>
-        ///   Determines whether the keyis define.
+        ///   Determines whether the key is defined.
         /// </summary>
         /// <param name="key"> The key to check. </param>
         /// <returns> <c>True</c> if the key is defined as a gesture key; otherwise, <c>false</c> . </returns>
@@ -34,13 +34,13 @@ namespace grbl.Master.UI.Input
         static string GetKeySequencesString(params KeySequence[] sequences)
         {
             if (sequences == null)
-                throw new ArgumentNullException("sequences");
+                throw new ArgumentNullException(nameof(sequences));
             if (sequences.Length == 0)
-                throw new ArgumentException("At least one sequence must be specified.", "sequences");
+                throw new ArgumentException(@"At least one sequence must be specified.", nameof(sequences));
 
             var builder = new StringBuilder();
 
-            builder.Append(sequences[0].ToString());
+            builder.Append(sequences[0]);
 
             for (var i = 1; i < sequences.Length; i++)
                 builder.Append(", " + sequences[i]);
@@ -59,47 +59,36 @@ namespace grbl.Master.UI.Input
         }
 
         /// <summary>
-        ///   The display string.
-        /// </summary>
-        readonly string displayString;
-
-        /// <summary>
         ///   The key sequences composing the gesture.
         /// </summary>
-        readonly KeySequence[] keySequences;
+        readonly KeySequence[] _keySequences;
 
         /// <summary>
         ///   The index of the current gesture key.
         /// </summary>
-        int currentKeyIndex;
+        int _currentKeyIndex;
 
         /// <summary>
         ///   The current sequence index.
         /// </summary>
-        int currentSequenceIndex;
+        int _currentSequenceIndex;
 
         /// <summary>
         ///   The last time a gesture key was pressed.
         /// </summary>
-        DateTime lastKeyPress;
+        DateTime _lastKeyPress;
 
         /// <summary>
         ///   Gets the key sequences composing the gesture.
         /// </summary>
         /// <value> The key sequences composing the gesture. </value>
-        public KeySequence[] KeySequences
-        {
-            get { return keySequences; }
-        }
+        public KeySequence[] KeySequences => this._keySequences;
 
         /// <summary>
         ///   Gets the display string.
         /// </summary>
         /// <value> The display string. </value>
-        public string DisplayString
-        {
-            get { return displayString; }
-        }
+        public string DisplayString { get; }
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="MultiKeyGesture" /> class.
@@ -116,13 +105,13 @@ namespace grbl.Master.UI.Input
         public MultiKeyGesture(string displayString, params KeySequence[] sequences)
         {
             if (sequences == null)
-                throw new ArgumentNullException("sequences");
+                throw new ArgumentNullException(nameof(sequences));
             if (sequences.Length == 0)
-                throw new ArgumentException("At least one sequence must be specified.", "sequences");
+                throw new ArgumentException(@"At least one sequence must be specified.", nameof(sequences));
 
-            this.displayString = displayString;
-            keySequences = new KeySequence[sequences.Length];
-            sequences.CopyTo(keySequences, 0);
+            this.DisplayString = displayString;
+            this._keySequences = new KeySequence[sequences.Length];
+            sequences.CopyTo(this._keySequences, 0);
         }
 
         /// <summary>
@@ -144,8 +133,8 @@ namespace grbl.Master.UI.Input
             if (!IsDefinedKey(key))
                 return false;
 
-            var currentSequence = keySequences[currentSequenceIndex];
-            var currentKey = currentSequence.Keys[currentKeyIndex];
+            var currentSequence = this._keySequences[this._currentSequenceIndex];
+            var currentKey = currentSequence.Keys[this._currentKeyIndex];
 
             //Check if the key is a modifier...
             if (IsModifierKey(key))
@@ -155,7 +144,7 @@ namespace grbl.Master.UI.Input
             }
 
             //Check if the current key press happened too late...
-            if (currentSequenceIndex != 0 && ((DateTime.Now - lastKeyPress) > maximumDelay))
+            if (this._currentSequenceIndex != 0 && ((DateTime.Now - this._lastKeyPress) > MaximumDelay))
             {
                 //The delay has expired, abort the match...
                 ResetState();
@@ -188,21 +177,21 @@ namespace grbl.Master.UI.Input
             }
 
             //Move on the index, pointing to the next key...
-            currentKeyIndex++;
+            this._currentKeyIndex++;
 
             //Check if the key is the last of the current sequence...
-            if (currentKeyIndex == keySequences[currentSequenceIndex].Keys.Length)
+            if (this._currentKeyIndex == this._keySequences[this._currentSequenceIndex].Keys.Length)
             {
                 //The key is the last of the current sequence, go to the next sequence...
-                currentSequenceIndex++;
-                currentKeyIndex = 0;
+                this._currentSequenceIndex++;
+                this._currentKeyIndex = 0;
             }
 
             //Check if the sequence is the last one of the gesture...
-            if (currentSequenceIndex != keySequences.Length)
+            if (this._currentSequenceIndex != this._keySequences.Length)
             {
                 //If the key is not the last one, get the current date time, handle the match event but do nothing...
-                lastKeyPress = DateTime.Now;
+                this._lastKeyPress = DateTime.Now;
                 inputEventArgs.Handled = true;
 #if DEBUG_MESSAGES
                 System.Diagnostics.Debug.WriteLine("Waiting for " + (m_KeySequences.Length - m_CurrentSequenceIndex) + " sequences", "[" + MultiKeyGestureConverter.Default.ConvertToString(this) + "]");
@@ -224,8 +213,8 @@ namespace grbl.Master.UI.Input
         /// </summary>
         void ResetState()
         {
-            currentSequenceIndex = 0;
-            currentKeyIndex = 0;
+            this._currentSequenceIndex = 0;
+            this._currentKeyIndex = 0;
         }
     }
 }

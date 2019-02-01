@@ -23,12 +23,12 @@ namespace grbl.Master.UI.Input
         /// <summary>
         ///   The inner key converter.
         /// </summary>
-        static readonly KeyConverter keyConverter = new KeyConverter();
+        static readonly KeyConverter KeyConverter = new KeyConverter();
 
         /// <summary>
         ///   The inner modifier key converter.
         /// </summary>
-        static readonly ModifierKeysConverter modifierKeysConverter = new ModifierKeysConverter();
+        static readonly ModifierKeysConverter ModifierKeysConverter = new ModifierKeysConverter();
 
         /// <summary>
         ///   Tries to get the modifier equivalent to the specified string.
@@ -86,7 +86,6 @@ namespace grbl.Master.UI.Input
             if (!string.IsNullOrEmpty(str))
             {
                 var sequences = str.Split(',');
-                string[] keyStrings;
 
                 var keySequences = new List<KeySequence>();
 
@@ -95,12 +94,11 @@ namespace grbl.Master.UI.Input
                 {
                     var modifier = ModifierKeys.None;
                     var keys = new List<Key>();
-                    keyStrings = sequence.Split('+');
+                    var keyStrings = sequence.Split('+');
                     var modifiersCount = 0;
 
-                    ModifierKeys currentModifier;
                     string temp;
-                    while ((temp = keyStrings[modifiersCount]) != null && TryGetModifierKeys(temp.Trim(), out currentModifier))
+                    while ((temp = keyStrings[modifiersCount]) != null && TryGetModifierKeys(temp.Trim(), out var currentModifier))
                     {
                         modifiersCount++;
                         modifier |= currentModifier;
@@ -111,7 +109,7 @@ namespace grbl.Master.UI.Input
                         var keyString = keyStrings[i];
                         if (keyString != null)
                         {
-                            var key = (Key)keyConverter.ConvertFrom(keyString.Trim());
+                            var key = (Key)KeyConverter.ConvertFrom(keyString.Trim());
                             keys.Add(key);
                         }
                     }
@@ -141,32 +139,28 @@ namespace grbl.Master.UI.Input
         {
             if (destinationType == typeof(string))
             {
-                var gesture = value as MultiKeyGesture;
-
-                if (gesture != null)
+                if (value is MultiKeyGesture gesture)
                 {
                     var builder = new StringBuilder();
-
-                    KeySequence sequence;
 
                     for (var i = 0; i < gesture.KeySequences.Length; i++)
                     {
                         if (i > 0)
                             builder.Append(", ");
 
-                        sequence = gesture.KeySequences[i];
+                        var sequence = gesture.KeySequences[i];
                         if (sequence.Modifiers != ModifierKeys.None)
                         {
-                            builder.Append((string)modifierKeysConverter.ConvertTo(context, culture, sequence.Modifiers, destinationType));
+                            builder.Append((string)ModifierKeysConverter.ConvertTo(context, culture, sequence.Modifiers, destinationType));
                             builder.Append("+");
                         }
 
-                        builder.Append((string)keyConverter.ConvertTo(context, culture, sequence.Keys[0], destinationType));
+                        builder.Append((string)KeyConverter.ConvertTo(context, culture, sequence.Keys[0], destinationType));
 
                         for (var j = 1; j < sequence.Keys.Length; j++)
                         {
                             builder.Append("+");
-                            builder.Append((string)keyConverter.ConvertTo(context, culture, sequence.Keys[0], destinationType));
+                            builder.Append((string)KeyConverter.ConvertTo(context, culture, sequence.Keys[0], destinationType));
                         }
                     }
 

@@ -6,19 +6,19 @@ namespace grbl.Master.UI.ViewModels
 {
     public class COMConnectionViewModel : Screen
     {
-        private ICOMService _comService;
+        private readonly IComService _comService;
         private BindableCollection<string> _comPorts = new BindableCollection<string>();
         private BindableCollection<string> _receivedData = new BindableCollection<string>();
         private List<int> _baudRates = new List<int> { 9600, 115200 };
 
-        public COMConnectionViewModel(ICOMService comService)
+        public COMConnectionViewModel(IComService comService)
         {
             _comService = comService;
-            _comService.ConnectionStateChanged += _comService_ConnectionStateChanged;
+            _comService.ConnectionStateChanged += this.ComServiceConnectionStateChanged;
             ReloadComPorts();
         }
 
-        private void _comService_ConnectionStateChanged(object sender, System.EventArgs e)
+        private void ComServiceConnectionStateChanged(object sender, System.EventArgs e)
         {
             NotifyOfPropertyChange(() => ConnectButtonCaption);
             NotifyOfPropertyChange(()=> CanChangePortBaud);
@@ -26,10 +26,7 @@ namespace grbl.Master.UI.ViewModels
 
         public BindableCollection<string> ComPorts
         {
-            get
-            {
-                return _comPorts;
-            }
+            get => _comPorts;
             set
             {
                 _comPorts = value;
@@ -40,10 +37,7 @@ namespace grbl.Master.UI.ViewModels
 
         public List<int> BaudRates
         {
-            get
-            {
-                return _baudRates;
-            }
+            get => _baudRates;
             set
             {
                 _baudRates = value;
@@ -54,10 +48,7 @@ namespace grbl.Master.UI.ViewModels
 
         public BindableCollection<string> ReceivedData
         {
-            get
-            {
-                return _receivedData;
-            }
+            get => _receivedData;
             set
             {
                 _receivedData = value;
@@ -67,10 +58,7 @@ namespace grbl.Master.UI.ViewModels
 
         public int SelectedBaudRate
         {
-            get
-            {
-                return Properties.Settings.Default.SelectedBaudRate;
-            }
+            get => Properties.Settings.Default.SelectedBaudRate;
             set
             {
                 Properties.Settings.Default.SelectedBaudRate = value;
@@ -84,10 +72,7 @@ namespace grbl.Master.UI.ViewModels
 
         public string SelectedComPort
         {
-            get
-            {
-                return Properties.Settings.Default.SelectedComPort;
-            }
+            get => Properties.Settings.Default.SelectedComPort;
             set
             {
                 Properties.Settings.Default.SelectedComPort = value;                

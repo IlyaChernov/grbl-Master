@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interactivity;
 
@@ -15,14 +14,14 @@ namespace grbl.Master.UI.Input
 
         public Key Key
         {
-            get { return (Key)GetValue(KeyProperty); }
-            set { SetValue(KeyProperty, value); }
+            get => (Key)GetValue(KeyProperty);
+            set => SetValue(KeyProperty, value);
         }
 
         public ModifierKeys Modifiers
         {
-            get { return (ModifierKeys)GetValue(ModifiersProperty); }
-            set { SetValue(ModifiersProperty, value); }
+            get => (ModifierKeys)GetValue(ModifiersProperty);
+            set => SetValue(ModifiersProperty, value);
         }
 
         protected override void OnAttached()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace grbl.Master.Communication
 {    
-    public interface ICOMService
+    public interface IComService
     {
         event EventHandler<string> DataReceived;
 
@@ -15,9 +15,7 @@ namespace grbl.Master.Communication
 
         void Send(string data);
 
-        void Disconnect();
-
-        void ResetBoard();
+        void Disconnect();        
 
         bool IsConnected
         {
