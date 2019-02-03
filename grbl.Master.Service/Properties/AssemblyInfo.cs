@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("grbl.Master.ViewModel")]
+[assembly: AssemblyTitle("grbl.Master.Service")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("grbl.Master.ViewModel")]
+[assembly: AssemblyProduct("grbl.Master.Service")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5e7ae4d4-095c-4e01-abea-f1237c52fc6c")]
+[assembly: Guid("5233400e-e720-4de5-8bed-6b11f2ae14c6")]
 
 // Version information for an assembly consists of the following four values:
 //

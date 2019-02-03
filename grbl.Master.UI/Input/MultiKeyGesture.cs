@@ -82,7 +82,7 @@ namespace grbl.Master.UI.Input
         ///   Gets the key sequences composing the gesture.
         /// </summary>
         /// <value> The key sequences composing the gesture. </value>
-        public KeySequence[] KeySequences => this._keySequences;
+        public KeySequence[] KeySequences => _keySequences;
 
         /// <summary>
         ///   Gets the display string.
@@ -109,9 +109,9 @@ namespace grbl.Master.UI.Input
             if (sequences.Length == 0)
                 throw new ArgumentException(@"At least one sequence must be specified.", nameof(sequences));
 
-            this.DisplayString = displayString;
-            this._keySequences = new KeySequence[sequences.Length];
-            sequences.CopyTo(this._keySequences, 0);
+            DisplayString = displayString;
+            _keySequences = new KeySequence[sequences.Length];
+            sequences.CopyTo(_keySequences, 0);
         }
 
         /// <summary>
@@ -133,8 +133,8 @@ namespace grbl.Master.UI.Input
             if (!IsDefinedKey(key))
                 return false;
 
-            var currentSequence = this._keySequences[this._currentSequenceIndex];
-            var currentKey = currentSequence.Keys[this._currentKeyIndex];
+            var currentSequence = _keySequences[_currentSequenceIndex];
+            var currentKey = currentSequence.Keys[_currentKeyIndex];
 
             //Check if the key is a modifier...
             if (IsModifierKey(key))
@@ -144,7 +144,7 @@ namespace grbl.Master.UI.Input
             }
 
             //Check if the current key press happened too late...
-            if (this._currentSequenceIndex != 0 && ((DateTime.Now - this._lastKeyPress) > MaximumDelay))
+            if (_currentSequenceIndex != 0 && ((DateTime.Now - _lastKeyPress) > MaximumDelay))
             {
                 //The delay has expired, abort the match...
                 ResetState();
@@ -177,21 +177,21 @@ namespace grbl.Master.UI.Input
             }
 
             //Move on the index, pointing to the next key...
-            this._currentKeyIndex++;
+            _currentKeyIndex++;
 
             //Check if the key is the last of the current sequence...
-            if (this._currentKeyIndex == this._keySequences[this._currentSequenceIndex].Keys.Length)
+            if (_currentKeyIndex == _keySequences[_currentSequenceIndex].Keys.Length)
             {
                 //The key is the last of the current sequence, go to the next sequence...
-                this._currentSequenceIndex++;
-                this._currentKeyIndex = 0;
+                _currentSequenceIndex++;
+                _currentKeyIndex = 0;
             }
 
             //Check if the sequence is the last one of the gesture...
-            if (this._currentSequenceIndex != this._keySequences.Length)
+            if (_currentSequenceIndex != _keySequences.Length)
             {
                 //If the key is not the last one, get the current date time, handle the match event but do nothing...
-                this._lastKeyPress = DateTime.Now;
+                _lastKeyPress = DateTime.Now;
                 inputEventArgs.Handled = true;
 #if DEBUG_MESSAGES
                 System.Diagnostics.Debug.WriteLine("Waiting for " + (m_KeySequences.Length - m_CurrentSequenceIndex) + " sequences", "[" + MultiKeyGestureConverter.Default.ConvertToString(this) + "]");
@@ -213,8 +213,8 @@ namespace grbl.Master.UI.Input
         /// </summary>
         void ResetState()
         {
-            this._currentSequenceIndex = 0;
-            this._currentKeyIndex = 0;
+            _currentSequenceIndex = 0;
+            _currentKeyIndex = 0;
         }
     }
 }

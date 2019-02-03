@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace grbl.Master.Service.Interface
+{
+    using System;
+    using System.Collections.Generic;
 
-namespace grbl.Master.Communication
-{    
     public interface IComService
     {
         event EventHandler<string> DataReceived;
+
+        event EventHandler<string> LineReceived;
 
         event EventHandler ConnectionStateChanged;
 

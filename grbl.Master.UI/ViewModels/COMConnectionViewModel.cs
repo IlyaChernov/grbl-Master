@@ -1,9 +1,10 @@
 ﻿using Caliburn.Micro;
-using grbl.Master.Communication;
 using System.Collections.Generic;
 
 namespace grbl.Master.UI.ViewModels
 {
+    using grbl.Master.Service.Interface;
+
     public class COMConnectionViewModel : Screen
     {
         private readonly IComService _comService;
@@ -14,7 +15,7 @@ namespace grbl.Master.UI.ViewModels
         public COMConnectionViewModel(IComService comService)
         {
             _comService = comService;
-            _comService.ConnectionStateChanged += this.ComServiceConnectionStateChanged;
+            _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             ReloadComPorts();
         }
 

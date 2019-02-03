@@ -1,5 +1,4 @@
 ﻿using Caliburn.Micro;
-using grbl.Master.Communication;
 using grbl.Master.UI.Input;
 using grbl.Master.UI.ViewModels;
 using System;
@@ -9,6 +8,9 @@ using System.Windows.Input;
 
 namespace grbl.Master.UI
 {
+    using grbl.Master.Service.Implementation;
+    using grbl.Master.Service.Interface;
+
     public class Bootstrapper : BootstrapperBase
     {
         private readonly SimpleContainer _container = new SimpleContainer();
@@ -45,7 +47,11 @@ namespace grbl.Master.UI
         protected override void Configure()
         {
             base.Configure();
+
             _container.RegisterSingleton(typeof(IComService), null, typeof(COMService));
+            _container.RegisterSingleton(typeof(ICommandSender), null, typeof(CommandSender));
+            _container.RegisterSingleton(typeof(IGrblStatusRequester), null, typeof(GrblStatusRequester));
+
             _container.RegisterPerRequest(typeof(IWindowManager), null, typeof(WindowManager));
             _container.RegisterPerRequest(typeof(MasterViewModel), null, typeof(MasterViewModel));
             _container.RegisterPerRequest(typeof(COMConnectionViewModel), "COMConnectionViewModel", typeof(COMConnectionViewModel));
