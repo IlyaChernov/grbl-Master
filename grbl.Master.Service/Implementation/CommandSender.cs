@@ -37,26 +37,25 @@
                 {
                     _commandList[_currentIndex].ResultType = CommandResultType.Ok;
                     _currentIndex++;
-                    OnCommandListUpdated();
                 }
                 else if (e.StartsWith("error"))
                 {
                     _commandList[_currentIndex].ResultType = CommandResultType.Error;
                     _commandList[_currentIndex].CommandResultCause = e.Split(':')[1];
                     _currentIndex++;
-                    OnCommandListUpdated();
                 }
                 else
                 {
                     _commandList[_currentIndex].Result = e;
-                    OnCommandListUpdated();
                 }
             }
             else
             {
-                _commandList.Add(new Command{Result = e});
-                this._currentIndex++;
+                _commandList.Add(new Command { Result = e });
+                _currentIndex++;
             }
+
+            OnCommandListUpdated();
         }
 
         public void Send(string command, CommandType type)
