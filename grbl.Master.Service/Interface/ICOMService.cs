@@ -5,8 +5,6 @@
 
     public interface IComService
     {
-        event EventHandler<string> DataReceived;
-
         event EventHandler<string> LineReceived;
 
         event EventHandler ConnectionStateChanged;
@@ -18,10 +16,6 @@
         void Send(string data);
 
         void Disconnect();
-
-        //byte GetByteFromDevice();
-
-        //byte PeekByteFromDevice();
 
         bool IsConnected
         {

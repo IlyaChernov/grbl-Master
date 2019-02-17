@@ -4,8 +4,7 @@
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
+    //using System.Collections.ObjectModel;
 
     public class StatusCommandSender
     {
@@ -13,7 +12,7 @@
 
         public event EventHandler CommandListUpdated;
 
-       public event EventHandler<Command> CommandFinished;
+        public event EventHandler<Command> CommandFinished;
 
         private void OnCommandListUpdated()
         {
@@ -42,7 +41,7 @@
             OnCommandFinished(e);
         }
 
-        public ObservableCollection<Command> CommandList => _commandSender.CommandList;
+        //public ObservableCollection<Command> CommandList => _commandSender.CommandList;
 
         public void Send(string command)
         {

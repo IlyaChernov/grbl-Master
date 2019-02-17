@@ -8,7 +8,6 @@ using System.Windows.Input;
 
 namespace grbl.Master.UI
 {
-    using System.Windows.Data;
 
     using grbl.Master.Service.Implementation;
     using grbl.Master.Service.Interface;
@@ -48,7 +47,7 @@ namespace grbl.Master.UI
 
         protected override void Configure()
         {
-            base.Configure();            
+            base.Configure();
 
             _container.RegisterSingleton(typeof(IComService), null, typeof(COMService));
             _container.RegisterSingleton(typeof(ICommandSender), null, typeof(CommandSender));

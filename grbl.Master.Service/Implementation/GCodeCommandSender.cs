@@ -4,7 +4,6 @@
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
     public class GCodeCommandSender

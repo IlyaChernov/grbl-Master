@@ -4,18 +4,15 @@ using System;
 namespace grbl.Master.UI.ViewModels
 {
     using grbl.Master.Service.DataTypes;
-    using grbl.Master.Service.Interface;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-
     using grbl.Master.Service.Enum;
+    using grbl.Master.Service.Interface;
+    using System.Collections.ObjectModel;
 
     public class MasterViewModel : Screen
     {
         private readonly IComService _comService;
         private readonly IGrblStatusRequester _grblStatus;
-        private readonly ICommandSender _commandSender;        
+        private readonly ICommandSender _commandSender;
         private string _manualCommand;
 
         public MasterViewModel(IComService comService, IGrblStatusRequester grblStatus, ICommandSender commandSender)
@@ -46,14 +43,13 @@ namespace grbl.Master.UI.ViewModels
             NotifyOfPropertyChange(() => CanSendEnterCommand);
         }
 
-        //public List<Command> CommandList => _commandSender.CommandList;//.ToList();
-        public ObservableCollection<Command> CommandList => _commandSender.CommandList;//.ToList();
+        public ObservableCollection<Command> CommandList => _commandSender.CommandList;
 
 
         public COMConnectionViewModel ComConnectionViewModel
         {
             get;
-        }       
+        }
 
         public string ManualCommand
         {
@@ -70,7 +66,7 @@ namespace grbl.Master.UI.ViewModels
 
         public void SendManualCommand()
         {
-            _commandSender.Send(ManualCommand, CommandType.System);            
+            _commandSender.Send(ManualCommand, CommandType.System);
         }
 
         public bool CanSendEnterCommand => _comService.IsConnected;
@@ -80,16 +76,8 @@ namespace grbl.Master.UI.ViewModels
             SendManualCommand();
         }
 
-        private void ComServiceDataReceived(object sender, string e)
-        {            
-            if (!_grblStatus.IsRunning)
-            {
-                _grblStatus.StartRequesting(TimeSpan.FromMilliseconds(200));
-            }
-        }
-
         private void ComServiceLineReceived(object sender, string e)
-        {            
+        {
             if (!_grblStatus.IsRunning)
             {
                 _grblStatus.StartRequesting(TimeSpan.FromMilliseconds(200));

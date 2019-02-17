@@ -1,16 +1,16 @@
 ﻿namespace grbl.Master.Service.Interface
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-
     using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
+    using System;
+    using System.Collections.ObjectModel;
 
     public interface ICommandSender
     {
-        //List<Command> CommandList { get; }
-        ObservableCollection<Command> CommandList { get; }
+        ObservableCollection<Command> CommandList
+        {
+            get;
+        }
 
         event EventHandler CommandListUpdated;
 

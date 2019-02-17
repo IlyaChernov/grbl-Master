@@ -1,4 +1,5 @@
-﻿using System;
+﻿// ReSharper disable All
+using System;
 using System.ComponentModel;
 using System.Text;
 using System.Windows.Input;

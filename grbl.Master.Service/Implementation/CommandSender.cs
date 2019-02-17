@@ -10,19 +10,13 @@
     public class CommandSender : ICommandSender
     {
         private readonly IComService _comService;
-
-        //private readonly List<Command> _commandList = new List<Command>();        
-        private readonly ObservableCollection<Command> _commandList = new ObservableCollection<Command>();
-
         private int _currentIndex;
 
-        private object _lockObject = new object();
+        private readonly object _lockObject = new object();
 
-        private SynchronizationContext _uiContext;
+        private readonly SynchronizationContext _uiContext;
 
-        //public List<Command> CommandList => _commandList;
-
-        public ObservableCollection<Command> CommandList => _commandList;
+        public ObservableCollection<Command> CommandList { get; } = new ObservableCollection<Command>();
 
         public event EventHandler CommandListUpdated;
 
@@ -43,9 +37,7 @@
             _uiContext = SynchronizationContext.Current;
             _comService = comService;
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
-            _comService.LineReceived += ComServiceLineReceived;
-
-            //BindingOperations.EnableCollectionSynchronization(_commandList, _lockObject);
+            _comService.LineReceived += ComServiceLineReceived;            
         }
 
         private void ComServiceConnectionStateChanged(object sender, EventArgs e)
@@ -54,22 +46,22 @@
             {
                 _currentIndex = 0;
                 lock (_lockObject)
-                    _commandList.Clear();
+                    CommandList.Clear();
             }
         }
 
         private void ComServiceLineReceived(object sender, string e)
         {
             lock (_lockObject)
-                if (_commandList.Count > _currentIndex)
+                if (CommandList.Count > _currentIndex)
                 {
                     if (e.Equals("ok"))
                     {
                         _uiContext.Send(
                             x =>
                                 {
-                                    _commandList[_currentIndex].ResultType = CommandResultType.Ok;
-                                    OnCommandFinished(_commandList[_currentIndex]);
+                                    CommandList[_currentIndex].ResultType = CommandResultType.Ok;
+                                    OnCommandFinished(CommandList[_currentIndex]);
                                 }, null);
 
                         _currentIndex++;
@@ -78,8 +70,8 @@
                     {
                         _uiContext.Send(x =>
                             {
-                                _commandList[_currentIndex].ResultType = CommandResultType.Ok;
-                                OnCommandFinished(_commandList[_currentIndex]);
+                                CommandList[_currentIndex].ResultType = CommandResultType.Ok;
+                                OnCommandFinished(CommandList[_currentIndex]);
                             }, null);
 
                         _currentIndex++;
@@ -88,9 +80,9 @@
                     {
                         _uiContext.Send(x =>
                             {
-                                _commandList[_currentIndex].ResultType = CommandResultType.Error;
-                                _commandList[_currentIndex].CommandResultCause = e.Split(':')[1];
-                                OnCommandFinished(_commandList[_currentIndex]);
+                                CommandList[_currentIndex].ResultType = CommandResultType.Error;
+                                CommandList[_currentIndex].CommandResultCause = e.Split(':')[1];
+                                OnCommandFinished(CommandList[_currentIndex]);
                             }, null);
 
                         _currentIndex++;
@@ -99,14 +91,13 @@
                     {
                         _uiContext.Send(x =>
                             {
-                                _commandList[_currentIndex].Result += e + Environment.NewLine;
+                                CommandList[_currentIndex].Result += e + Environment.NewLine;
                             }, null);
                     }
                 }
                 else
                 {
-                    _uiContext.Send(x => _commandList.Add(new Command { Result = e }), null);
-                    //_commandList.Add(new Command { Result = e });
+                    _uiContext.Send(x => CommandList.Add(new Command { Result = e }), null);                    
                     _currentIndex++;
                 }
 
@@ -115,8 +106,7 @@
 
         public void Send(string command, CommandType type)
         {
-            _uiContext.Send(x => _commandList.Add(new Command { Data = command, Type = type }), null);
-            //_commandList.Add(new Command { Data = command, Type = type });
+            _uiContext.Send(x => CommandList.Add(new Command { Data = command, Type = type }), null);            
             _comService.Send(command);
             OnCommandListUpdated();
         }
