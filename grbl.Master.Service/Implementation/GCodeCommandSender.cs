@@ -5,6 +5,7 @@
     using grbl.Master.Service.Interface;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     public class GCodeCommandSender
     {
@@ -28,7 +29,7 @@
             OnCommandListUpdated();
         }
 
-        public List<Command> CommandList => _commandSender.CommandList;
+        public ObservableCollection<Command> CommandList => _commandSender.CommandList;
 
         public void Send(string command)
         {

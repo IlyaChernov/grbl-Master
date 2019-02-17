@@ -44,11 +44,13 @@
                         <RowDefinition Height="208*"/>
                         <RowDefinition Height="287*"/>
                     </Grid.RowDefinitions>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="1">
-                        <TextBlock  x:Name="ReceivedData" />
-                    </ScrollViewer>
-                    <ListBox Grid.Column="1"  Grid.Row="1"  ItemsSource="{Binding CommandList}" >
-                        <ListBox.ItemTemplate>
+                    <ListView Grid.Column="0"  Grid.Row="1"  ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid ToolTip="{Binding Result}">
                                     <Grid.ColumnDefinitions>
@@ -61,8 +63,8 @@
                                     <TextBlock Grid.Column="2" Text="{Binding Path=Result}"></TextBlock>
                                 </Grid>
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </Grid>
             </TabItem>
             <TabItem Header="Grbl config">

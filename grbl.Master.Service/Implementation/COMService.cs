@@ -1,11 +1,11 @@
 ﻿namespace grbl.Master.Service.Implementation
 {
+    using grbl.Master.Service.Interface;
     using System;
     using System.Collections.Generic;
     using System.IO.Ports;
     using System.Linq;
-
-    using grbl.Master.Service.Interface;
+    using System.Reactive.Linq;
 
     public class COMService : IComService
     {
@@ -54,22 +54,32 @@
             _sp.Open();
             ResetBoard();
             _sp.DataReceived += SpDataReceived;
+
             OnConnectionStateChanged();
         }
 
         private void SpDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            Console.WriteLine(_buffer);
+            var cnt = this._sp.BytesToRead;
+            byte[] buffer = new byte[cnt];
+            if (!_sp.IsOpen)
+            {
+                throw new InvalidOperationException("Serial port is closed.");
+            }
+            _sp.Read(buffer, 0, cnt);
 
-            var serialData = _sp.ReadExisting();
+            var serialData = System.Text.Encoding.UTF8.GetString(buffer);
 
-            var lines = (_buffer + serialData).Split(new[] { "\r\n" }, StringSplitOptions.None);
+            Console.WriteLine("Incoming: {0}", serialData);
+
+            var lines = (_buffer + serialData).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
             if (lines.Any())
             {
                 if (lines.Last() == string.Empty)
                 {
                     _buffer = string.Empty;
+                    Console.WriteLine("Buf: {0}", _buffer);
                     foreach (var line in lines)
                     {
                         OnLineReceived(line);
@@ -78,6 +88,7 @@
                 else
                 {
                     _buffer = lines.Last();
+                    Console.WriteLine("Buf: {0}", _buffer);
                     foreach (var line in lines.Take(lines.Length - 1))
                     {
                         OnLineReceived(line);
@@ -85,7 +96,7 @@
                 }
             }
 
-            OnDataReceived(_sp.ReadExisting());
+            OnDataReceived(serialData);
         }
 
         public void Disconnect()
@@ -94,8 +105,18 @@
             {
                 return;
             }
-            _sp.Close();
-            OnConnectionStateChanged();
+
+            Observable.Start(
+                () =>
+                    {
+                        _sp.DiscardInBuffer();
+                        _sp.DiscardOutBuffer();
+                        //Thread.Sleep(3000);
+                        _sp.Close();
+
+                        OnConnectionStateChanged();
+                    }).Subscribe();
+
         }
 
         public List<string> GetPortNames()

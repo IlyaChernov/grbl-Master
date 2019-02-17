@@ -5,16 +5,24 @@
     using grbl.Master.Service.Interface;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
-    public class SystemCommandSender
+    public class StatusCommandSender
     {
         private readonly ICommandSender _commandSender;
 
         public event EventHandler CommandListUpdated;
 
+       public event EventHandler<Command> CommandFinished;
+
         private void OnCommandListUpdated()
         {
             CommandListUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnCommandFinished(Command cmd)
+        {
+            CommandFinished?.Invoke(this, cmd);
         }
 
         private void CommandSenderCommandListUpdated(object sender, EventArgs e)
@@ -22,17 +30,23 @@
             OnCommandListUpdated();
         }
 
-        public SystemCommandSender(ICommandSender commandSender)
+        public StatusCommandSender(ICommandSender commandSender)
         {
             _commandSender = commandSender;
             _commandSender.CommandListUpdated += CommandSenderCommandListUpdated;
+            _commandSender.CommandFinished += CommandSenderCommandFinished;
         }
 
-        public List<Command> CommandList => _commandSender.CommandList;
+        private void CommandSenderCommandFinished(object sender, Command e)
+        {
+            OnCommandFinished(e);
+        }
+
+        public ObservableCollection<Command> CommandList => _commandSender.CommandList;
 
         public void Send(string command)
         {
-            _commandSender.Send(command, CommandType.System);
+            _commandSender.Send(command, CommandType.StatusRequest);
         }
     }
 }

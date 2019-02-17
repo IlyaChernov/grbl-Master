@@ -1,32 +1,43 @@
 ﻿namespace grbl.Master.Service.Implementation
 {
+    using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System;
     using System.Reactive;
-    using System.Reactive.Linq;
     using System.Reactive.Subjects;
+    using System.Threading.Tasks;
 
     public class GrblStatusRequester : IGrblStatusRequester
     {
-        private ICommandSender _commandSender;
-        private readonly SystemCommandSender _systemCommandSender;
+        private readonly StatusCommandSender _systemCommandSender;
         readonly Subject<Unit> _stopSubject = new Subject<Unit>();
+        private TimeSpan _interval = TimeSpan.Zero;
 
         public GrblStatusRequester(ICommandSender commandSender)
         {
-            _commandSender = commandSender;
-            _systemCommandSender = new SystemCommandSender(commandSender);
+            _systemCommandSender = new StatusCommandSender(commandSender);
+            _systemCommandSender.CommandFinished += SystemCommandSenderCommandFinished;
+        }
+
+        private void Request()
+        {
+            _systemCommandSender.Send("?");
+        }
+
+        private async void SystemCommandSenderCommandFinished(object sender, DataTypes.Command e)
+        {
+            if (IsRunning && e.Type == CommandType.StatusRequest)
+            {
+                await Task.Delay(_interval);
+                Request();
+            }
         }
 
         public void StartRequesting(TimeSpan interval)
         {
+            _interval = interval;
             IsRunning = true;
-            Observable.Timer(TimeSpan.Zero, interval).TakeUntil(_stopSubject).Subscribe(
-                l =>
-                    {
-                        _systemCommandSender.Send("?");
-                    });
-
+            Request();
         }
 
         public void StopRequesting()

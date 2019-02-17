@@ -3,6 +3,7 @@
     public enum CommandType
     {
         System,
+        StatusRequest,
         GCode
     }
 }

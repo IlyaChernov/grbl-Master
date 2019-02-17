@@ -1,18 +1,36 @@
 ﻿namespace grbl.Master.Service.DataTypes
 {
+    using grbl.Master.Service.Annotations;
     using grbl.Master.Service.Enum;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Command that will be stored in memory after sending. Can be updated with results.
     /// </summary>
-    public class Command
+    public class Command : INotifyPropertyChanged
     {
+        private string _data;
+
+        private CommandType? _type;
+
+        private string _result;
+
+        private CommandResultType? _resultType;
+
+        private string _commandResultCause;
+
         /// <summary>
         /// Data sent
         /// </summary>
         public string Data
         {
-            get; set;
+            get => _data;
+            set
+            {
+                _data = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -20,7 +38,12 @@
         /// </summary>
         public CommandType? Type
         {
-            get; set;
+            get => _type;
+            set
+            {
+                _type = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -28,7 +51,12 @@
         /// </summary>
         public string Result
         {
-            get; set;
+            get => _result;
+            set
+            {
+                _result = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -36,7 +64,12 @@
         /// </summary>
         public CommandResultType? ResultType
         {
-            get; set;
+            get => _resultType;
+            set
+            {
+                _resultType = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -44,7 +77,20 @@
         /// </summary>
         public string CommandResultCause
         {
-            get; set;
+            get => _commandResultCause;
+            set
+            {
+                _commandResultCause = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

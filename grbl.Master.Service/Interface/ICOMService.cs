@@ -17,7 +17,11 @@
 
         void Send(string data);
 
-        void Disconnect();        
+        void Disconnect();
+
+        //byte GetByteFromDevice();
+
+        //byte PeekByteFromDevice();
 
         bool IsConnected
         {
