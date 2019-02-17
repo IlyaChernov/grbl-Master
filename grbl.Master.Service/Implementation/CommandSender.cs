@@ -1,13 +1,16 @@
 ﻿namespace grbl.Master.Service.Implementation
 {
+    using grbl.Master.Service.Annotations;
     using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
     using System.Threading;
 
-    public class CommandSender : ICommandSender
+    public class CommandSender : ICommandSender, INotifyPropertyChanged
     {
         private readonly IComService _comService;
         private int _currentIndex;
@@ -24,7 +27,7 @@
 
         private void OnCommandListUpdated()
         {
-            CommandListUpdated?.Invoke(this, EventArgs.Empty);
+            CommandListUpdated?.Invoke(this, EventArgs.Empty);        
         }
 
         private void OnCommandFinished(Command cmd)
@@ -37,7 +40,7 @@
             _uiContext = SynchronizationContext.Current;
             _comService = comService;
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
-            _comService.LineReceived += ComServiceLineReceived;            
+            _comService.LineReceived += ComServiceLineReceived;
         }
 
         private void ComServiceConnectionStateChanged(object sender, EventArgs e)
@@ -97,7 +100,7 @@
                 }
                 else
                 {
-                    _uiContext.Send(x => CommandList.Add(new Command { Result = e }), null);                    
+                    _uiContext.Send(x => CommandList.Add(new Command { Result = e }), null);
                     _currentIndex++;
                 }
 
@@ -106,9 +109,17 @@
 
         public void Send(string command, CommandType type)
         {
-            _uiContext.Send(x => CommandList.Add(new Command { Data = command, Type = type }), null);            
+            _uiContext.Send(x => CommandList.Add(new Command { Data = command, Type = type }), null);
             _comService.Send(command);
             OnCommandListUpdated();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

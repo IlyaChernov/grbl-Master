@@ -85,7 +85,6 @@
     <Compile Include="Input\KeyTrigger.cs" />
     <Compile Include="Input\MultiKeyGesture.cs" />
     <Compile Include="Input\MultiKeyGestureConverter.cs" />
-    <Compile Include="Models\Status.cs" />
     <Compile Include="ViewModels\COMConnectionViewModel.cs" />
     <Compile Include="ViewModels\MasterViewModel.cs" />
     <Compile Include="Views\COMConnectionView.xaml.cs">
@@ -124,6 +123,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\grbl.Master.BL\grbl.Master.BL.csproj">
+      <Project>{A8D81938-5739-42C5-AD7E-EB78C63295B9}</Project>
+      <Name>grbl.Master.BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\grbl.Master.Model\grbl.Master.Model.csproj">
+      <Project>{B21C205E-5CE2-436E-AFA4-F2A3DAC60D21}</Project>
+      <Name>grbl.Master.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\grbl.Master.Service\grbl.Master.Service.csproj">
       <Project>{5233400E-E720-4DE5-8BED-6B11F2AE14C6}</Project>
       <Name>grbl.Master.Service</Name>

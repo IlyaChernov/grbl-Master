@@ -3,23 +3,28 @@ using System;
 
 namespace grbl.Master.UI.ViewModels
 {
+    using grbl.Master.Model;
     using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System.Collections.ObjectModel;
 
+    using grbl.Master.BL.Interface;
+
     public class MasterViewModel : Screen
     {
         private readonly IComService _comService;
-        private readonly IGrblStatusRequester _grblStatus;
+        private readonly IGrblStatusRequester _grblStatusRequester;
         private readonly ICommandSender _commandSender;
         private string _manualCommand;
 
-        public MasterViewModel(IComService comService, IGrblStatusRequester grblStatus, ICommandSender commandSender)
+        private GrblStatus _grblStatus;
+
+        public MasterViewModel(IComService comService, IGrblStatusRequester grblStatusRequester, ICommandSender commandSender)
         {
             ComConnectionViewModel = new COMConnectionViewModel(comService);
             _comService = comService;
-            _grblStatus = grblStatus;
+            _grblStatusRequester = grblStatusRequester;
             _commandSender = commandSender;
 
             _comService.LineReceived += ComServiceLineReceived;
@@ -36,7 +41,7 @@ namespace grbl.Master.UI.ViewModels
         {
             if (!_comService.IsConnected)
             {
-                _grblStatus.StopRequesting();
+                _grblStatusRequester.StopRequesting();
             }
 
             NotifyOfPropertyChange(() => CanSendManualCommand);
@@ -44,7 +49,6 @@ namespace grbl.Master.UI.ViewModels
         }
 
         public ObservableCollection<Command> CommandList => _commandSender.CommandList;
-
 
         public COMConnectionViewModel ComConnectionViewModel
         {
@@ -59,6 +63,16 @@ namespace grbl.Master.UI.ViewModels
                 _manualCommand = value;
                 NotifyOfPropertyChange(() => ManualCommand);
                 NotifyOfPropertyChange(() => CanSendManualCommand);
+            }
+        }
+
+        public GrblStatus GrblStatus
+        {
+            get => _grblStatus;
+            set
+            {
+                _grblStatus = value;
+                NotifyOfPropertyChange(() => GrblStatus);
             }
         }
 
@@ -78,9 +92,9 @@ namespace grbl.Master.UI.ViewModels
 
         private void ComServiceLineReceived(object sender, string e)
         {
-            if (!_grblStatus.IsRunning)
+            if (!_grblStatusRequester.IsRunning)
             {
-                _grblStatus.StartRequesting(TimeSpan.FromMilliseconds(200));
+                _grblStatusRequester.StartRequesting(TimeSpan.FromMilliseconds(200));
             }
         }
     }

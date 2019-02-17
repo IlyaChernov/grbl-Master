@@ -1,5 +1,6 @@
-﻿namespace grbl.Master.Service.Implementation
+﻿namespace grbl.Master.BL
 {
+    using grbl.Master.BL.Interface;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System;
@@ -9,22 +10,28 @@
 
     public class GrblStatusRequester : IGrblStatusRequester
     {
-        private readonly StatusCommandSender _systemCommandSender;
+        private readonly ICommandSender _commandSender;
         readonly Subject<Unit> _stopSubject = new Subject<Unit>();
         private TimeSpan _interval = TimeSpan.Zero;
 
         public GrblStatusRequester(ICommandSender commandSender)
         {
-            _systemCommandSender = new StatusCommandSender(commandSender);
-            _systemCommandSender.CommandFinished += SystemCommandSenderCommandFinished;
+            _commandSender = commandSender;
+            commandSender.CommandFinished += SystemCommandSenderCommandFinished;
+        }
+
+        public bool IsRunning
+        {
+            get;
+            set;
         }
 
         private void Request()
         {
-            _systemCommandSender.Send("?");
+            _commandSender.Send("?", CommandType.StatusRequest);
         }
 
-        private async void SystemCommandSenderCommandFinished(object sender, DataTypes.Command e)
+        private async void SystemCommandSenderCommandFinished(object sender, Service.DataTypes.Command e)
         {
             if (IsRunning && e.Type == CommandType.StatusRequest)
             {
@@ -44,12 +51,6 @@
         {
             IsRunning = false;
             _stopSubject.OnNext(Unit.Default);
-        }
-
-        public bool IsRunning
-        {
-            get;
-            set;
         }
     }
 }

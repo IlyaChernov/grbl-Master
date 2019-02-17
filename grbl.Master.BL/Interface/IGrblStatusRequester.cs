@@ -1,4 +1,4 @@
-﻿namespace grbl.Master.Service.Interface
+﻿namespace grbl.Master.BL.Interface
 {
     using System;
 

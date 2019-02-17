@@ -8,7 +8,8 @@ using System.Windows.Input;
 
 namespace grbl.Master.UI
 {
-
+    using grbl.Master.BL;
+    using grbl.Master.BL.Interface;
     using grbl.Master.Service.Implementation;
     using grbl.Master.Service.Interface;
 

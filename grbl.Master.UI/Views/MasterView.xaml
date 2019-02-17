@@ -44,7 +44,7 @@
                         <RowDefinition Height="208*"/>
                         <RowDefinition Height="287*"/>
                     </Grid.RowDefinitions>
-                    <ListView Grid.Column="0"  Grid.Row="1"  ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                    <ListView Grid.Column="0"  Grid.Row="1" ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VirtualizingStackPanel />

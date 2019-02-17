@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.Test", "grbl.Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.Service", "grbl.Master.Service\grbl.Master.Service.csproj", "{5233400E-E720-4DE5-8BED-6B11F2AE14C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.Model", "grbl.Master.Model\grbl.Master.Model.csproj", "{B21C205E-5CE2-436E-AFA4-F2A3DAC60D21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.BL", "grbl.Master.BL\grbl.Master.BL.csproj", "{A8D81938-5739-42C5-AD7E-EB78C63295B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{5233400E-E720-4DE5-8BED-6B11F2AE14C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5233400E-E720-4DE5-8BED-6B11F2AE14C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5233400E-E720-4DE5-8BED-6B11F2AE14C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B21C205E-5CE2-436E-AFA4-F2A3DAC60D21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B21C205E-5CE2-436E-AFA4-F2A3DAC60D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B21C205E-5CE2-436E-AFA4-F2A3DAC60D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B21C205E-5CE2-436E-AFA4-F2A3DAC60D21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8D81938-5739-42C5-AD7E-EB78C63295B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D81938-5739-42C5-AD7E-EB78C63295B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D81938-5739-42C5-AD7E-EB78C63295B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D81938-5739-42C5-AD7E-EB78C63295B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
