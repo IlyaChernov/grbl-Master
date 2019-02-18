@@ -19,8 +19,6 @@ namespace grbl.Master.UI.ViewModels
         private readonly IGrblStatusProcessor _grblStatusProcessor;
         private string _manualCommand;
 
-        private GrblStatus _grblStatus;
-
         public MasterViewModel(IGrblStatusProcessor grblStatusProcessor, IComService comService, IGrblStatusRequester grblStatusRequester, ICommandSender commandSender)
         {
             ComConnectionViewModel = new COMConnectionViewModel(comService);

@@ -8,7 +8,6 @@ using System.Windows.Input;
 
 namespace grbl.Master.UI
 {
-    using grbl.Master.BL;
     using grbl.Master.BL.Implementation;
     using grbl.Master.BL.Interface;
     using grbl.Master.Service.Implementation;
@@ -56,7 +55,7 @@ namespace grbl.Master.UI
             _container.RegisterSingleton(typeof(IGrblStatusRequester), null, typeof(GrblStatusRequester));
 
             _container.RegisterSingleton(typeof(IGrblStatusProcessor), null, typeof(GrblStatusProcessor));
-            
+
 
             _container.RegisterPerRequest(typeof(IWindowManager), null, typeof(WindowManager));
             _container.RegisterPerRequest(typeof(MasterViewModel), null, typeof(MasterViewModel));

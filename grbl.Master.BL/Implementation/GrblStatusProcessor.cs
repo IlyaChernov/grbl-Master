@@ -115,7 +115,7 @@
                                 && int.TryParse(bufferParts[2], out var bytes))
                             {
                                 GrblStatus.BufferState.AvailableBlocks = blocks;
-                                GrblStatus.BufferState.AvailableBlocks = bytes;
+                                GrblStatus.BufferState.AvailableBytes = bytes;
                             }
                         }
                     }

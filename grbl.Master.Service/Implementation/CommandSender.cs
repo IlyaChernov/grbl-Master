@@ -1,16 +1,13 @@
 ﻿namespace grbl.Master.Service.Implementation
 {
-    using grbl.Master.Service.Annotations;
     using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
     using System.Threading;
 
-    public class CommandSender : ICommandSender, INotifyPropertyChanged
+    public class CommandSender : ICommandSender
     {
         private readonly IComService _comService;
         private int _currentIndex;
@@ -27,7 +24,7 @@
 
         private void OnCommandListUpdated()
         {
-            CommandListUpdated?.Invoke(this, EventArgs.Empty);        
+            CommandListUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnCommandFinished(Command cmd)
@@ -94,7 +91,7 @@
                     {
                         _uiContext.Send(x =>
                             {
-                                CommandList[_currentIndex].Result += e;// + Environment.NewLine;
+                                CommandList[_currentIndex].Result += e;
                             }, null);
                     }
                 }
@@ -112,14 +109,6 @@
             _uiContext.Send(x => CommandList.Add(new Command { Data = command, Type = type }), null);
             _comService.Send(command);
             OnCommandListUpdated();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
