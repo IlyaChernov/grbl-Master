@@ -46,6 +46,7 @@ namespace grbl.Master.UI.ViewModels
 
             NotifyOfPropertyChange(() => CanSendManualCommand);
             NotifyOfPropertyChange(() => CanSendEnterCommand);
+            NotifyOfPropertyChange(() => CanUnlockCommand);
         }
 
         public GrblStatus GrblStatus => _grblStatusProcessor.GrblStatus;
@@ -66,7 +67,7 @@ namespace grbl.Master.UI.ViewModels
                 NotifyOfPropertyChange(() => ManualCommand);
                 NotifyOfPropertyChange(() => CanSendManualCommand);
             }
-        }       
+        }
 
         public bool CanSendManualCommand => !string.IsNullOrWhiteSpace(ManualCommand) && _comService.IsConnected;
 
@@ -80,6 +81,13 @@ namespace grbl.Master.UI.ViewModels
         public void SendEnterCommand()
         {
             SendManualCommand();
+        }
+
+        public bool CanUnlockCommand => _comService.IsConnected;
+
+        public void UnlockCommand()
+        {
+            _commandSender.Send("$X", CommandType.System);
         }
 
         private void ComServiceLineReceived(object sender, string e)

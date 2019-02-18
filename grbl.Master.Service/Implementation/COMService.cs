@@ -1,11 +1,14 @@
 ﻿namespace grbl.Master.Service.Implementation
 {
+    using grbl.Master.Service.Annotations;
     using grbl.Master.Service.Interface;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.IO.Ports;
     using System.Linq;
     using System.Reactive.Linq;
+    using System.Runtime.CompilerServices;
 
     public class COMService : IComService
     {
@@ -36,7 +39,7 @@
 
         public virtual void OnConnectionStateChanged()
         {
-            ConnectionStateChanged?.Invoke(this, EventArgs.Empty);
+            ConnectionStateChanged?.Invoke(this, EventArgs.Empty);            
         }
 
         public bool IsConnected => _sp.IsOpen;
@@ -60,7 +63,7 @@
 
         private void SpDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            var cnt = this._sp.BytesToRead;
+            var cnt = _sp.BytesToRead;
             byte[] buffer = new byte[cnt];
             if (!_sp.IsOpen)
             {

@@ -53,11 +53,8 @@
         //private IGrblStatusRequester _grblStatusRequester;
         private readonly IComService _comService;
 
-        private GrblStatus _grblStatus;
-
         public GrblStatusProcessor(/*IGrblStatusRequester grblStatusRequester,*/ ICommandSender commandSender, IComService comService)
         {
-            GrblStatus = new GrblStatus();
             _comService = comService;
             //_grblStatusRequester = grblStatusRequester;
 
@@ -72,7 +69,7 @@
 
         private void CommandSenderCommandFinished(object sender, Service.DataTypes.Command e)
         {
-            if (_responseReg.IsMatch(e.Result))
+            if (!string.IsNullOrEmpty(e.Result) && _responseReg.IsMatch(e.Result))
             {
                 var parts = e.Result.Split(new[] { '<', '>', '|' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -146,8 +143,9 @@
                         var feedSpeedParts = part.Split(new[] { ':', ',' }, StringSplitOptions.RemoveEmptyEntries);
                         if (feedSpeedParts.Length == 3)
                         {
-                            if (int.TryParse(feedSpeedParts[1], out var feed)
-                                && int.TryParse(feedSpeedParts[2], out var speed))
+                            if (int.TryParse(feedSpeedParts[1], out var feed) && int.TryParse(
+                                    feedSpeedParts[2],
+                                    out var speed))
                             {
                                 GrblStatus.FeedAndSpeed.Feed = feed;
                                 GrblStatus.FeedAndSpeed.Speed = speed;
@@ -175,8 +173,9 @@
                         if (overrideParts.Length == 4)
                         {
                             if (int.TryParse(overrideParts[1], out var feed)
-                                && int.TryParse(overrideParts[2], out var rapid)
-                                && int.TryParse(overrideParts[3], out var spindle))
+                                && int.TryParse(overrideParts[2], out var rapid) && int.TryParse(
+                                    overrideParts[3],
+                                    out var spindle))
                             {
                                 GrblStatus.OverrideValues.Feed = feed;
                                 GrblStatus.OverrideValues.Rapid = rapid;
@@ -219,15 +218,7 @@
             return false;
         }
 
-        public GrblStatus GrblStatus
-        {
-            get => _grblStatus;
-            private set
-            {
-                _grblStatus = value;
-                OnPropertyChanged();
-            }
-        }
+        public GrblStatus GrblStatus { get; } = new GrblStatus();
 
         public event PropertyChangedEventHandler PropertyChanged;
 

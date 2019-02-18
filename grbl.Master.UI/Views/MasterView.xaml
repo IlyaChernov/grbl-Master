@@ -37,40 +37,123 @@
             <TabItem Header="Grbl interface">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="373*"/>
-                        <ColumnDefinition Width="413*"/>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="200"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
 
-                    <TextBox  Grid.Row="2" Text="{Binding GrblStatus.MachineState}" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="230"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="26"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                    <ListView Grid.Column="0"  Grid.Row="3" ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel />
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ToolTip="{Binding Result}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}"></TextBlock>
-                                    <TextBlock Grid.Column="1" Text="{Binding Path=Data}"></TextBlock>
-                                    <TextBlock Grid.Column="2" Text="{Binding Path=Result}"></TextBlock>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        <Grid Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.Resources>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="FontSize" Value="50" ></Setter>
+                                    <Setter Property="TextAlignment" Value="Right" ></Setter>
+                                    <Setter Property="VerticalContentAlignment" Value="Top"></Setter>
+                                    <Setter Property="FontWeight" Value="Bold" ></Setter>
+                                    <Setter Property="IsReadOnly" Value="True"></Setter>
+                                    <Setter Property="Padding" Value="0,-15,0,0"></Setter>
+                                </Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="30" ></Setter>
+                                    <Setter Property="VerticalAlignment" Value="Bottom" ></Setter>
+                                    <Setter Property="HorizontalAlignment" Value="Right" ></Setter>
+                                    <Setter Property="FontWeight" Value="Bold" ></Setter>
+                                    <Setter Property="TextAlignment" Value="Right"></Setter>
+                                    <Setter Property="Foreground" Value="DarkGray"></Setter>
+                                </Style>
+                                <Style TargetType="Label">
+                                    <Setter Property="FontSize" Value="50"></Setter>
+                                    <Setter Property="Padding" Value="0"></Setter>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                                </Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="FontSize" Value="50" ></Setter>
+                                    <Setter Property="FontWeight" Value="Bold" ></Setter>
+                                    <Setter Property="Margin" Value="0"></Setter>
+                                    <Setter Property="Padding" Value="0"></Setter>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="227*"/>
+                                <ColumnDefinition Width="43*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0"  Grid.Column="0" >X</Label>
+                            <Label  Grid.Row="1" Grid.Column="0">Y</Label>
+                            <Label  Grid.Row="2" Grid.Column="0" >Z</Label>
 
+                            <TextBox  Grid.Row="0" Text="{Binding GrblStatus.WorkPosition.X}" Grid.Column="1" />
+                            <TextBlock   Grid.Row="0" Text="{Binding GrblStatus.MachinePosition.X}" Grid.Column="1"></TextBlock>
+
+                            <TextBox  Grid.Row="1" Text="{Binding GrblStatus.WorkPosition.Y}" Grid.Column="1" />
+                            <TextBlock   Grid.Row="1" Text="{Binding GrblStatus.MachinePosition.Y}" Grid.Column="1"></TextBlock>
+
+                            <TextBox Grid.Row="2" Text="{Binding GrblStatus.WorkPosition.Z}" Grid.Column="1" />
+                            <TextBlock   Grid.Row="2" Text="{Binding GrblStatus.MachinePosition.Z}" Grid.Column="1"></TextBlock>
+
+                            <Button Grid.Row="0" Grid.Column="2">0</Button>
+                            <Button Grid.Row="1" Grid.Column="2">0</Button>
+                            <Button Grid.Row="2" Grid.Column="2">0</Button>
+                        </Grid>
+
+                        <Grid Grid.Row="1" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <Style TargetType="Button">
+                                    <Setter Property="FontSize" Value="16" ></Setter>
+                                    <Setter Property="FontWeight" Value="Bold" ></Setter>
+                                    <Setter Property="Margin" Value="1"></Setter>
+                                </Style>
+                            </Grid.Resources>
+                            <Button Grid.Column="0" x:Name="UnlockCommand">Unlock</Button>
+                            <Button Grid.Column="1">Reset</Button>
+                            <Button Grid.Column="2">Hold</Button>
+                            <Button Grid.Column="3">Start</Button>
+                            <Button Grid.Column="4">Check</Button>
+                        </Grid>
+
+                        <TextBox  Grid.Row="2" Grid.Column="0" Text="{Binding GrblStatus.MachineState}" FontWeight="Bold" FontSize="15" />
+
+                        <ListView Grid.Column="0"  Grid.Row="3" ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ToolTip="{Binding Result}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}"></TextBlock>
+                                        <TextBlock Grid.Column="1" Text="{Binding Path=Data}"></TextBlock>
+                                        <TextBlock Grid.Column="2" Text="{Binding Path=Result}"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Grbl config">
