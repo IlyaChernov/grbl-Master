@@ -1,12 +1,13 @@
-﻿namespace grbl.Master.BL
+﻿namespace grbl.Master.BL.Implementation
 {
-    using grbl.Master.BL.Interface;
-    using grbl.Master.Service.Enum;
-    using grbl.Master.Service.Interface;
     using System;
     using System.Reactive;
     using System.Reactive.Subjects;
     using System.Threading.Tasks;
+
+    using grbl.Master.BL.Interface;
+    using grbl.Master.Service.Enum;
+    using grbl.Master.Service.Interface;
 
     public class GrblStatusRequester : IGrblStatusRequester
     {
@@ -16,8 +17,8 @@
 
         public GrblStatusRequester(ICommandSender commandSender)
         {
-            _commandSender = commandSender;
-            commandSender.CommandFinished += SystemCommandSenderCommandFinished;
+            this._commandSender = commandSender;
+            commandSender.CommandFinished += this.SystemCommandSenderCommandFinished;
         }
 
         public bool IsRunning
@@ -28,29 +29,29 @@
 
         private void Request()
         {
-            _commandSender.Send("?", CommandType.StatusRequest);
+            this._commandSender.Send("?", CommandType.StatusRequest);
         }
 
         private async void SystemCommandSenderCommandFinished(object sender, Service.DataTypes.Command e)
         {
-            if (IsRunning && e.Type == CommandType.StatusRequest)
+            if (this.IsRunning && e.Type == CommandType.StatusRequest)
             {
-                await Task.Delay(_interval);
-                Request();
+                await Task.Delay(this._interval);
+                this.Request();
             }
         }
 
         public void StartRequesting(TimeSpan interval)
         {
-            _interval = interval;
-            IsRunning = true;
-            Request();
+            this._interval = interval;
+            this.IsRunning = true;
+            this.Request();
         }
 
         public void StopRequesting()
         {
-            IsRunning = false;
-            _stopSubject.OnNext(Unit.Default);
+            this.IsRunning = false;
+            this._stopSubject.OnNext(Unit.Default);
         }
     }
 }

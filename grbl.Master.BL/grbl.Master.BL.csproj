@@ -49,11 +49,17 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GrblStatusRequester.cs" />
+    <Compile Include="Implementation\GrblStatusProcessor.cs" />
+    <Compile Include="Implementation\GrblStatusRequester.cs" />
+    <Compile Include="Interface\IGrblStatusProcessor.cs" />
     <Compile Include="Interface\IGrblStatusRequester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\grbl.Master.Model\grbl.Master.Model.csproj">
+      <Project>{B21C205E-5CE2-436E-AFA4-F2A3DAC60D21}</Project>
+      <Name>grbl.Master.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\grbl.Master.Service\grbl.Master.Service.csproj">
       <Project>{5233400E-E720-4DE5-8BED-6B11F2AE14C6}</Project>
       <Name>grbl.Master.Service</Name>

@@ -41,10 +41,15 @@
                         <ColumnDefinition Width="413*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="208*"/>
-                        <RowDefinition Height="287*"/>
+                        <RowDefinition Height="200"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <ListView Grid.Column="0"  Grid.Row="1" ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+
+                    <TextBox  Grid.Row="2" Text="{Binding GrblStatus.MachineState}" />
+
+                    <ListView Grid.Column="0"  Grid.Row="3" ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VirtualizingStackPanel />
@@ -65,6 +70,7 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
+
                 </Grid>
             </TabItem>
             <TabItem Header="Grbl config">

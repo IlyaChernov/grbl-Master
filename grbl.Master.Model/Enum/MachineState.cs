@@ -1,8 +1,9 @@
-﻿namespace grbl.Master.Service.Enum
+﻿namespace grbl.Master.Model.Enum
 {
     public enum MachineState
     {
         Offline,
+        Online,
         Idle,
         Run,
         Hold,
@@ -14,3 +15,4 @@
         Sleep
     }
 }
+

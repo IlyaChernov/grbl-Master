@@ -3,26 +3,28 @@ using System;
 
 namespace grbl.Master.UI.ViewModels
 {
+    using grbl.Master.BL.Interface;
     using grbl.Master.Model;
     using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
+    using grbl.Master.UI.Properties;
     using System.Collections.ObjectModel;
-
-    using grbl.Master.BL.Interface;
 
     public class MasterViewModel : Screen
     {
         private readonly IComService _comService;
         private readonly IGrblStatusRequester _grblStatusRequester;
         private readonly ICommandSender _commandSender;
+        private readonly IGrblStatusProcessor _grblStatusProcessor;
         private string _manualCommand;
 
         private GrblStatus _grblStatus;
 
-        public MasterViewModel(IComService comService, IGrblStatusRequester grblStatusRequester, ICommandSender commandSender)
+        public MasterViewModel(IGrblStatusProcessor grblStatusProcessor, IComService comService, IGrblStatusRequester grblStatusRequester, ICommandSender commandSender)
         {
             ComConnectionViewModel = new COMConnectionViewModel(comService);
+            _grblStatusProcessor = grblStatusProcessor;
             _comService = comService;
             _grblStatusRequester = grblStatusRequester;
             _commandSender = commandSender;
@@ -48,6 +50,8 @@ namespace grbl.Master.UI.ViewModels
             NotifyOfPropertyChange(() => CanSendEnterCommand);
         }
 
+        public GrblStatus GrblStatus => _grblStatusProcessor.GrblStatus;
+
         public ObservableCollection<Command> CommandList => _commandSender.CommandList;
 
         public COMConnectionViewModel ComConnectionViewModel
@@ -64,17 +68,7 @@ namespace grbl.Master.UI.ViewModels
                 NotifyOfPropertyChange(() => ManualCommand);
                 NotifyOfPropertyChange(() => CanSendManualCommand);
             }
-        }
-
-        public GrblStatus GrblStatus
-        {
-            get => _grblStatus;
-            set
-            {
-                _grblStatus = value;
-                NotifyOfPropertyChange(() => GrblStatus);
-            }
-        }
+        }       
 
         public bool CanSendManualCommand => !string.IsNullOrWhiteSpace(ManualCommand) && _comService.IsConnected;
 
@@ -92,7 +86,7 @@ namespace grbl.Master.UI.ViewModels
 
         private void ComServiceLineReceived(object sender, string e)
         {
-            if (!_grblStatusRequester.IsRunning)
+            if (!_grblStatusRequester.IsRunning && e.Equals(Resources.GRBLWelcomeMessage))
             {
                 _grblStatusRequester.StartRequesting(TimeSpan.FromMilliseconds(200));
             }

@@ -94,7 +94,7 @@
                     {
                         _uiContext.Send(x =>
                             {
-                                CommandList[_currentIndex].Result += e + Environment.NewLine;
+                                CommandList[_currentIndex].Result += e;// + Environment.NewLine;
                             }, null);
                     }
                 }
