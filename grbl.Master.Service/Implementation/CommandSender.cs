@@ -110,5 +110,10 @@
             _comService.Send(command);
             OnCommandListUpdated();
         }
+
+        public void Send(char command, CommandType type)
+        {
+            Send("" + command, type);
+        }
     }
 }

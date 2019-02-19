@@ -47,6 +47,11 @@ namespace grbl.Master.UI.ViewModels
             NotifyOfPropertyChange(() => CanSendManualCommand);
             NotifyOfPropertyChange(() => CanSendEnterCommand);
             NotifyOfPropertyChange(() => CanUnlockCommand);
+            NotifyOfPropertyChange(() => CanResetCommand);
+            NotifyOfPropertyChange(() => CanHoldCommand);
+            NotifyOfPropertyChange(() => CanStartCommand);
+            NotifyOfPropertyChange(() => CanCheckCommand);
+            NotifyOfPropertyChange(() => CanRegularSystemCommand);
         }
 
         public GrblStatus GrblStatus => _grblStatusProcessor.GrblStatus;
@@ -88,6 +93,42 @@ namespace grbl.Master.UI.ViewModels
         public void UnlockCommand()
         {
             _commandSender.Send("$X", CommandType.System);
+        }
+
+        public bool CanResetCommand => _comService.IsConnected;
+
+        public void ResetCommand()
+        {
+
+            _commandSender.Send((char)24, CommandType.System); //Ctrl+X
+        }
+
+        public bool CanHoldCommand => _comService.IsConnected;
+
+        public void HoldCommand()
+        {
+            _commandSender.Send("!", CommandType.System);
+        }
+
+        public bool CanStartCommand => _comService.IsConnected;
+
+        public void StartCommand()
+        {
+            _commandSender.Send("~", CommandType.System);
+        }
+
+        public bool CanCheckCommand => _comService.IsConnected;
+
+        public void CheckCommand()
+        {
+            _commandSender.Send("$C", CommandType.System);
+        }
+
+        public bool CanRegularSystemCommand => _comService.IsConnected;        
+
+        public void RegularSystemCommand(string command)
+        {
+            _commandSender.Send(command, CommandType.System);
         }
 
         private void ComServiceLineReceived(object sender, string e)

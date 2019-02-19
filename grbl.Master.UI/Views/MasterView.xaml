@@ -43,96 +43,214 @@
 
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="230"/>
-                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="290"/>
                             <RowDefinition Height="26"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
+                        <TabControl Grid.Row="0">
+                            <TabItem Header="Coordinates">
+                                <Grid >
+                                    <Grid.Resources>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="FontSize" Value="50" ></Setter>
+                                            <Setter Property="TextAlignment" Value="Right" ></Setter>
+                                            <Setter Property="VerticalContentAlignment" Value="Top"></Setter>
+                                            <Setter Property="FontWeight" Value="Bold" ></Setter>
+                                            <Setter Property="IsReadOnly" Value="True"></Setter>
+                                            <Setter Property="Padding" Value="0,-15,0,0"></Setter>
+                                        </Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontSize" Value="30" ></Setter>
+                                            <Setter Property="VerticalAlignment" Value="Bottom" ></Setter>
+                                            <Setter Property="HorizontalAlignment" Value="Right" ></Setter>
+                                            <Setter Property="FontWeight" Value="Bold" ></Setter>
+                                            <Setter Property="TextAlignment" Value="Right"></Setter>
+                                            <Setter Property="Foreground" Value="DarkGray"></Setter>
+                                        </Style>
+                                        <Style TargetType="Label">
+                                            <Setter Property="FontSize" Value="50"></Setter>
+                                            <Setter Property="Padding" Value="0"></Setter>
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="FontSize" Value="50" ></Setter>
+                                            <Setter Property="FontWeight" Value="Bold" ></Setter>
+                                            <Setter Property="Margin" Value="1"></Setter>
+                                            <Setter Property="Padding" Value="0"></Setter>
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="40"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="40"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Row="0"  Grid.Column="0" >X</Label>
+                                    <Label  Grid.Row="1" Grid.Column="0">Y</Label>
+                                    <Label  Grid.Row="2" Grid.Column="0" >Z</Label>
 
-                        <Grid Grid.Row="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.Resources>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="FontSize" Value="50" ></Setter>
-                                    <Setter Property="TextAlignment" Value="Right" ></Setter>
-                                    <Setter Property="VerticalContentAlignment" Value="Top"></Setter>
-                                    <Setter Property="FontWeight" Value="Bold" ></Setter>
-                                    <Setter Property="IsReadOnly" Value="True"></Setter>
-                                    <Setter Property="Padding" Value="0,-15,0,0"></Setter>
-                                </Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontSize" Value="30" ></Setter>
-                                    <Setter Property="VerticalAlignment" Value="Bottom" ></Setter>
-                                    <Setter Property="HorizontalAlignment" Value="Right" ></Setter>
-                                    <Setter Property="FontWeight" Value="Bold" ></Setter>
-                                    <Setter Property="TextAlignment" Value="Right"></Setter>
-                                    <Setter Property="Foreground" Value="DarkGray"></Setter>
-                                </Style>
-                                <Style TargetType="Label">
-                                    <Setter Property="FontSize" Value="50"></Setter>
-                                    <Setter Property="Padding" Value="0"></Setter>
-                                    <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
-                                    <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
-                                </Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="FontSize" Value="50" ></Setter>
-                                    <Setter Property="FontWeight" Value="Bold" ></Setter>
-                                    <Setter Property="Margin" Value="0"></Setter>
-                                    <Setter Property="Padding" Value="0"></Setter>
-                                </Style>
-                            </Grid.Resources>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30"/>
-                                <ColumnDefinition Width="227*"/>
-                                <ColumnDefinition Width="43*"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0"  Grid.Column="0" >X</Label>
-                            <Label  Grid.Row="1" Grid.Column="0">Y</Label>
-                            <Label  Grid.Row="2" Grid.Column="0" >Z</Label>
+                                    <TextBox  Grid.Row="0" Text="{Binding GrblStatus.WorkPosition.X}" Grid.Column="1" ToolTip="Current X work position" />
+                                    <TextBlock   Grid.Row="0" Text="{Binding GrblStatus.MachinePosition.X}" Grid.Column="1" ToolTip="Current X machine position"></TextBlock>
 
-                            <TextBox  Grid.Row="0" Text="{Binding GrblStatus.WorkPosition.X}" Grid.Column="1" />
-                            <TextBlock   Grid.Row="0" Text="{Binding GrblStatus.MachinePosition.X}" Grid.Column="1"></TextBlock>
+                                    <TextBox  Grid.Row="1" Text="{Binding GrblStatus.WorkPosition.Y}" Grid.Column="1" ToolTip="Current Y work position"/>
+                                    <TextBlock   Grid.Row="1" Text="{Binding GrblStatus.MachinePosition.Y}" Grid.Column="1" ToolTip="Current Y machine position"></TextBlock>
 
-                            <TextBox  Grid.Row="1" Text="{Binding GrblStatus.WorkPosition.Y}" Grid.Column="1" />
-                            <TextBlock   Grid.Row="1" Text="{Binding GrblStatus.MachinePosition.Y}" Grid.Column="1"></TextBlock>
+                                    <TextBox Grid.Row="2" Text="{Binding GrblStatus.WorkPosition.Z}" Grid.Column="1" ToolTip="Current Z work position"/>
+                                    <TextBlock   Grid.Row="2" Text="{Binding GrblStatus.MachinePosition.Z}" Grid.Column="1" ToolTip="Current Z machine position"></TextBlock>
 
-                            <TextBox Grid.Row="2" Text="{Binding GrblStatus.WorkPosition.Z}" Grid.Column="1" />
-                            <TextBlock   Grid.Row="2" Text="{Binding GrblStatus.MachinePosition.Z}" Grid.Column="1"></TextBlock>
+                                    <Button Grid.Row="0" Grid.Column="2" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 X0')">0</Button>
+                                    <Button Grid.Row="1" Grid.Column="2" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 Y0')">0</Button>
+                                    <Button Grid.Row="2" Grid.Column="2" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 Z0')">0</Button>
+                                    <Button FontSize="30" Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 X0 Y0 Z0')">
+                                        <Button.LayoutTransform>
+                                            <RotateTransform Angle="-90"></RotateTransform>
+                                        </Button.LayoutTransform>
+                                        Zero X Y Z
+                                    </Button>
 
-                            <Button Grid.Row="0" Grid.Column="2">0</Button>
-                            <Button Grid.Row="1" Grid.Column="2">0</Button>
-                            <Button Grid.Row="2" Grid.Column="2">0</Button>
-                        </Grid>
+                                    <Grid Grid.Row="3" Grid.ColumnSpan="4" Grid.Column="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.Resources>
+                                            <Style TargetType="Button">
+                                                <Setter Property="FontSize" Value="16" ></Setter>
+                                                <Setter Property="FontWeight" Value="Bold" ></Setter>
+                                                <Setter Property="Margin" Value="0"></Setter>
+                                            </Style>
+                                        </Grid.Resources>
+                                        <Button Grid.Column="0" x:Name="UnlockCommand">Unlock</Button>
+                                        <Button Grid.Column="1" x:Name="ResetCommand">Reset</Button>
+                                        <Button Grid.Column="2" x:Name="HoldCommand">Hold</Button>
+                                        <Button Grid.Column="3" x:Name="StartCommand">Start</Button>
+                                        <Button Grid.Column="4" x:Name="CheckCommand">Check</Button>
+                                    </Grid>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="Offsets">
+                                <Grid>
+                                    <Grid.Resources>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Padding" Value="0, -1, 0, 0"></Setter>
+                                            <Setter Property="Margin" Value="1"></Setter>
+                                        </Style>
+                                        <Style TargetType="Label" >
+                                            <Setter Property="Padding" Value="0"></Setter>
+                                            <Setter Property="Margin" Value="1"></Setter>
+                                        </Style>
+                                        <Style TargetType="Label" x:Key="ColHeader">
+                                            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+                                            <Setter Property="FontWeight" Value="Bold"></Setter>
+                                            <Setter Property="Padding" Value="0"></Setter>
+                                            <Setter Property="Margin" Value="1"></Setter>
+                                        </Style>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="TextAlignment" Value="Right"></Setter>
+                                            <Setter Property="Margin" Value="1"></Setter>
+                                            <Setter Property="Padding" Value="0, -1, 0, 0"></Setter>
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="30" />
+                                    </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Row="1" Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.Resources>
-                                <Style TargetType="Button">
-                                    <Setter Property="FontSize" Value="16" ></Setter>
-                                    <Setter Property="FontWeight" Value="Bold" ></Setter>
-                                    <Setter Property="Margin" Value="1"></Setter>
-                                </Style>
-                            </Grid.Resources>
-                            <Button Grid.Column="0" x:Name="UnlockCommand">Unlock</Button>
-                            <Button Grid.Column="1">Reset</Button>
-                            <Button Grid.Column="2">Hold</Button>
-                            <Button Grid.Column="3">Start</Button>
-                            <Button Grid.Column="4">Check</Button>
-                        </Grid>
+                                    <Label Style="{StaticResource ColHeader}" Content="X" Grid.Column="1"  />
+                                    <Label Style="{StaticResource ColHeader}" Content="Y" Grid.Row="0" Grid.Column="2"  />
+                                    <Label Style="{StaticResource ColHeader}" Content="Z" Grid.Row="0" Grid.Column="3"  />
 
-                        <TextBox  Grid.Row="2" Grid.Column="0" Text="{Binding GrblStatus.MachineState}" FontWeight="Bold" FontSize="15" />
+                                    <Label Content="Current machine position:" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5"  />
 
-                        <ListView Grid.Column="0"  Grid.Row="3" ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
+                                    <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
+                                    <TextBox Grid.Column="3" Grid.Row="2" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+
+                                    <Label Content="Tool length offset:" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="5"   />
+                                    <Label Content="G43.1" Grid.Column="0" Grid.Row="4" />
+                                    <TextBox Grid.Column="3" Grid.Row="4" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+                                    <Button  Grid.Column="4" Grid.Row="4">0</Button>
+
+                                    <Label Content="Work offsets:" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="5" Padding="0"  />
+
+                                    <Button  Grid.Column="0" Grid.Row="6">G54</Button>
+                                    <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
+                                    <TextBox Grid.Column="2" Grid.Row="6" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
+                                    <TextBox Grid.Column="3" Grid.Row="6" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+                                    <Button  Grid.Column="4" Grid.Row="6">0</Button>
+
+                                    <Button  Grid.Column="0" Grid.Row="7">G55</Button>
+                                    <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
+                                    <TextBox Grid.Column="2" Grid.Row="7" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
+                                    <TextBox Grid.Column="3" Grid.Row="7" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+                                    <Button  Grid.Column="4" Grid.Row="7">0</Button>
+
+                                    <Button  Grid.Column="0" Grid.Row="8">G56</Button>
+                                    <TextBox Grid.Column="1" Grid.Row="8" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
+                                    <TextBox Grid.Column="2" Grid.Row="8" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
+                                    <TextBox Grid.Column="3" Grid.Row="8" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+                                    <Button  Grid.Column="4" Grid.Row="8">0</Button>
+
+                                    <Button  Grid.Column="0" Grid.Row="9">G57</Button>
+                                    <TextBox Grid.Column="1" Grid.Row="9" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
+                                    <TextBox Grid.Column="2" Grid.Row="9" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
+                                    <TextBox Grid.Column="3" Grid.Row="9" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+                                    <Button  Grid.Column="4" Grid.Row="9">0</Button>
+
+                                    <Button  Grid.Column="0" Grid.Row="10">G58</Button>
+                                    <TextBox Grid.Column="1" Grid.Row="10" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
+                                    <TextBox Grid.Column="2" Grid.Row="10" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
+                                    <TextBox Grid.Column="3" Grid.Row="10" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+                                    <Button  Grid.Column="4" Grid.Row="10">0</Button>
+
+                                    <Button  Grid.Column="0" Grid.Row="11">G59</Button>
+                                    <TextBox Grid.Column="1" Grid.Row="11" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
+                                    <TextBox Grid.Column="2" Grid.Row="11" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
+                                    <TextBox Grid.Column="3" Grid.Row="11" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+                                    <Button  Grid.Column="4" Grid.Row="11">0</Button>
+
+                                    <Button  Grid.Column="1" Grid.Row="12">Load</Button>
+                                    <Button  Grid.Column="2" Grid.Row="12">Save</Button>
+                                    <Button  Grid.Column="3" Grid.Row="12">Retrieve</Button>
+
+
+                                </Grid>
+                            </TabItem>
+                        </TabControl>
+
+
+                        <TextBox  Grid.Row="1" Grid.Column="0" Text="{Binding GrblStatus.MachineState}" FontWeight="Bold" FontSize="15" />
+
+                        <ListView Grid.Column="0"  Grid.Row="2" ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <VirtualizingStackPanel />

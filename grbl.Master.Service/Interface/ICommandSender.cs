@@ -17,5 +17,7 @@
         event EventHandler<Command> CommandFinished;
 
         void Send(string command, CommandType type);
+
+        void Send(char command, CommandType type);
     }
 }
