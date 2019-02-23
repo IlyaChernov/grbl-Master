@@ -3,16 +3,14 @@
     using grbl.Master.BL.Interface;
     using grbl.Master.Model;
     using grbl.Master.Model.Enum;
-    using grbl.Master.Service.Annotations;
+    using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System;
-    using System.ComponentModel;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
     using System.Threading;
 
-    public class GrblStatusProcessor : IGrblStatusProcessor, INotifyPropertyChanged
+    public class GrblStatusProcessor : IGrblStatusProcessor
     {
         private const string ResponseTag = "^<(.*?)>$";
         private const string MPosTag = "^MPos:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$";
@@ -50,32 +48,25 @@
 
         private readonly string _decimalSeparator = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
-        //private IGrblStatusRequester _grblStatusRequester;
-        private readonly IComService _comService;
+        private readonly IGrblStatus _grblStatus;
 
-        public GrblStatusProcessor(/*IGrblStatusRequester grblStatusRequester,*/ ICommandSender commandSender, IComService comService)
+        public GrblStatusProcessor(IComService comService, IGrblStatus grblStatus)
         {
-            _comService = comService;
-            //_grblStatusRequester = grblStatusRequester;
+            _grblStatus = grblStatus;
 
-            commandSender.CommandFinished += CommandSenderCommandFinished;
-            _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
+            comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
+            comService.LineReceived += ComServiceLineReceived;
         }
 
-        private void ComServiceConnectionStateChanged(object sender, EventArgs e)
+        private void ComServiceLineReceived(object sender, string e)
         {
-            GrblStatus.MachineState = _comService.IsConnected ? MachineState.Online : MachineState.Offline;
-        }
-
-        private void CommandSenderCommandFinished(object sender, Service.DataTypes.Command e)
-        {
-            if (!string.IsNullOrEmpty(e.Result) && _responseReg.IsMatch(e.Result))
+            if (!string.IsNullOrEmpty(e) && _responseReg.IsMatch(e))
             {
-                var parts = e.Result.Split(new[] { '<', '>', '|' }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = e.Split(new[] { '<', '>', '|' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (parts.Any())
                 {
-                    GrblStatus.MachineState = (MachineState)Enum.Parse(typeof(MachineState), parts.First());
+                    _grblStatus.MachineState = (MachineState)Enum.Parse(typeof(MachineState), parts.First());
                 }
 
                 foreach (var part in parts)
@@ -84,23 +75,23 @@
                     {
                         if (ParsePosition(part, out var position))
                         {
-                            GrblStatus.MachinePosition.Update(position);
-                            GrblStatus.WorkPosition.Update(GrblStatus.MachinePosition - GrblStatus.WorkOffset);
+                            _grblStatus.MachinePosition.Update(position);
+                            _grblStatus.WorkPosition.Update(_grblStatus.MachinePosition - _grblStatus.WorkOffset);
                         }
                     }
                     else if (_wPosReg.IsMatch(part))
                     {
                         if (ParsePosition(part, out var position))
                         {
-                            GrblStatus.WorkPosition.Update(position);
-                            GrblStatus.MachinePosition.Update(GrblStatus.WorkPosition + GrblStatus.WorkOffset);
+                            _grblStatus.WorkPosition.Update(position);
+                            _grblStatus.MachinePosition.Update(_grblStatus.WorkPosition + _grblStatus.WorkOffset);
                         }
                     }
                     else if (_wCoReg.IsMatch(part))
                     {
                         if (ParsePosition(part, out var position))
                         {
-                            GrblStatus.WorkOffset.Update(position);
+                            _grblStatus.WorkOffset.Update(position);
                         }
                     }
                     else if (_bfReg.IsMatch(part))
@@ -111,8 +102,8 @@
                             if (int.TryParse(bufferParts[1], out var blocks)
                                 && int.TryParse(bufferParts[2], out var bytes))
                             {
-                                GrblStatus.BufferState.AvailableBlocks = blocks;
-                                GrblStatus.BufferState.AvailableBytes = bytes;
+                                _grblStatus.BufferState.AvailableBlocks = blocks;
+                                _grblStatus.BufferState.AvailableBytes = bytes;
                             }
                         }
                     }
@@ -123,7 +114,7 @@
                         {
                             if (int.TryParse(lineParts[1], out var line))
                             {
-                                GrblStatus.LineNumber = line;
+                                _grblStatus.LineNumber = line;
                             }
                         }
                     }
@@ -134,7 +125,7 @@
                         {
                             if (int.TryParse(feedParts[1], out var feed))
                             {
-                                GrblStatus.FeedAndSpeed.Feed = feed;
+                                _grblStatus.FeedAndSpeed.Feed = feed;
                             }
                         }
                     }
@@ -147,8 +138,8 @@
                                     feedSpeedParts[2],
                                     out var speed))
                             {
-                                GrblStatus.FeedAndSpeed.Feed = feed;
-                                GrblStatus.FeedAndSpeed.Speed = speed;
+                                _grblStatus.FeedAndSpeed.Feed = feed;
+                                _grblStatus.FeedAndSpeed.Speed = speed;
                             }
                         }
                     }
@@ -157,14 +148,14 @@
                         var pinParts = part.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if (pinParts.Length == 2)
                         {
-                            GrblStatus.InputPinState.XLimitPin = pinParts[1].Contains('X');
-                            GrblStatus.InputPinState.YLimitPin = pinParts[1].Contains('Y');
-                            GrblStatus.InputPinState.ZLimitPin = pinParts[1].Contains('Z');
-                            GrblStatus.InputPinState.ProbePin = pinParts[1].Contains('P');
-                            GrblStatus.InputPinState.DoorPin = pinParts[1].Contains('D');
-                            GrblStatus.InputPinState.HoldPin = pinParts[1].Contains('H');
-                            GrblStatus.InputPinState.SoftResetPin = pinParts[1].Contains('R');
-                            GrblStatus.InputPinState.CycleStartPin = pinParts[1].Contains('S');
+                            _grblStatus.InputPinState.XLimitPin = pinParts[1].Contains('X');
+                            _grblStatus.InputPinState.YLimitPin = pinParts[1].Contains('Y');
+                            _grblStatus.InputPinState.ZLimitPin = pinParts[1].Contains('Z');
+                            _grblStatus.InputPinState.ProbePin = pinParts[1].Contains('P');
+                            _grblStatus.InputPinState.DoorPin = pinParts[1].Contains('D');
+                            _grblStatus.InputPinState.HoldPin = pinParts[1].Contains('H');
+                            _grblStatus.InputPinState.SoftResetPin = pinParts[1].Contains('R');
+                            _grblStatus.InputPinState.CycleStartPin = pinParts[1].Contains('S');
                         }
                     }
                     else if (_ovReg.IsMatch(part))
@@ -177,9 +168,9 @@
                                     overrideParts[3],
                                     out var spindle))
                             {
-                                GrblStatus.OverrideValues.Feed = feed;
-                                GrblStatus.OverrideValues.Rapid = rapid;
-                                GrblStatus.OverrideValues.Spindle = spindle;
+                                _grblStatus.OverrideValues.Feed = feed;
+                                _grblStatus.OverrideValues.Rapid = rapid;
+                                _grblStatus.OverrideValues.Spindle = spindle;
                             }
                         }
                     }
@@ -188,14 +179,21 @@
                         var accessoryParts = part.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if (accessoryParts.Length == 2)
                         {
-                            GrblStatus.AccessoryState.SpindleCw = accessoryParts[1].Contains('S');
-                            GrblStatus.AccessoryState.SpindleCcw = accessoryParts[1].Contains('C');
-                            GrblStatus.AccessoryState.Flood = accessoryParts[1].Contains('F');
-                            GrblStatus.AccessoryState.Mist = accessoryParts[1].Contains('M');
+                            _grblStatus.AccessoryState.SpindleCw = accessoryParts[1].Contains('S');
+                            _grblStatus.AccessoryState.SpindleCcw = accessoryParts[1].Contains('C');
+                            _grblStatus.AccessoryState.Flood = accessoryParts[1].Contains('F');
+                            _grblStatus.AccessoryState.Mist = accessoryParts[1].Contains('M');
                         }
                     }
                 }
+
+                OnStatusReceived();
             }
+        }
+
+        private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
+        {
+            _grblStatus.MachineState = e == ConnectionState.Online ? MachineState.Online : MachineState.Offline;
         }
 
         private bool ParsePosition(string data, out Position result)
@@ -218,14 +216,11 @@
             return false;
         }
 
-        public GrblStatus GrblStatus { get; } = new GrblStatus();
+        public event EventHandler StatusReceived;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnStatusReceived()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            StatusReceived?.Invoke(this, EventArgs.Empty);
         }
     }
 }

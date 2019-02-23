@@ -3,11 +3,13 @@
     using System;
     using System.Collections.Generic;
 
+    using grbl.Master.Service.Enum;
+
     public interface IComService
     {
         event EventHandler<string> LineReceived;
 
-        event EventHandler ConnectionStateChanged;
+        event EventHandler<ConnectionState> ConnectionStateChanged;
 
         List<string> GetPortNames();
 

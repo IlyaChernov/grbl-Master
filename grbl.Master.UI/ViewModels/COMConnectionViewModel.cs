@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace grbl.Master.UI.ViewModels
 {
+    using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
 
     public class COMConnectionViewModel : Screen
@@ -19,7 +20,7 @@ namespace grbl.Master.UI.ViewModels
             ReloadComPorts();
         }
 
-        private void ComServiceConnectionStateChanged(object sender, System.EventArgs e)
+        private void  ComServiceConnectionStateChanged(object sender, ConnectionState e)
         {
             NotifyOfPropertyChange(() => ConnectButtonCaption);
             NotifyOfPropertyChange(()=> CanChangePortBaud);

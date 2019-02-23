@@ -41,7 +41,6 @@
     <Compile Include="FeedAndSpeed.cs" />
     <Compile Include="BufferState.cs" />
     <Compile Include="Enum\MachineState.cs" />
-    <Compile Include="GrblStatus.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

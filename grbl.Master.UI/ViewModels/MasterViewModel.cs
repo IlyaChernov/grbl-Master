@@ -4,11 +4,9 @@ using System;
 namespace grbl.Master.UI.ViewModels
 {
     using grbl.Master.BL.Interface;
-    using grbl.Master.Model;
     using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
-    using grbl.Master.UI.Properties;
     using System.Collections.ObjectModel;
 
     public class MasterViewModel : Screen
@@ -16,20 +14,25 @@ namespace grbl.Master.UI.ViewModels
         private readonly IComService _comService;
         private readonly IGrblStatusRequester _grblStatusRequester;
         private readonly ICommandSender _commandSender;
-        private readonly IGrblStatusProcessor _grblStatusProcessor;
+
         private string _manualCommand;
 
-        public MasterViewModel(IGrblStatusProcessor grblStatusProcessor, IComService comService, IGrblStatusRequester grblStatusRequester, ICommandSender commandSender)
+        public MasterViewModel(IComService comService, IGrblStatusRequester grblStatusRequester, ICommandSender commandSender, IGrblStatus grblStatus)
         {
+            GrblStatus = grblStatus;
             ComConnectionViewModel = new COMConnectionViewModel(comService);
-            _grblStatusProcessor = grblStatusProcessor;
             _comService = comService;
             _grblStatusRequester = grblStatusRequester;
             _commandSender = commandSender;
 
-            _comService.LineReceived += ComServiceLineReceived;
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _commandSender.CommandListUpdated += CommandSenderCommandListUpdated;
+            _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
+        }
+
+        private void CommandSenderCommunicationLogUpdated(object sender, EventArgs e)
+        {
+            NotifyOfPropertyChange(() => CommunicationLog);
         }
 
         private void CommandSenderCommandListUpdated(object sender, EventArgs e)
@@ -37,9 +40,9 @@ namespace grbl.Master.UI.ViewModels
             NotifyOfPropertyChange(() => CommandList);
         }
 
-        private void ComServiceConnectionStateChanged(object sender, EventArgs e)
+        private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
         {
-            if (!_comService.IsConnected)
+            if (e == ConnectionState.Offline)
             {
                 _grblStatusRequester.StopRequesting();
             }
@@ -54,9 +57,14 @@ namespace grbl.Master.UI.ViewModels
             NotifyOfPropertyChange(() => CanRegularSystemCommand);
         }
 
-        public GrblStatus GrblStatus => _grblStatusProcessor.GrblStatus;
+        public IGrblStatus GrblStatus
+        {
+            get;
+        }
 
         public ObservableCollection<Command> CommandList => _commandSender.CommandList;
+
+        public ObservableCollection<string> CommunicationLog => _commandSender.CommunicationLog;
 
         public COMConnectionViewModel ComConnectionViewModel
         {
@@ -78,7 +86,7 @@ namespace grbl.Master.UI.ViewModels
 
         public void SendManualCommand()
         {
-            _commandSender.Send(ManualCommand, CommandType.System);
+            _commandSender.Send(ManualCommand, CommandType.GCode);
         }
 
         public bool CanSendEnterCommand => _comService.IsConnected;
@@ -92,51 +100,42 @@ namespace grbl.Master.UI.ViewModels
 
         public void UnlockCommand()
         {
-            _commandSender.Send("$X", CommandType.System);
+            _commandSender.SendSystem("$X");
         }
 
         public bool CanResetCommand => _comService.IsConnected;
 
         public void ResetCommand()
         {
-
-            _commandSender.Send((char)24, CommandType.System); //Ctrl+X
+            _commandSender.SendRealtime((char)24); //Ctrl+X
         }
 
         public bool CanHoldCommand => _comService.IsConnected;
 
         public void HoldCommand()
         {
-            _commandSender.Send("!", CommandType.System);
+            _commandSender.SendRealtime('!');
         }
 
         public bool CanStartCommand => _comService.IsConnected;
 
         public void StartCommand()
         {
-            _commandSender.Send("~", CommandType.System);
+            _commandSender.SendRealtime('~');
         }
 
         public bool CanCheckCommand => _comService.IsConnected;
 
         public void CheckCommand()
         {
-            _commandSender.Send("$C", CommandType.System);
+            _commandSender.SendSystem("$C");
         }
 
-        public bool CanRegularSystemCommand => _comService.IsConnected;        
+        public bool CanRegularSystemCommand => _comService.IsConnected;
 
         public void RegularSystemCommand(string command)
         {
             _commandSender.Send(command, CommandType.System);
-        }
-
-        private void ComServiceLineReceived(object sender, string e)
-        {
-            if (!_grblStatusRequester.IsRunning && e.Equals(Resources.GRBLWelcomeMessage))
-            {
-                _grblStatusRequester.StartRequesting(TimeSpan.FromMilliseconds(200));
-            }
         }
     }
 }

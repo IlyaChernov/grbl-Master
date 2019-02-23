@@ -3,7 +3,7 @@
     public enum CommandType
     {
         System,
-        StatusRequest,
-        GCode
+        GCode,
+        Realtime
     }
 }

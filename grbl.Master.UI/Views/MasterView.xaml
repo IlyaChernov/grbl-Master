@@ -250,27 +250,46 @@
 
                         <TextBox  Grid.Row="1" Grid.Column="0" Text="{Binding GrblStatus.MachineState}" FontWeight="Bold" FontSize="15" />
 
-                        <ListView Grid.Column="0"  Grid.Row="2" ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel />
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid ToolTip="{Binding Result}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}"></TextBlock>
-                                        <TextBlock Grid.Column="1" Text="{Binding Path=Data}"></TextBlock>
-                                        <TextBlock Grid.Column="2" Text="{Binding Path=Result}"></TextBlock>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                        <TabControl Grid.Column="0"  Grid.Row="2">
+                            <TabItem Header="Commands">
+                                <ListView  ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel />
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ToolTip="{Binding Result}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}"></TextBlock>
+                                                <TextBlock Grid.Column="1" Text="{Binding Path=Data}"></TextBlock>
+                                                <TextBlock Grid.Column="2" Text="{Binding Path=Result}"></TextBlock>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </TabItem>
+                            <TabItem Header="Communication">
+                                <ListView  ItemsSource="{Binding CommunicationLog}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel />
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" ToolTip="{Binding}"></TextBlock>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </TabItem>
+                        </TabControl>
+
                     </Grid>
                 </Grid>
             </TabItem>

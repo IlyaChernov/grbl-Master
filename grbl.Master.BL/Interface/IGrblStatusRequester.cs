@@ -9,8 +9,7 @@
 
         bool IsRunning
         {
-            get;
-            set;
+            get;           
         }
     }
 }

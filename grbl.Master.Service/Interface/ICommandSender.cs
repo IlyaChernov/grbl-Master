@@ -12,12 +12,21 @@
             get;
         }
 
+        ObservableCollection<string> CommunicationLog
+        {
+            get;
+        }
+
         event EventHandler CommandListUpdated;
+
+        event EventHandler CommunicationLogUpdated;
 
         event EventHandler<Command> CommandFinished;
 
         void Send(string command, CommandType type);
 
-        void Send(char command, CommandType type);
+        void SendSystem(string command);
+
+        void SendRealtime(char command);
     }
 }

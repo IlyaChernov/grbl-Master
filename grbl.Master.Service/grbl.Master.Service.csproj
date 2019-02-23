@@ -55,6 +55,7 @@
     <Compile Include="DataTypes\Command.cs" />
     <Compile Include="Enum\CommandResultType.cs" />
     <Compile Include="Enum\CommandType.cs" />
+    <Compile Include="Enum\ConnectionState.cs" />
     <Compile Include="Implementation\CommandSender.cs" />
     <Compile Include="Implementation\COMService.cs" />
     <Compile Include="Interface\ICommandSender.cs" />

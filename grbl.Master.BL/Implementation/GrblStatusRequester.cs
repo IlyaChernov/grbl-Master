@@ -1,57 +1,64 @@
 ﻿namespace grbl.Master.BL.Implementation
 {
-    using System;
-    using System.Reactive;
-    using System.Reactive.Subjects;
-    using System.Threading.Tasks;
-
     using grbl.Master.BL.Interface;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class GrblStatusRequester : IGrblStatusRequester
     {
         private readonly ICommandSender _commandSender;
-        readonly Subject<Unit> _stopSubject = new Subject<Unit>();
         private TimeSpan _interval = TimeSpan.Zero;
+        private bool _executing;
 
-        public GrblStatusRequester(ICommandSender commandSender)
+        CancellationTokenSource source = new CancellationTokenSource();
+
+        public GrblStatusRequester(ICommandSender commandSender, IGrblPrompt grblPrompt, IGrblStatusProcessor grblStatusProcessor)
         {
-            this._commandSender = commandSender;
-            commandSender.CommandFinished += this.SystemCommandSenderCommandFinished;
+            _commandSender = commandSender;
+            grblPrompt.PromptReceived += GrblPromptPromptReceived;
+            grblStatusProcessor.StatusReceived += GrblStatusProcessorStatusReceived;
+        }
+
+        private async void GrblStatusProcessorStatusReceived(object sender, EventArgs e)
+        {
+            if (IsRunning && !_executing)
+            {
+                _executing = true;
+                await Task.Delay(_interval, source.Token);
+                Request();
+                _executing = false;
+            }
+        }
+
+        private void GrblPromptPromptReceived(object sender, string e)
+        {
+            StartRequesting(TimeSpan.FromMilliseconds(200));
         }
 
         public bool IsRunning
         {
-            get;
-            set;
+            get; private set;
         }
 
         private void Request()
         {
-            this._commandSender.Send("?", CommandType.StatusRequest);
-        }
-
-        private async void SystemCommandSenderCommandFinished(object sender, Service.DataTypes.Command e)
-        {
-            if (this.IsRunning && e.Type == CommandType.StatusRequest)
-            {
-                await Task.Delay(this._interval);
-                this.Request();
-            }
+            _commandSender.Send("?", CommandType.Realtime);
         }
 
         public void StartRequesting(TimeSpan interval)
         {
-            this._interval = interval;
-            this.IsRunning = true;
-            this.Request();
+            _interval = interval;
+            IsRunning = true;
+            Request();
         }
 
         public void StopRequesting()
         {
-            this.IsRunning = false;
-            this._stopSubject.OnNext(Unit.Default);
+            IsRunning = false;
+            source.Cancel();
         }
     }
 }

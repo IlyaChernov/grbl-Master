@@ -1,12 +1,9 @@
 ﻿namespace grbl.Master.BL.Interface
 {
-    using grbl.Master.Model;
+    using System;
 
-    public  interface IGrblStatusProcessor
+    public interface IGrblStatusProcessor
     {
-        GrblStatus GrblStatus
-        {
-            get;
-        }
+        event EventHandler StatusReceived;
     }
 }

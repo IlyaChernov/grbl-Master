@@ -1,11 +1,13 @@
-﻿namespace grbl.Master.Model
+﻿namespace grbl.Master.BL.Implementation
 {
+    using grbl.Master.BL.Interface;
+    using grbl.Master.Model;
     using grbl.Master.Model.Enum;
     using grbl.Master.Service.Annotations;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    public class GrblStatus : INotifyPropertyChanged
+    public class GrblStatus : INotifyPropertyChanged, IGrblStatus
     {
         private MachineState _machineState;
         private Position _machinePosition = new Position();
