@@ -50,6 +50,8 @@
 
         private readonly Queue<Command> _commandQueue = new Queue<Command>();
 
+        private readonly Queue<Command> _realtimeCommandQueue = new Queue<Command>();
+
         private readonly IComService _comService;
 
         private readonly object _lockObject = new object();
@@ -88,8 +90,14 @@
 
             var cmd = new Command { Data = command, Type = realtimeOverride ? CommandType.Realtime : type };
 
-            if (type != CommandType.Realtime && _waitingCommandQueue.Any() || _realtimeWaiting)
+            if (cmd.Type != CommandType.Realtime && _waitingCommandQueue.Any() || _realtimeWaiting)
+            {
                 _commandQueue.Enqueue(cmd);
+            }
+            else if (cmd.Type == CommandType.Realtime && _waitingCommandQueue.Any() && !string.IsNullOrEmpty(_waitingCommandQueue.Peek().Result))
+            {
+                _realtimeCommandQueue.Enqueue(cmd);
+            }
             else Send(cmd);
         }
 
@@ -127,6 +135,16 @@
                 }
         }
 
+        private Command GetNextCommand()
+        {
+            if (_realtimeCommandQueue.Any())
+                return _realtimeCommandQueue.Dequeue();
+
+            if (_commandQueue.Any())
+                return _commandQueue.Dequeue();
+            return null;
+        }
+
         private void ComServiceLineReceived(object sender, string e)
         {
             lock (_lockObject)
@@ -139,7 +157,7 @@
                 if (e.StartsWith("ok") || e.StartsWith("error"))
                 {
                     _realtimeWaiting = false;
-                    if (_commandQueue.Any()) Send(_commandQueue.Dequeue());
+                    Send(GetNextCommand());
                 }
             }
             else
@@ -173,7 +191,9 @@
                     }
                     else if (_waitingCommandQueue.Any())
                     {
-                        _waitingCommandQueue.Peek().Result += e;
+                        var cmd = _waitingCommandQueue.Peek();
+
+                        cmd.Result += (string.IsNullOrEmpty(cmd.Result) ? "" : Environment.NewLine) + e;
                     }
                 }
             }
@@ -181,6 +201,9 @@
 
         private void Send(Command cmd)
         {
+            if (cmd == null)
+                return;
+
             if (cmd.Type != CommandType.Realtime) _waitingCommandQueue.Enqueue(cmd);
             else _realtimeWaiting = true;
 
