@@ -28,5 +28,7 @@
         void SendSystem(string command);
 
         void SendRealtime(char command);
+
+        void PurgeQueues();
     }
 }

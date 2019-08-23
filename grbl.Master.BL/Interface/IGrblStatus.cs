@@ -1,28 +1,20 @@
 ﻿namespace grbl.Master.BL.Interface
 {
+    using System;    
     using grbl.Master.Model;
-    using grbl.Master.Model.Enum;
 
     public interface IGrblStatus
     {
-        MachineState MachineState { get; set; }
+        event EventHandler StatusReceived;
 
-        Position MachinePosition { get; set; }
+        void StartRequesting(TimeSpan interval);
+        void StopRequesting();  
 
-        Position WorkPosition { get; set; }
+        bool IsRunning
+        {
+            get;           
+        }
 
-        Position WorkOffset { get; set; }
-
-        BufferState BufferState { get; set; }
-
-        long LineNumber { get; set; }
-
-        FeedAndSpeed FeedAndSpeed { get; set; }
-
-        InputPinState InputPinState { get; set; }
-
-        OverrideValues OverrideValues { get; set; }
-
-        AccessoryState AccessoryState { get; set; }
+        GrblStatusModel GrblStatusModel { get; set; } 
     }
 }

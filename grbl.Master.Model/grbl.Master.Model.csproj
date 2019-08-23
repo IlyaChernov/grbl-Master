@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessoryState.cs" />
+    <Compile Include="GrblStatusModel.cs" />
     <Compile Include="OverrideValues.cs" />
     <Compile Include="InputPinState.cs" />
     <Compile Include="FeedAndSpeed.cs" />

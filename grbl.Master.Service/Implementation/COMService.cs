@@ -6,7 +6,9 @@
     using System.Collections.Generic;
     using System.IO.Ports;
     using System.Linq;
+    using System.Reactive;
     using System.Reactive.Linq;
+    using System.Reactive.Subjects;
 
     public class COMService : IComService
     {
@@ -19,6 +21,8 @@
         public event EventHandler<ConnectionState> ConnectionStateChanged;
 
         private string _buffer = "";
+
+        readonly Subject<Unit> _stopSubject = new Subject<Unit>();
 
         public virtual void OnDataReceived(string e)
         {
@@ -37,33 +41,51 @@
 
         public virtual void OnConnectionStateChanged()
         {
-            ConnectionStateChanged?.Invoke(this, _sp.IsOpen ? ConnectionState.Online : ConnectionState.Offline);
+            ConnectionStateChanged?.Invoke(this, IsConnected ? ConnectionState.Online : ConnectionState.Offline);
         }
 
         public bool IsConnected => _sp.IsOpen;
 
         public void Connect(string portName, int baudRate)
         {
-            if (_sp.IsOpen)
+            if (IsConnected)
             {
                 return;
             }
-
+            
             _sp.PortName = portName;
             _sp.BaudRate = baudRate;
             _sp.ReadTimeout = 5000;
             _sp.Open();
+            _sp.DiscardInBuffer();
+            _sp.DiscardOutBuffer();
             ResetBoard();
+            _sp.ReceivedBytesThreshold = 2;
             _sp.DataReceived += SpDataReceived;
 
             OnConnectionStateChanged();
+
+            PortMonitoring();
+        }
+
+        private void PortMonitoring()
+        {
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(0.5)).TakeUntil(this._stopSubject).Subscribe(
+                l =>
+                    {
+                        var ports = GetPortNames();
+                        if (!IsConnected || ports.All(x => x.ToLower() != _sp.PortName.ToLower()))
+                        {
+                            Disconnect();
+                        }
+                    });
         }
 
         private void SpDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             var cnt = _sp.BytesToRead;
             byte[] buffer = new byte[cnt];
-            if (!_sp.IsOpen)
+            if (!IsConnected)
             {
                 throw new InvalidOperationException("Serial port is closed.");
             }
@@ -100,34 +122,42 @@
             OnDataReceived(serialData);
         }
 
+        public void SendImmediate(string data)
+        {
+            if (IsConnected)
+            {
+                _sp.Write(data);
+            }
+        }
+
         public void Disconnect()
         {
-            if (!_sp.IsOpen)
-            {
-                return;
-            }
+            this._stopSubject.OnNext(Unit.Default);
 
             Observable.Start(
                 () =>
                     {
-                        _sp.DiscardInBuffer();
-                        _sp.DiscardOutBuffer();
-                        //Thread.Sleep(3000);
-                        _sp.Close();
+                        if (IsConnected)
+                        {
+                            _sp.DiscardInBuffer();
+                            _sp.DiscardOutBuffer();
+                            _sp.Close();
+                        }                        
 
+                        _buffer = string.Empty;
                         OnConnectionStateChanged();
                     }).Subscribe();
-
         }
 
         public List<string> GetPortNames()
         {
+
             return SerialPort.GetPortNames().ToList();
         }
 
         public void ResetBoard()
         {
-            if (_sp.IsOpen)
+            if (IsConnected)
             {
                 _sp.DtrEnable = true;
                 _sp.DtrEnable = false;
@@ -136,7 +166,7 @@
 
         public void Send(string data)
         {
-            if (_sp.IsOpen)
+            if (IsConnected)
             {
                 _sp.WriteLine(data);
             }

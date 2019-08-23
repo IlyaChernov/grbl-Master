@@ -17,6 +17,8 @@
 
         void Send(string data);
 
+        void SendImmediate(string data);
+
         void Disconnect();
 
         bool IsConnected

@@ -92,9 +92,9 @@
                                         <ColumnDefinition Width="40"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Row="0"  Grid.Column="0" >X</Label>
-                                    <Label  Grid.Row="1" Grid.Column="0">Y</Label>
-                                    <Label  Grid.Row="2" Grid.Column="0" >Z</Label>
+                                    <Label Grid.Row="0" Grid.Column="0" Foreground="Red" >X</Label>
+                                    <Label  Grid.Row="1" Grid.Column="0" Foreground="Green">Y</Label>
+                                    <Label  Grid.Row="2" Grid.Column="0" Foreground="Blue" >Z</Label>
 
                                     <TextBox  Grid.Row="0" Text="{Binding GrblStatus.WorkPosition.X}" Grid.Column="1" ToolTip="Current X work position" />
                                     <TextBlock   Grid.Row="0" Text="{Binding GrblStatus.MachinePosition.X}" Grid.Column="1" ToolTip="Current X machine position"></TextBlock>
@@ -267,7 +267,7 @@
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}"></TextBlock>
-                                                <TextBlock Grid.Column="1" Text="{Binding Path=Data}"></TextBlock>
+                                                <TextBlock Padding="1, 0, 5, 0" Grid.Column="1" Text="{Binding Path=Data}"></TextBlock>
                                                 <TextBlock Grid.Column="2" Text="{Binding Path=Result}"></TextBlock>
                                             </Grid>
                                         </DataTemplate>

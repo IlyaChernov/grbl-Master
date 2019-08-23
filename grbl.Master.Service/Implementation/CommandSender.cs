@@ -7,17 +7,28 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Reactive;
+    using System.Reactive.Linq;
+    using System.Reactive.Subjects;
     using System.Threading;
 
     public class CommandSender : ICommandSender
     {
+        private readonly Queue<Command> _commandQueue = new Queue<Command>();
+
+        private readonly IComService _comService;
+
+        private readonly object _lockObject = new object();
+
+        private bool _processing;
+
         private readonly char[] _realtimeCommands =
             {
                 // Basic
                 '\x18', // (ctrl-x) : Soft-Reset
-                '?',    // Status Report Query
-                '~',    // Cycle Start / Resume
-                '!',    // Feed Hold
+                '?', // Status Report Query
+                '~', // Cycle Start / Resume
+                '!', // Feed Hold
 
                 // Extended
                 '\x84', // Safety door
@@ -29,7 +40,7 @@
                 '\x92', // Decrease 10%
                 '\x93', // Increase 1%
                 '\x94', // Decrease 1%
-                
+
                 // Rapid Overrides
                 '\x95', // Set to 100% full rapid rate.
                 '\x96', // Set to 50% of rapid rate.
@@ -48,26 +59,34 @@
                 '\xA1' //Toggle Mist Coolant
             };
 
-        private readonly Queue<Command> _commandQueue = new Queue<Command>();
-
-        private readonly Queue<Command> _realtimeCommandQueue = new Queue<Command>();
-
-        private readonly IComService _comService;
-
-        private readonly object _lockObject = new object();
-
         private readonly SynchronizationContext _uiContext;
+
+        readonly Subject<Unit> _stopSubject = new Subject<Unit>();
 
         private readonly Queue<Command> _waitingCommandQueue = new Queue<Command>();
 
-        private bool _realtimeWaiting;
+        private int _bufferSizeLimit = 100;
 
         public CommandSender(IComService comService)
         {
             _uiContext = SynchronizationContext.Current;
             _comService = comService;
-            _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _comService.LineReceived += ComServiceLineReceived;
+            _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
+        }
+
+        private void ProcessQueue()
+        {
+            _processing = true;
+            Observable.Timer(TimeSpan.Zero, TimeSpan.Zero).TakeUntil(_stopSubject).Subscribe(
+                l =>
+                    {
+                        if (_commandQueue.Any() && _commandQueue.Peek().Data.Length
+                            + _waitingCommandQueue.Select(x => x.Data.Length).Sum() <= _bufferSizeLimit)
+                        {
+                            Send(_commandQueue.Dequeue());
+                        }
+                    });
         }
 
         public ObservableCollection<Command> CommandList { get; } = new ObservableCollection<Command>();
@@ -82,22 +101,19 @@
 
         public void Send(string command, CommandType type)
         {
-            var realtimeOverride = (type != CommandType.Realtime && command.Length == 1 && _realtimeCommands.Any(x => x == command[0]));
+            var realtimeOverride = type != CommandType.Realtime && command.Length == 1
+                                                                && _realtimeCommands.Any(x => x == command[0]);
 
-            _uiContext.Send(x => { CommunicationLog.Add("grbl <=" + command); }, null);
+            lock (_lockObject)
+            {
+                _uiContext.Send(x => { CommunicationLog.Add("grbl <=" + command); }, null);
+            }
 
             OnCommunicationLogUpdated();
 
             var cmd = new Command { Data = command, Type = realtimeOverride ? CommandType.Realtime : type };
 
-            if (cmd.Type != CommandType.Realtime && _waitingCommandQueue.Any() || _realtimeWaiting)
-            {
-                _commandQueue.Enqueue(cmd);
-            }
-            else if (cmd.Type == CommandType.Realtime && _waitingCommandQueue.Any() && !string.IsNullOrEmpty(_waitingCommandQueue.Peek().Result))
-            {
-                _realtimeCommandQueue.Enqueue(cmd);
-            }
+            if (cmd.Type != CommandType.Realtime) _commandQueue.Enqueue(cmd);
             else Send(cmd);
         }
 
@@ -109,6 +125,25 @@
         public void SendRealtime(char command)
         {
             Send("" + command, CommandType.Realtime);
+        }
+
+        public void PurgeQueues()
+        {
+            _waitingCommandQueue.Clear();
+            _commandQueue.Clear();
+        }
+
+        private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
+        {
+            if (e == ConnectionState.Online)
+            {
+                if (!_processing)
+                    ProcessQueue();
+            }
+            else
+            {
+                _stopSubject.OnNext(Unit.Default);
+            }
         }
 
         private void OnCommandListUpdated()
@@ -126,25 +161,6 @@
             CommandFinished?.Invoke(this, cmd);
         }
 
-        private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
-        {
-            if (e == ConnectionState.Online)
-                lock (_lockObject)
-                {
-                    CommandList.Clear();
-                }
-        }
-
-        private Command GetNextCommand()
-        {
-            if (_realtimeCommandQueue.Any())
-                return _realtimeCommandQueue.Dequeue();
-
-            if (_commandQueue.Any())
-                return _commandQueue.Dequeue();
-            return null;
-        }
-
         private void ComServiceLineReceived(object sender, string e)
         {
             lock (_lockObject)
@@ -152,49 +168,38 @@
                 _uiContext.Send(x => { CommunicationLog.Add("grbl =>" + e); }, null);
             }
 
-            if (_realtimeWaiting)
+            lock (_lockObject)
             {
-                if (e.StartsWith("ok") || e.StartsWith("error"))
+                if ((e.StartsWith("ok") || e.StartsWith("error")) && _waitingCommandQueue.Any())
                 {
-                    _realtimeWaiting = false;
-                    Send(GetNextCommand());
+                    var cmd = _waitingCommandQueue.Dequeue();
+
+                    //if (_commandQueue.Any()) Send(_commandQueue.Dequeue());
+
+                    if (e.StartsWith("ok"))
+                    {
+                        cmd.ResultType = CommandResultType.Ok;
+                    }
+                    else if (e.StartsWith("error"))
+                    {
+                        cmd.ResultType = CommandResultType.Error;
+                        cmd.CommandResultCause = e.Split(':')[1];
+                    }
+
+                    _uiContext.Send(
+                        x =>
+                            {
+                                CommandList.Add(cmd);
+                                OnCommandFinished(cmd);
+                                OnCommandListUpdated();
+                            },
+                        null);
                 }
-            }
-            else
-            {
-                lock (_lockObject)
+                else if (_waitingCommandQueue.Any())
                 {
-                    if (e.StartsWith("ok") || e.StartsWith("error"))
-                    {
-                        var cmd = _waitingCommandQueue.Dequeue();
+                    var cmd = _waitingCommandQueue.Peek();
 
-                        if (_commandQueue.Any()) Send(_commandQueue.Dequeue());
-
-                        if (e.StartsWith("ok"))
-                        {
-                            cmd.ResultType = CommandResultType.Ok;
-                        }
-                        else if (e.StartsWith("error"))
-                        {
-                            cmd.ResultType = CommandResultType.Error;
-                            cmd.CommandResultCause = e.Split(':')[1];
-                        }
-
-                        _uiContext.Send(
-                            x =>
-                                {
-                                    CommandList.Add(cmd);
-                                    OnCommandFinished(cmd);
-                                    OnCommandListUpdated();
-                                },
-                            null);
-                    }
-                    else if (_waitingCommandQueue.Any())
-                    {
-                        var cmd = _waitingCommandQueue.Peek();
-
-                        cmd.Result += (string.IsNullOrEmpty(cmd.Result) ? "" : Environment.NewLine) + e;
-                    }
+                    cmd.Result += (string.IsNullOrEmpty(cmd.Result) ? "" : Environment.NewLine) + e;
                 }
             }
         }
@@ -204,10 +209,19 @@
             if (cmd == null)
                 return;
 
-            if (cmd.Type != CommandType.Realtime) _waitingCommandQueue.Enqueue(cmd);
-            else _realtimeWaiting = true;
+            if (cmd.Type != CommandType.Realtime)
+            {
+                _waitingCommandQueue.Enqueue(cmd);
+                _comService.Send(cmd.Data);
+            }
+            else
+            {
+                this._comService.SendImmediate(cmd.Data);
+            }
+                
+            
 
-            _comService.Send(cmd.Data);
+
         }
     }
 }

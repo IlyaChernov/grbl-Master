@@ -4,6 +4,7 @@ using System;
 namespace grbl.Master.UI.ViewModels
 {
     using grbl.Master.BL.Interface;
+    using grbl.Master.Model;
     using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
@@ -11,18 +12,20 @@ namespace grbl.Master.UI.ViewModels
 
     public class MasterViewModel : Screen
     {
+        private readonly IGrblDispatcher _grblDispatcher;
         private readonly IComService _comService;
-        private readonly IGrblStatusRequester _grblStatusRequester;
+        private readonly IGrblStatus _grblStatus;
         private readonly ICommandSender _commandSender;
+
 
         private string _manualCommand;
 
-        public MasterViewModel(IComService comService, IGrblStatusRequester grblStatusRequester, ICommandSender commandSender, IGrblStatus grblStatus)
+        public MasterViewModel(IComService comService, IGrblStatus grblStatus, ICommandSender commandSender, IGrblDispatcher grblDispatcher)
         {
-            GrblStatus = grblStatus;
+            _grblDispatcher = grblDispatcher;
             ComConnectionViewModel = new COMConnectionViewModel(comService);
             _comService = comService;
-            _grblStatusRequester = grblStatusRequester;
+            _grblStatus = grblStatus;
             _commandSender = commandSender;
 
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
@@ -42,11 +45,6 @@ namespace grbl.Master.UI.ViewModels
 
         private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
         {
-            if (e == ConnectionState.Offline)
-            {
-                _grblStatusRequester.StopRequesting();
-            }
-
             NotifyOfPropertyChange(() => CanSendManualCommand);
             NotifyOfPropertyChange(() => CanSendEnterCommand);
             NotifyOfPropertyChange(() => CanUnlockCommand);
@@ -57,10 +55,7 @@ namespace grbl.Master.UI.ViewModels
             NotifyOfPropertyChange(() => CanRegularSystemCommand);
         }
 
-        public IGrblStatus GrblStatus
-        {
-            get;
-        }
+        public GrblStatusModel GrblStatus => _grblStatus.GrblStatusModel;
 
         public ObservableCollection<Command> CommandList => _commandSender.CommandList;
 

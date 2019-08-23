@@ -51,12 +51,10 @@
   <ItemGroup>
     <Compile Include="Implementation\GrblPrompt.cs" />
     <Compile Include="Implementation\GrblStatus.cs" />
-    <Compile Include="Implementation\GrblStatusProcessor.cs" />
-    <Compile Include="Implementation\GrblStatusRequester.cs" />
+    <Compile Include="Implementation\GrblDispatcher.cs" />
     <Compile Include="Interface\IGrblPrompt.cs" />
     <Compile Include="Interface\IGrblStatus.cs" />
-    <Compile Include="Interface\IGrblStatusProcessor.cs" />
-    <Compile Include="Interface\IGrblStatusRequester.cs" />
+    <Compile Include="Interface\IGrblDispatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

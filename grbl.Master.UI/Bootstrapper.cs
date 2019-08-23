@@ -48,15 +48,17 @@ namespace grbl.Master.UI
 
         protected override void Configure()
         {
-            base.Configure();
+            base.Configure();            
+
+            _container.RegisterSingleton(typeof(IGrblDispatcher), null, typeof(GrblDispatcher));
 
             _container.RegisterSingleton(typeof(IComService), null, typeof(COMService));
             _container.RegisterSingleton(typeof(ICommandSender), null, typeof(CommandSender));
-            _container.RegisterSingleton(typeof(IGrblStatusRequester), null, typeof(GrblStatusRequester));
+            //_container.RegisterSingleton(typeof(IGrblStatusRequester), null, typeof(GrblStatusRequester));
 
-            _container.RegisterSingleton(typeof(IGrblStatus), null, typeof(GrblStatus));
+            //_container.RegisterSingleton(typeof(IGrblStatus), null, typeof(GrblStatus));
             _container.RegisterSingleton(typeof(IGrblPrompt), null, typeof(GrblPrompt));
-            _container.RegisterSingleton(typeof(IGrblStatusProcessor), null, typeof(GrblStatusProcessor));
+            _container.RegisterSingleton(typeof(IGrblStatus), null, typeof(GrblStatus));
 
 
             _container.RegisterPerRequest(typeof(IWindowManager), null, typeof(WindowManager));
