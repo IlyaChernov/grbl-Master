@@ -105,9 +105,21 @@
                                     <TextBox Grid.Row="2" Text="{Binding GrblStatus.WorkPosition.Z}" Grid.Column="1" ToolTip="Current Z work position"/>
                                     <TextBlock   Grid.Row="2" Text="{Binding GrblStatus.MachinePosition.Z}" Grid.Column="1" ToolTip="Current Z machine position"></TextBlock>
 
-                                    <Button Grid.Row="0" Grid.Column="2" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 X0')">0</Button>
-                                    <Button Grid.Row="1" Grid.Column="2" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 Y0')">0</Button>
-                                    <Button Grid.Row="2" Grid.Column="2" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 Z0')">0</Button>
+                                    <Button FontSize="20" Grid.Row="0" Grid.Column="2" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 X0')">
+                                        <Button.LayoutTransform>
+                                            <RotateTransform Angle="-90"></RotateTransform>
+                                        </Button.LayoutTransform> X=0
+                                    </Button>
+                                    <Button FontSize="20" Grid.Row="1" Grid.Column="2" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 Y0')">
+                                        <Button.LayoutTransform>
+                                            <RotateTransform Angle="-90"></RotateTransform>
+                                        </Button.LayoutTransform> Y=0
+                                    </Button>
+                                    <Button FontSize="20" Grid.Row="2" Grid.Column="2" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 Z0')">
+                                        <Button.LayoutTransform>
+                                            <RotateTransform Angle="-90"></RotateTransform>
+                                        </Button.LayoutTransform> Z=0
+                                    </Button>
                                     <Button FontSize="30" Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" cal:Message.Attach="RegularSystemCommand('G90 G10 L20 P0 X0 Y0 Z0')">
                                         <Button.LayoutTransform>
                                             <RotateTransform Angle="-90"></RotateTransform>
