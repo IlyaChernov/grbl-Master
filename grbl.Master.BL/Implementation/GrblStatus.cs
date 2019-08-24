@@ -85,7 +85,7 @@
             if (!IsRunning)
             {
                 IsRunning = true;
-                Observable.Timer(TimeSpan.Zero, interval).TakeUntil(this._stopSubject).Subscribe(l => { Request(); });
+                Observable.Timer(TimeSpan.Zero, interval).TakeUntil(_stopSubject).Subscribe(l => { Request(); });
             }
         }
 
@@ -94,7 +94,7 @@
             if (IsRunning)
             {
                 IsRunning = false;
-                this._stopSubject.OnNext(Unit.Default);
+                _stopSubject.OnNext(Unit.Default);
             }
         }
 

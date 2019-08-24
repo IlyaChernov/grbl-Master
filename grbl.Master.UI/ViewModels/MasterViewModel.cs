@@ -47,12 +47,10 @@ namespace grbl.Master.UI.ViewModels
         {
             NotifyOfPropertyChange(() => CanSendManualCommand);
             NotifyOfPropertyChange(() => CanSendEnterCommand);
-            NotifyOfPropertyChange(() => CanUnlockCommand);
-            NotifyOfPropertyChange(() => CanResetCommand);
-            NotifyOfPropertyChange(() => CanHoldCommand);
-            NotifyOfPropertyChange(() => CanStartCommand);
-            NotifyOfPropertyChange(() => CanCheckCommand);
-            NotifyOfPropertyChange(() => CanRegularSystemCommand);
+            NotifyOfPropertyChange(() => CanGCommand);
+            NotifyOfPropertyChange(() => CanSystemCommand);
+            NotifyOfPropertyChange(() => CanRealtimeCommand);
+            NotifyOfPropertyChange(() => CanRealtimeIntCommand);
         }
 
         public GrblStatusModel GrblStatus => _grblStatus.GrblStatusModel;
@@ -91,46 +89,32 @@ namespace grbl.Master.UI.ViewModels
             SendManualCommand();
         }
 
-        public bool CanUnlockCommand => _comService.IsConnected;
+        public bool CanGCommand => _comService.IsConnected;
 
-        public void UnlockCommand()
+        public void GCommand(string code)
         {
-            _commandSender.SendSystem("$X");
+            _commandSender.SendGCode(code);
         }
 
-        public bool CanResetCommand => _comService.IsConnected;
+        public bool CanSystemCommand => _comService.IsConnected;
 
-        public void ResetCommand()
+        public void SystemCommand(string code)
         {
-            _commandSender.SendRealtime((char)24); //Ctrl+X
+            _commandSender.SendSystem(code);
         }
 
-        public bool CanHoldCommand => _comService.IsConnected;
+        public bool CanRealtimeCommand => _comService.IsConnected;
 
-        public void HoldCommand()
+        public void RealtimeCommand(string code)
         {
-            _commandSender.SendRealtime('!');
+            _commandSender.SendRealtime(code);
         }
 
-        public bool CanStartCommand => _comService.IsConnected;
+        public bool CanRealtimeIntCommand => _comService.IsConnected;
 
-        public void StartCommand()
+        public void RealtimeIntCommand(int code)
         {
-            _commandSender.SendRealtime('~');
-        }
-
-        public bool CanCheckCommand => _comService.IsConnected;
-
-        public void CheckCommand()
-        {
-            _commandSender.SendSystem("$C");
-        }
-
-        public bool CanRegularSystemCommand => _comService.IsConnected;
-
-        public void RegularSystemCommand(string command)
-        {
-            _commandSender.Send(command, CommandType.System);
+            _commandSender.SendRealtime(((char)code).ToString());
         }
     }
 }

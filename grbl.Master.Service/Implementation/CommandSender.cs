@@ -117,14 +117,19 @@
             else Send(cmd);
         }
 
-        public void SendSystem(string command)
+        public void SendGCode(string command)
         {
-            Send(command, CommandType.System);
+            Observable.Start(() => { Send(command, CommandType.GCode); }).Subscribe();
         }
 
-        public void SendRealtime(char command)
+        public void SendSystem(string command)
         {
-            Send("" + command, CommandType.Realtime);
+            Observable.Start(() => { Send(command, CommandType.System); }).Subscribe();
+        }
+
+        public void SendRealtime(string command)
+        {
+            Observable.Start(() => { Send(command, CommandType.Realtime); }).Subscribe();
         }
 
         public void PurgeQueues()
@@ -166,15 +171,10 @@
             lock (_lockObject)
             {
                 _uiContext.Send(x => { CommunicationLog.Add("grbl =>" + e); }, null);
-            }
 
-            lock (_lockObject)
-            {
                 if ((e.StartsWith("ok") || e.StartsWith("error")) && _waitingCommandQueue.Any())
                 {
                     var cmd = _waitingCommandQueue.Dequeue();
-
-                    //if (_commandQueue.Any()) Send(_commandQueue.Dequeue());
 
                     if (e.StartsWith("ok"))
                     {
@@ -216,12 +216,8 @@
             }
             else
             {
-                this._comService.SendImmediate(cmd.Data);
+                _comService.SendImmediate(cmd.Data);
             }
-                
-            
-
-
         }
     }
 }

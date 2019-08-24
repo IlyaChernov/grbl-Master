@@ -25,9 +25,11 @@
 
         void Send(string command, CommandType type);
 
+        void SendGCode(string command);
+
         void SendSystem(string command);
 
-        void SendRealtime(char command);
+        void SendRealtime(string command);
 
         void PurgeQueues();
     }
