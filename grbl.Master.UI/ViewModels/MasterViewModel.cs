@@ -17,6 +17,28 @@ namespace grbl.Master.UI.ViewModels
         private readonly IGrblStatus _grblStatus;
         private readonly ICommandSender _commandSender;
 
+        private double _manualDistance = 1;
+        public double ManualDistance
+        {
+            get => _manualDistance;
+            set
+            {
+                _manualDistance = value;
+                NotifyOfPropertyChange(() => ManualDistance);
+            }
+        }
+        private double _manualSpeed = 500;
+
+        public double ManualSpeed
+        {
+            get => _manualSpeed;
+            set
+            {
+                _manualSpeed = value;
+                NotifyOfPropertyChange(() => ManualSpeed);
+            }
+        }
+
 
         private string _manualCommand;
 
@@ -52,7 +74,7 @@ namespace grbl.Master.UI.ViewModels
             NotifyOfPropertyChange(() => CanRealtimeCommand);
             NotifyOfPropertyChange(() => CanRealtimeIntCommand);
             NotifyOfPropertyChange(() => CanJoggingCommand);
-            
+
         }
 
         public GrblStatusModel GrblStatus => _grblStatus.GrblStatusModel;
@@ -123,7 +145,7 @@ namespace grbl.Master.UI.ViewModels
 
         public void JoggingCommand(string code)
         {
-            _commandSender.SendGCode(code);
+            _commandSender.SendGCode(string.Format(code, ManualDistance, ManualSpeed));
         }
     }
 }
