@@ -51,6 +51,8 @@ namespace grbl.Master.UI.ViewModels
             NotifyOfPropertyChange(() => CanSystemCommand);
             NotifyOfPropertyChange(() => CanRealtimeCommand);
             NotifyOfPropertyChange(() => CanRealtimeIntCommand);
+            NotifyOfPropertyChange(() => CanJoggingCommand);
+            
         }
 
         public GrblStatusModel GrblStatus => _grblStatus.GrblStatusModel;
@@ -79,7 +81,7 @@ namespace grbl.Master.UI.ViewModels
 
         public void SendManualCommand()
         {
-            _commandSender.Send(ManualCommand, CommandType.GCode);
+            _commandSender.SendGCode(ManualCommand);
         }
 
         public bool CanSendEnterCommand => _comService.IsConnected;
@@ -115,6 +117,13 @@ namespace grbl.Master.UI.ViewModels
         public void RealtimeIntCommand(int code)
         {
             _commandSender.SendRealtime(((char)code).ToString());
+        }
+
+        public bool CanJoggingCommand => _comService.IsConnected;
+
+        public void JoggingCommand(string code)
+        {
+            _commandSender.SendGCode(code);
         }
     }
 }

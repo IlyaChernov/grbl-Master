@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:viewModel="clr-namespace:grbl.Master.UI.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewModel:MasterViewModel, IsDesignTimeCreatable=False}"
-        Title="grbl Master" Height="600" Width="800" MinWidth="800" MinHeight="600">
+        Title="grbl Master" Height="660" Width="800" MinWidth="800" MinHeight="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="46" />
@@ -46,6 +46,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="320"/>
                             <RowDefinition Height="26"/>
+                            <RowDefinition Height="206"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <TabControl Grid.Row="0">
@@ -280,45 +281,70 @@
 
                         <TextBox  Grid.Row="1" Grid.Column="0" Text="{Binding GrblStatus.MachineState}" FontWeight="Bold" FontSize="15" />
 
-                        <TabControl Grid.Column="0"  Grid.Row="2">
-                            <TabItem Header="Commands">
-                                <ListView  ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                    <ListView.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel />
-                                        </ItemsPanelTemplate>
-                                    </ListView.ItemsPanel>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid ToolTip="{Binding Result}">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="30" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}"></TextBlock>
-                                                <TextBlock Padding="1, 0, 5, 0" Grid.Column="1" Text="{Binding Path=Data}"></TextBlock>
-                                                <TextBlock Grid.Column="2" Text="{Binding Path=Result}"></TextBlock>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </TabItem>
-                            <TabItem Header="Communication">
-                                <ListView  ItemsSource="{Binding CommunicationLog}" VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                    <ListView.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel />
-                                        </ItemsPanelTemplate>
-                                    </ListView.ItemsPanel>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" ToolTip="{Binding}"></TextBlock>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </TabItem>
-                        </TabControl>
+                        <GroupBox Header="Jogging" Grid.Row="2" >
+                            <Grid   >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="26"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="Button">
+                                        <Setter Property="FontSize" Value="16" ></Setter>
+                                        <Setter Property="FontWeight" Value="Bold" ></Setter>
+                                        <Setter Property="Margin" Value="1"></Setter>
+                                        <Setter Property="Padding" Value="-10"></Setter>
+                                    </Style>
+                                </Grid.Resources>
+                                <Grid Grid.RowSpan="3" Grid.Column="0" Grid.Row="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition Height="26"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBox Grid.Row="1"/>
+                                    <Slider HorizontalAlignment="Right" Orientation="Vertical"  TickPlacement="Both" Ticks="0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 2, 3, 5, 10, 100" Minimum="0.01" Maximum="100" Grid.Row="0"/>
+                                </Grid>
+                                <Grid Grid.RowSpan="3" Grid.Column="5" Grid.Row="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition Height="26"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBox Grid.Row="1"/>
+                                    <Slider HorizontalAlignment="Left" Orientation="Vertical" TickPlacement="Both" Ticks="0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 2, 3, 5, 10, 100" Minimum="0.01" Maximum="100" Grid.Row="0"/>
+                                </Grid>
+                                <Button Content="X-Y+" Grid.Column="1" Grid.Row="0"/>
+                                <Button Content="X-" Grid.Column="1" Grid.Row="1"/>
+                                <Button Content="X-Y-" Grid.Column="1" Grid.Row="2" />
+                                <Button Content="Y+" Grid.Column="2" cal:Message.Attach="JoggingCommand('G1 Y+{0} F{1}')" Grid.Row="0" />
+                                <Button Content="Home" cal:Message.Attach="SystemCommand('$H')" Grid.Column="2" Grid.Row="1"/>
+                                <Button Content="Y-" Grid.Column="2" Grid.Row="2" />
+                                <Button Content="X+Y+" Grid.Column="3" Grid.Row="0"/>
+                                <Button Content="X+" Grid.Column="3" Grid.Row="1"/>
+                                <Button Content="X+Y-" Grid.Column="3" Grid.Row="2" />
+                                <Label Content="Distance" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" />
+                                <Label Content="Speed"  Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" />
+                                <Grid Grid.Row="0" Grid.Column="4" Grid.RowSpan="3" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Button Content="Z+" Grid.Row="0" />
+                                    <Button Content="Z-" Grid.Row="1" />
+                                </Grid>
+                            </Grid>
+
+                        </GroupBox>
 
                     </Grid>
                     <Grid Grid.Column="2" >
@@ -362,52 +388,46 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
-                        <GroupBox Header="Jogging"  >
-                            <Grid Width="Auto" HorizontalAlignment="Center"  >
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="0"/>
-                                    <RowDefinition Height="51"/>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="50"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30" />
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="30" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.Resources>
-                                    <Style TargetType="Button">
-                                        <Setter Property="FontSize" Value="16" ></Setter>
-                                        <Setter Property="FontWeight" Value="Bold" ></Setter>
-                                        <Setter Property="Margin" Value="1"></Setter>
-                                        <Setter Property="Padding" Value="-10"></Setter>
-                                    </Style>
-                                </Grid.Resources>
-                                <Slider Grid.RowSpan="4" Orientation="Vertical"/>
-                                <Slider Grid.Row="0" Grid.RowSpan="4" Grid.Column="5" Orientation="Vertical" HorizontalAlignment="Right"/>
-                                <Button Content="X-Y+" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"/>
-                                <Button Content="X-" Grid.Column="1" Grid.Row="2"/>
-                                <Button Content="X-Y-" Grid.Column="1" Grid.Row="3"/>
-                                <Button Content="Y+" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"/>
-                                <Button Content="Home" Grid.Column="2" Grid.Row="2"/>
-                                <Button Content="Y-" Grid.Column="2" Grid.Row="3"/>
-                                <Button Content="X+Y+" Grid.Column="3" Grid.Row="0" Grid.RowSpan="2"/>
-                                <Button Content="X+" Grid.Column="3" Grid.Row="2"/>
-                                <Button Content="X+Y-" Grid.Column="3" Grid.Row="3"/>
-                                <Grid Grid.Row="0" Grid.Column="4" Grid.RowSpan="4" >
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <Button Content="Z+" Grid.Row="0" />
-                                    <Button Content="Z-" Grid.Row="1" />
-                                </Grid>
-                            </Grid>
 
-                        </GroupBox>
+                        <TabControl Grid.Column="0"  Grid.Row="2">
+                            <TabItem Header="Commands">
+                                <ListView  ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel />
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ToolTip="{Binding Result}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}"></TextBlock>
+                                                <TextBlock Padding="1, 0, 5, 0" Grid.Column="1" Text="{Binding Path=Data}"></TextBlock>
+                                                <TextBlock Grid.Column="2" Text="{Binding Path=Result}"></TextBlock>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </TabItem>
+                            <TabItem Header="Communication">
+                                <ListView  ItemsSource="{Binding CommunicationLog}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel />
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" ToolTip="{Binding}"></TextBlock>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </TabItem>
+                        </TabControl>
                     </Grid>
                 </Grid>
             </TabItem>
