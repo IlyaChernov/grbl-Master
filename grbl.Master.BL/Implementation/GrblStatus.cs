@@ -112,7 +112,10 @@
                 var parts = e.Split(new[] { '<', '>', '|' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (parts.Any())
-                    GrblStatusModel.MachineState = (MachineState)Enum.Parse(typeof(MachineState), parts.First());
+                {
+                    var firstPart = parts.First().Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries).First();
+                    GrblStatusModel.MachineState = (MachineState)Enum.Parse(typeof(MachineState), firstPart);
+                }
 
                 foreach (var part in parts)
                     if (_mPosReg.IsMatch(part))
