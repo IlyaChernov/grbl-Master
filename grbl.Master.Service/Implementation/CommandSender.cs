@@ -84,7 +84,10 @@
                         if (_commandQueue.Any() && _commandQueue.Peek().Data.Length
                             + _waitingCommandQueue.Select(x => x.Data.Length).Sum() <= _bufferSizeLimit)
                         {
-                            Send(_commandQueue.Dequeue());
+                            lock (_lockObject)
+                            {
+                                Send(_commandQueue.Dequeue());
+                            }
                         }
                     });
         }
@@ -113,7 +116,13 @@
 
             var cmd = new Command { Data = command, Type = realtimeOverride ? CommandType.Realtime : type };
 
-            if (cmd.Type != CommandType.Realtime) _commandQueue.Enqueue(cmd);
+            if (cmd.Type != CommandType.Realtime)
+            {
+                lock (_lockObject)
+                {
+                    _commandQueue.Enqueue(cmd);
+                }
+            }
             else Send(cmd);
         }
 
@@ -133,7 +142,7 @@
         }
 
         public void PurgeQueues()
-        {
+        {   
             _waitingCommandQueue.Clear();
             _commandQueue.Clear();
         }
@@ -211,7 +220,11 @@
 
             if (cmd.Type != CommandType.Realtime)
             {
-                _waitingCommandQueue.Enqueue(cmd);
+                lock (_lockObject)
+                {
+                    _waitingCommandQueue.Enqueue(cmd);
+                }
+
                 _comService.Send(cmd.Data);
             }
             else

@@ -5,6 +5,7 @@ namespace grbl.Master.UI.ViewModels
 {
     using grbl.Master.BL.Interface;
     using grbl.Master.Model;
+    using grbl.Master.Model.Enum;
     using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
@@ -50,9 +51,21 @@ namespace grbl.Master.UI.ViewModels
             _grblStatus = grblStatus;
             _commandSender = commandSender;
 
+            _grblStatus.GrblStatusModel.MachineStateChanged += GrblStatusModelMachineStateChanged;
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _commandSender.CommandListUpdated += CommandSenderCommandListUpdated;
             _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
+        }
+
+        private void GrblStatusModelMachineStateChanged(object sender, MachineState e)
+        {
+            NotifyOfPropertyChange(() => CanSendManualCommand);
+            NotifyOfPropertyChange(() => CanSendEnterCommand);
+            NotifyOfPropertyChange(() => CanGCommand);
+            NotifyOfPropertyChange(() => CanSystemCommand);
+            NotifyOfPropertyChange(() => CanRealtimeCommand);
+            NotifyOfPropertyChange(() => CanRealtimeIntCommand);
+            NotifyOfPropertyChange(() => CanJoggingCommand);
         }
 
         private void CommandSenderCommunicationLogUpdated(object sender, EventArgs e)
@@ -74,7 +87,6 @@ namespace grbl.Master.UI.ViewModels
             NotifyOfPropertyChange(() => CanRealtimeCommand);
             NotifyOfPropertyChange(() => CanRealtimeIntCommand);
             NotifyOfPropertyChange(() => CanJoggingCommand);
-
         }
 
         public GrblStatusModel GrblStatus => _grblStatus.GrblStatusModel;
@@ -106,46 +118,50 @@ namespace grbl.Master.UI.ViewModels
             _commandSender.SendGCode(ManualCommand);
         }
 
-        public bool CanSendEnterCommand => _comService.IsConnected;
+        private bool BasicCanSendCommand =>
+            _comService.IsConnected && _grblStatus.GrblStatusModel.MachineState != MachineState.Offline
+                                    && _grblStatus.GrblStatusModel.MachineState != MachineState.Online;
+
+        public bool CanSendEnterCommand => BasicCanSendCommand;
 
         public void SendEnterCommand()
         {
             SendManualCommand();
         }
 
-        public bool CanGCommand => _comService.IsConnected;
+        public bool CanGCommand => BasicCanSendCommand;
 
         public void GCommand(string code)
         {
             _commandSender.SendGCode(code);
         }
 
-        public bool CanSystemCommand => _comService.IsConnected;
+        public bool CanSystemCommand => BasicCanSendCommand;
 
         public void SystemCommand(string code)
         {
             _commandSender.SendSystem(code);
         }
 
-        public bool CanRealtimeCommand => _comService.IsConnected;
+        public bool CanRealtimeCommand => BasicCanSendCommand;
 
         public void RealtimeCommand(string code)
         {
             _commandSender.SendRealtime(code);
         }
 
-        public bool CanRealtimeIntCommand => _comService.IsConnected;
+        public bool CanRealtimeIntCommand => BasicCanSendCommand;
 
         public void RealtimeIntCommand(int code)
         {
             _commandSender.SendRealtime(((char)code).ToString());
         }
 
-        public bool CanJoggingCommand => _comService.IsConnected;
+        public bool CanJoggingCommand => BasicCanSendCommand;
 
         public void JoggingCommand(string code)
         {
-            _commandSender.SendGCode(string.Format(code, ManualDistance, ManualSpeed));
+            _commandSender.SendGCode("$J=" + string.Format(code, ManualDistance, ManualSpeed));
         }
     }
 }

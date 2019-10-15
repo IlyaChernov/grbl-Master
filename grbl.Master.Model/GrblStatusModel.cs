@@ -2,11 +2,14 @@
 {
     using grbl.Master.Model.Enum;
     using grbl.Master.Service.Annotations;
+    using System;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
     public class GrblStatusModel : INotifyPropertyChanged //, IGrblStatus
     {
+        public event EventHandler<MachineState> MachineStateChanged;
+
         private MachineState _machineState;
         private Position _machinePosition = new Position();
         private Position _workPosition = new Position();
@@ -24,9 +27,18 @@
             get => _machineState;
             set
             {
-                _machineState = value;
-                OnPropertyChanged();
+                if (_machineState != value)
+                {
+                    _machineState = value;
+                    OnPropertyChanged();
+                    OnMachineStateChanged();
+                }
             }
+        }
+
+        public virtual void OnMachineStateChanged()
+        {
+            MachineStateChanged?.Invoke(this, MachineState);
         }
 
         public Position MachinePosition
