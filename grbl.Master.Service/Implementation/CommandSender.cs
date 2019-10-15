@@ -4,7 +4,7 @@
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Reactive;
@@ -14,7 +14,7 @@
 
     public class CommandSender : ICommandSender
     {
-        private readonly Queue<Command> _commandQueue = new Queue<Command>();
+        private readonly ConcurrentQueue<Command> _commandQueue = new ConcurrentQueue<Command>();
 
         private readonly IComService _comService;
 
@@ -58,12 +58,12 @@
                 '\xA0', //Toggle Flood Coolant
                 '\xA1' //Toggle Mist Coolant
             };
-
+        
         private readonly SynchronizationContext _uiContext;
 
         readonly Subject<Unit> _stopSubject = new Subject<Unit>();
 
-        private readonly Queue<Command> _waitingCommandQueue = new Queue<Command>();
+        private readonly ConcurrentQueue<Command> _waitingCommandQueue = new ConcurrentQueue<Command>();
 
         private int _bufferSizeLimit = 100;
 
@@ -81,14 +81,20 @@
             Observable.Timer(TimeSpan.Zero, TimeSpan.Zero).TakeUntil(_stopSubject).Subscribe(
                 l =>
                     {
-                        if (_commandQueue.Any() && _commandQueue.Peek().Data.Length
-                            + _waitingCommandQueue.Select(x => x.Data.Length).Sum() <= _bufferSizeLimit)
+                        //Command cmd;
+                        if (_commandQueue.TryPeek(out var cmd) && cmd.Data.Length + _waitingCommandQueue.Select(x => x.Data.Length).Sum() <= _bufferSizeLimit && _commandQueue.TryDequeue(out var command))
                         {
-                            lock (_lockObject)
-                            {
-                                Send(_commandQueue.Dequeue());
-                            }
+                            Send(command);
                         }
+
+                        //if (_commandQueue.Any() && _commandQueue.Peek().Data.Length
+                        //    + _waitingCommandQueue.Select(x => x.Data.Length).Sum() <= _bufferSizeLimit)
+                        //{
+                        //    lock (_lockObject)
+                        //    {
+                        //        Send(_commandQueue.Dequeue());
+                        //    }
+                        //}
                     });
         }
 
@@ -142,9 +148,17 @@
         }
 
         public void PurgeQueues()
-        {   
-            _waitingCommandQueue.Clear();
-            _commandQueue.Clear();
+        {
+            while (_waitingCommandQueue.Any())
+            {
+                _waitingCommandQueue.TryDequeue(out var dummy);
+            }
+            while (_commandQueue.Any())
+            {
+                _commandQueue.TryDequeue(out var dummy);
+            }
+            //_waitingCommandQueue.Clear();
+            //_commandQueue.Clear();
         }
 
         private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
@@ -181,10 +195,11 @@
             {
                 _uiContext.Send(x => { CommunicationLog.Add("grbl =>" + e); }, null);
 
-                if ((e.StartsWith("ok") || e.StartsWith("error")) && _waitingCommandQueue.Any())
+                if ((e.StartsWith("ok") || e.StartsWith("error")) && _waitingCommandQueue.Any() && _waitingCommandQueue.TryDequeue(out var cmd)) // _waitingCommandQueue.Any())
                 {
-                    var cmd = _waitingCommandQueue.Dequeue();
-
+                    //var cmd = _waitingCommandQueue.Dequeue();
+                    //_waitingCommandQueue.TryDequeue(out var cmd);
+                    
                     if (e.StartsWith("ok"))
                     {
                         cmd.ResultType = CommandResultType.Ok;
@@ -204,11 +219,11 @@
                             },
                         null);
                 }
-                else if (_waitingCommandQueue.Any())
+                else if (_waitingCommandQueue.Any() && this._waitingCommandQueue.TryPeek(out var comd))
                 {
-                    var cmd = _waitingCommandQueue.Peek();
+                    //var cmd = _waitingCommandQueue.Peek();
 
-                    cmd.Result += (string.IsNullOrEmpty(cmd.Result) ? "" : Environment.NewLine) + e;
+                    comd.Result += (string.IsNullOrEmpty(comd.Result) ? "" : Environment.NewLine) + e;
                 }
             }
         }
