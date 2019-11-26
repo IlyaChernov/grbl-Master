@@ -70,7 +70,7 @@
 
         private void PortMonitoring()
         {
-            Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(0.5)).TakeUntil(this._stopSubject).Subscribe(
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(0.5)).TakeUntil(_stopSubject).Subscribe(
                 l =>
                     {
                         var ports = GetPortNames();
@@ -119,7 +119,7 @@
                 }
             }
 
-            OnDataReceived(serialData);
+            //OnDataReceived(serialData);
         }
 
         public void SendImmediate(string data)
@@ -132,7 +132,7 @@
 
         public void Disconnect()
         {
-            this._stopSubject.OnNext(Unit.Default);
+            _stopSubject.OnNext(Unit.Default);
 
             Observable.Start(
                 () =>

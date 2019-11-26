@@ -219,7 +219,7 @@
                             },
                         null);
                 }
-                else if (_waitingCommandQueue.Any() && this._waitingCommandQueue.TryPeek(out var comd))
+                else if (_waitingCommandQueue.Any() && _waitingCommandQueue.TryPeek(out var comd))
                 {
                     //var cmd = _waitingCommandQueue.Peek();
 
@@ -233,7 +233,7 @@
             if (cmd == null)
                 return;
 
-            if (cmd.Type != CommandType.Realtime)
+            if (cmd.Type != CommandType.Realtime && cmd.Type != CommandType.System)
             {
                 lock (_lockObject)
                 {

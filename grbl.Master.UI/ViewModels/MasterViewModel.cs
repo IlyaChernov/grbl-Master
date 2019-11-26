@@ -1,167 +1,193 @@
-﻿using Caliburn.Micro;
-using System;
-
-namespace grbl.Master.UI.ViewModels
+﻿namespace grbl.Master.UI.ViewModels
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Reactive;
+    using System.Reactive.Linq;
+    using System.Reactive.Subjects;
+
+    using Caliburn.Micro;
+
     using grbl.Master.BL.Interface;
     using grbl.Master.Model;
     using grbl.Master.Model.Enum;
     using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
-    using System.Collections.ObjectModel;
 
     public class MasterViewModel : Screen
     {
-        private readonly IGrblDispatcher _grblDispatcher;
-        private readonly IComService _comService;
-        private readonly IGrblStatus _grblStatus;
         private readonly ICommandSender _commandSender;
 
-        private double _manualDistance = 1;
-        public double ManualDistance
-        {
-            get => _manualDistance;
-            set
-            {
-                _manualDistance = value;
-                NotifyOfPropertyChange(() => ManualDistance);
-            }
-        }
-        private double _manualSpeed = 500;
+        private readonly IComService _comService;
 
-        public double ManualSpeed
-        {
-            get => _manualSpeed;
-            set
-            {
-                _manualSpeed = value;
-                NotifyOfPropertyChange(() => ManualSpeed);
-            }
-        }
+        private readonly IGrblDispatcher _grblDispatcher;
 
+        private readonly IGrblStatus _grblStatus;
+
+        private readonly Subject<Unit> _jogStopSubject = new Subject<Unit>();
 
         private string _manualCommand;
 
-        public MasterViewModel(IComService comService, IGrblStatus grblStatus, ICommandSender commandSender, IGrblDispatcher grblDispatcher)
-        {
-            _grblDispatcher = grblDispatcher;
-            ComConnectionViewModel = new COMConnectionViewModel(comService);
-            _comService = comService;
-            _grblStatus = grblStatus;
-            _commandSender = commandSender;
+        private double _manualDistance = 1;
 
-            _grblStatus.GrblStatusModel.MachineStateChanged += GrblStatusModelMachineStateChanged;
-            _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
-            _commandSender.CommandListUpdated += CommandSenderCommandListUpdated;
-            _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
+        private double _manualSpeed = 500;
+
+        public MasterViewModel(
+            IComService comService,
+            IGrblStatus grblStatus,
+            ICommandSender commandSender,
+            IGrblDispatcher grblDispatcher)
+        {
+            this._grblDispatcher = grblDispatcher;
+            this.ComConnectionViewModel = new COMConnectionViewModel(comService);
+            this._comService = comService;
+            this._grblStatus = grblStatus;
+            this._commandSender = commandSender;
+
+            this._grblStatus.GrblStatusModel.MachineStateChanged += this.GrblStatusModelMachineStateChanged;
+            this._comService.ConnectionStateChanged += this.ComServiceConnectionStateChanged;
+            this._commandSender.CommandListUpdated += this.CommandSenderCommandListUpdated;
+            this._commandSender.CommunicationLogUpdated += this.CommandSenderCommunicationLogUpdated;
         }
+
+        public double ManualDistance
+        {
+            get => this._manualDistance;
+            set
+            {
+                this._manualDistance = value;
+                this.NotifyOfPropertyChange(() => this.ManualDistance);
+            }
+        }
+
+        public double ManualSpeed
+        {
+            get => this._manualSpeed;
+            set
+            {
+                this._manualSpeed = value;
+                this.NotifyOfPropertyChange(() => this.ManualSpeed);
+            }
+        }
+
+        public GrblStatusModel GrblStatus => this._grblStatus.GrblStatusModel;
+
+        public ObservableCollection<Command> CommandList => this._commandSender.CommandList;
+
+        public ObservableCollection<string> CommunicationLog => this._commandSender.CommunicationLog;
+
+        public COMConnectionViewModel ComConnectionViewModel { get; }
+
+        public string ManualCommand
+        {
+            get => this._manualCommand;
+            set
+            {
+                this._manualCommand = value;
+                this.NotifyOfPropertyChange(() => this.ManualCommand);
+                this.NotifyOfPropertyChange(() => this.CanSendManualCommand);
+            }
+        }
+
+        public bool CanSendManualCommand =>
+            !string.IsNullOrWhiteSpace(this.ManualCommand) && this._comService.IsConnected;
+
+        private bool BasicCanSendCommand =>
+            this._comService.IsConnected && this._grblStatus.GrblStatusModel.MachineState != MachineState.Offline
+                                         && this._grblStatus.GrblStatusModel.MachineState != MachineState.Online;
+
+        public bool CanSendEnterCommand => this.BasicCanSendCommand;
+
+        public bool CanGCommand => this.BasicCanSendCommand;
+
+        public bool CanSystemCommand => this.BasicCanSendCommand;
+
+        public bool CanRealtimeCommand => this.BasicCanSendCommand;
+
+        public bool CanRealtimeIntCommand => this.BasicCanSendCommand;
+
+        public bool CanJoggingCommand => this.BasicCanSendCommand;
+
+        public bool CanCancelJogging => this.BasicCanSendCommand;
 
         private void GrblStatusModelMachineStateChanged(object sender, MachineState e)
         {
-            NotifyOfPropertyChange(() => CanSendManualCommand);
-            NotifyOfPropertyChange(() => CanSendEnterCommand);
-            NotifyOfPropertyChange(() => CanGCommand);
-            NotifyOfPropertyChange(() => CanSystemCommand);
-            NotifyOfPropertyChange(() => CanRealtimeCommand);
-            NotifyOfPropertyChange(() => CanRealtimeIntCommand);
-            NotifyOfPropertyChange(() => CanJoggingCommand);
+            this.NotifyOfPropertyChange(() => this.CanSendManualCommand);
+            this.NotifyOfPropertyChange(() => this.CanSendEnterCommand);
+            this.NotifyOfPropertyChange(() => this.CanGCommand);
+            this.NotifyOfPropertyChange(() => this.CanSystemCommand);
+            this.NotifyOfPropertyChange(() => this.CanRealtimeCommand);
+            this.NotifyOfPropertyChange(() => this.CanRealtimeIntCommand);
+            this.NotifyOfPropertyChange(() => this.CanJoggingCommand);
         }
 
         private void CommandSenderCommunicationLogUpdated(object sender, EventArgs e)
         {
-            NotifyOfPropertyChange(() => CommunicationLog);
+            this.NotifyOfPropertyChange(() => this.CommunicationLog);
         }
 
         private void CommandSenderCommandListUpdated(object sender, EventArgs e)
         {
-            NotifyOfPropertyChange(() => CommandList);
+            this.NotifyOfPropertyChange(() => this.CommandList);
         }
 
         private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
         {
-            NotifyOfPropertyChange(() => CanSendManualCommand);
-            NotifyOfPropertyChange(() => CanSendEnterCommand);
-            NotifyOfPropertyChange(() => CanGCommand);
-            NotifyOfPropertyChange(() => CanSystemCommand);
-            NotifyOfPropertyChange(() => CanRealtimeCommand);
-            NotifyOfPropertyChange(() => CanRealtimeIntCommand);
-            NotifyOfPropertyChange(() => CanJoggingCommand);
+            this.NotifyOfPropertyChange(() => this.CanSendManualCommand);
+            this.NotifyOfPropertyChange(() => this.CanSendEnterCommand);
+            this.NotifyOfPropertyChange(() => this.CanGCommand);
+            this.NotifyOfPropertyChange(() => this.CanSystemCommand);
+            this.NotifyOfPropertyChange(() => this.CanRealtimeCommand);
+            this.NotifyOfPropertyChange(() => this.CanRealtimeIntCommand);
+            this.NotifyOfPropertyChange(() => this.CanJoggingCommand);
         }
-
-        public GrblStatusModel GrblStatus => _grblStatus.GrblStatusModel;
-
-        public ObservableCollection<Command> CommandList => _commandSender.CommandList;
-
-        public ObservableCollection<string> CommunicationLog => _commandSender.CommunicationLog;
-
-        public COMConnectionViewModel ComConnectionViewModel
-        {
-            get;
-        }
-
-        public string ManualCommand
-        {
-            get => _manualCommand;
-            set
-            {
-                _manualCommand = value;
-                NotifyOfPropertyChange(() => ManualCommand);
-                NotifyOfPropertyChange(() => CanSendManualCommand);
-            }
-        }
-
-        public bool CanSendManualCommand => !string.IsNullOrWhiteSpace(ManualCommand) && _comService.IsConnected;
 
         public void SendManualCommand()
         {
-            _commandSender.SendGCode(ManualCommand);
+            this._commandSender.SendGCode(this.ManualCommand);
         }
-
-        private bool BasicCanSendCommand =>
-            _comService.IsConnected && _grblStatus.GrblStatusModel.MachineState != MachineState.Offline
-                                    && _grblStatus.GrblStatusModel.MachineState != MachineState.Online;
-
-        public bool CanSendEnterCommand => BasicCanSendCommand;
 
         public void SendEnterCommand()
         {
-            SendManualCommand();
+            this.SendManualCommand();
         }
-
-        public bool CanGCommand => BasicCanSendCommand;
 
         public void GCommand(string code)
         {
-            _commandSender.SendGCode(code);
+            this._commandSender.SendGCode(code);
         }
-
-        public bool CanSystemCommand => BasicCanSendCommand;
 
         public void SystemCommand(string code)
         {
-            _commandSender.SendSystem(code);
+            this._commandSender.SendSystem(code);
         }
-
-        public bool CanRealtimeCommand => BasicCanSendCommand;
 
         public void RealtimeCommand(string code)
         {
-            _commandSender.SendRealtime(code);
+            this._commandSender.SendRealtime(code);
         }
-
-        public bool CanRealtimeIntCommand => BasicCanSendCommand;
 
         public void RealtimeIntCommand(int code)
         {
-            _commandSender.SendRealtime(((char)code).ToString());
+            this._commandSender.SendRealtime(((char)code).ToString());
         }
-
-        public bool CanJoggingCommand => BasicCanSendCommand;
 
         public void JoggingCommand(string code)
         {
-            _commandSender.SendGCode("$J=" + string.Format(code, ManualDistance, ManualSpeed));
+            this._jogStopSubject.OnNext(Unit.Default);
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(1)).TakeUntil(this._jogStopSubject).Subscribe(
+                l =>
+                    {
+                        this._commandSender.SendGCode(
+                            "$J=" + string.Format(code, this.ManualDistance, this.ManualSpeed));
+                    });
+        }
+
+        public void CancelJogging()
+        {
+            this._jogStopSubject.OnNext(Unit.Default);
+            if (this._grblStatus.GrblStatusModel.MachineState == MachineState.Jog) this.RealtimeCommand("!");
         }
     }
 }

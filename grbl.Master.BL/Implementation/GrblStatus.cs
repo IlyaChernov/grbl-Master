@@ -103,6 +103,7 @@
         private void Request()
         {
             _commandSender.Send("?", CommandType.Realtime);
+            _commandSender.Send("$G", CommandType.System);
         }
 
         private void ComServiceLineReceived(object sender, string e)

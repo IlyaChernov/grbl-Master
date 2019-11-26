@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cal="http://www.caliburnproject.org"        
         mc:Ignorable="d"
-        xmlns:viewModel="clr-namespace:grbl.Master.UI.ViewModels" 
+        xmlns:viewModel="clr-namespace:grbl.Master.UI.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         d:DataContext="{d:DesignInstance Type=viewModel:MasterViewModel, IsDesignTimeCreatable=False}"
         Title="grbl Master" Height="660" Width="800" MinWidth="800" MinHeight="600">
     <Grid>
@@ -323,15 +324,16 @@
                                     <TextBox Text="{Binding ManualSpeed}" Grid.Row="1"/>
                                     <Slider x:Name="ManualSpeed" HorizontalAlignment="Left" Orientation="Vertical" IsSnapToTickEnabled="True" TickPlacement="Both" Ticks="1, 5, 10, 50, 100, 200, 300, 400, 500, 800, 1000, 1200, 1500" Minimum="1" Maximum="1500" Grid.Row="0"/>
                                 </Grid>
-                                <Button Content="X-Y+" Grid.Column="1" Grid.Row="0" cal:Message.Attach="JoggingCommand('G91 G21 X-{0} Y+{0} F{1}')"/>
-                                <Button Content="X-" Grid.Column="1" Grid.Row="1" cal:Message.Attach="JoggingCommand('G91 G21 X-{0} F{1}')"/>
-                                <Button Content="X-Y-" Grid.Column="1" Grid.Row="2" cal:Message.Attach="JoggingCommand('G91 G21 X-{0} Y-{0} F{1}')" />
-                                <Button Content="Y+" Grid.Column="2" cal:Message.Attach="JoggingCommand('G91 G21 Y+{0} F{1}')" Grid.Row="0" />
+                                <!--cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 X-{0} Y+{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]"-->
+                                <Button Content="X-Y+" Grid.Column="1" Grid.Row="0" Background="Transparent" cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 X-{0} Y+{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]" />
+                                <Button Content="X-" Grid.Column="1" Grid.Row="1" cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 X-{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]"/>
+                                <Button Content="X-Y-" Grid.Column="1" Grid.Row="2" cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 X-{0} Y-{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]" />
+                                <Button Content="Y+" Grid.Column="2" cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 Y+{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]" Grid.Row="0" />
                                 <Button Content="Home" cal:Message.Attach="SystemCommand('$H')" Grid.Column="2" Grid.Row="1"/>
-                                <Button Content="Y-" Grid.Column="2" Grid.Row="2" cal:Message.Attach="JoggingCommand('G91 G21 Y-{0} F{1}')" />
-                                <Button Content="X+Y+" Grid.Column="3" Grid.Row="0" cal:Message.Attach="JoggingCommand('G91 G21 X+{0} Y+{0} F{1}')"/>
-                                <Button Content="X+" Grid.Column="3" Grid.Row="1" cal:Message.Attach="JoggingCommand('G91 G21 X+{0} F{1}')"/>
-                                <Button Content="X+Y-" Grid.Column="3" Grid.Row="2"  cal:Message.Attach="JoggingCommand('G91 G21 X+{0} Y-{0} F{1}')"/>
+                                <Button Content="Y-" Grid.Column="2" Grid.Row="2" cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 Y-{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]" />
+                                <Button Content="X+Y+" Grid.Column="3" Grid.Row="0" cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 X+{0} Y+{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]"/>
+                                <Button Content="X+" Grid.Column="3" Grid.Row="1" cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 X+{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]"/>
+                                <Button Content="X+Y-" Grid.Column="3" Grid.Row="2"  cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 X+{0} Y-{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]"/>
                                 <Label Content="Distance" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" />
                                 <Label Content="Speed"  Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" />
                                 <Grid Grid.Row="0" Grid.Column="4" Grid.RowSpan="3" >
@@ -339,8 +341,8 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
-                                    <Button Content="Z+" Grid.Row="0"  cal:Message.Attach="JoggingCommand('G91 G21 Z+{0} F{1}')"/>
-                                    <Button Content="Z-" Grid.Row="1" cal:Message.Attach="JoggingCommand('G91 G21 Z-{0} F{1}')" />
+                                    <Button Content="Z+" Grid.Row="0"  cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 Z+{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]"/>
+                                    <Button Content="Z-" Grid.Row="1" cal:Message.Attach="[Event PreviewMouseDown] = [Action JoggingCommand('G91 G21 Z-{0} F{1}')]; [Event PreviewMouseUp] = [Action CancelJogging()]" />
                                 </Grid>
                             </Grid>
 
@@ -372,7 +374,7 @@
                         <Label HorizontalAlignment="Right" Content="Coolant state:" Grid.Column="0" Grid.Row="6"   />
                         <Label HorizontalAlignment="Right" Content="Active plane:" Grid.Column="0" Grid.Row="7"   />
 
-                        <ComboBox Grid.Row="0" Grid.Column="1" />
+                        <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding GrblStatus.WorkOffset}" FontWeight="Bold" FontSize="15" />
                         <ComboBox Grid.Row="1" Grid.Column="1" />
                         <ComboBox Grid.Row="2" Grid.Column="1" />
                         <ComboBox Grid.Row="3" Grid.Column="1" />
