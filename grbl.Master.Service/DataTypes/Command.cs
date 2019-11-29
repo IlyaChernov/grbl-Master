@@ -1,5 +1,7 @@
 ﻿namespace grbl.Master.Service.DataTypes
 {
+    using System.Collections.Generic;
+
     using grbl.Master.Service.Annotations;
     using grbl.Master.Service.Enum;
     using System.ComponentModel;
@@ -12,7 +14,9 @@
     {
         private string _data;
 
-        private CommandType? _type;
+        private RequestType? _type;
+
+        public List<ResponseType> ExpectedResponses { get; set; }
 
         private string _result;
 
@@ -36,7 +40,7 @@
         /// <summary>
         /// Type of command
         /// </summary>
-        public CommandType? Type
+        public RequestType? Type
         {
             get => _type;
             set

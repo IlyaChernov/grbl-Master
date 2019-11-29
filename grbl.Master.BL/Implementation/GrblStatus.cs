@@ -102,8 +102,8 @@
 
         private void Request()
         {
-            _commandSender.Send("?", CommandType.Realtime);
-            _commandSender.Send("$G", CommandType.System);
+            _commandSender.Send("?", RequestType.Realtime);
+            _commandSender.Send("$G", RequestType.System);
         }
 
         private void ComServiceLineReceived(object sender, string e)

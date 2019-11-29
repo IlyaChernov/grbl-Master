@@ -1,7 +1,6 @@
 ﻿namespace grbl.Master.Service.Interface
 {
     using grbl.Master.Service.DataTypes;
-    using grbl.Master.Service.Enum;
     using System;
     using System.Collections.ObjectModel;
 
@@ -23,13 +22,9 @@
 
         event EventHandler<Command> CommandFinished;
 
-        void Send(string command, CommandType type);
+        void Send(string command);
 
-        void SendGCode(string command);
-
-        void SendSystem(string command);
-
-        void SendRealtime(string command);
+        void SendAsync(string command);
 
         void PurgeQueues();
     }

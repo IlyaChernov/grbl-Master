@@ -54,13 +54,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTypes\Command.cs" />
+    <Compile Include="Enum\RequestTypeAttribute.cs" />
+    <Compile Include="Enum\EnumHelper.cs" />
+    <Compile Include="Enum\ExpectedResponseAttribute.cs" />
     <Compile Include="Enum\CommandResultType.cs" />
     <Compile Include="Enum\CommandType.cs" />
+    <Compile Include="Enum\CharListAttribute.cs" />
+    <Compile Include="Enum\RegexAttribute.cs" />
+    <Compile Include="Enum\RequestType.cs" />
     <Compile Include="Enum\ConnectionState.cs" />
+    <Compile Include="Enum\ResponseType.cs" />
+    <Compile Include="Implementation\GrblCommandPreProcessor.cs" />
     <Compile Include="Implementation\CommandSender.cs" />
     <Compile Include="Implementation\COMService.cs" />
+    <Compile Include="Implementation\GrblResponseTypeFinder.cs" />
     <Compile Include="Interface\ICommandSender.cs" />
     <Compile Include="Interface\ICOMService.cs" />
+    <Compile Include="Interface\IGrblCommandPreProcessor.cs" />
+    <Compile Include="Interface\IGrblResponseTypeFinder.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

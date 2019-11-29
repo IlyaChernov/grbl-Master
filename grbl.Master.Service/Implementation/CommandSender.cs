@@ -18,47 +18,14 @@
 
         private readonly IComService _comService;
 
+        private readonly IGrblResponseTypeFinder _responseTypeFinder;
+
+        private readonly IGrblCommandPreProcessor _commandPreProcessor;
+
         private readonly object _lockObject = new object();
 
         private bool _processing;
 
-        private readonly char[] _realtimeCommands =
-            {
-                // Basic
-                '\x18', // (ctrl-x) : Soft-Reset
-                '?', // Status Report Query
-                '~', // Cycle Start / Resume
-                '!', // Feed Hold
-
-                // Extended
-                '\x84', // Safety door
-                '\x85', // Jog Cancel
-
-                // Feed Overrides
-                '\x90', // Set 100% of programmed rate.
-                '\x91', // Increase 10%
-                '\x92', // Decrease 10%
-                '\x93', // Increase 1%
-                '\x94', // Decrease 1%
-
-                // Rapid Overrides
-                '\x95', // Set to 100% full rapid rate.
-                '\x96', // Set to 50% of rapid rate.
-                '\x97', // Set to 25% of rapid rate.
-
-                // Spindle Speed Overrides
-                '\x99', // Set 100% of programmed spindle speed
-                '\x9A', // Increase 10%
-                '\x9B', // Decrease 10%
-                '\x9C', // Increase 1%
-                '\x9D', // Decrease 1%
-
-                //Toggles
-                '\x9E', //Toggle Spindle Stop
-                '\xA0', //Toggle Flood Coolant
-                '\xA1' //Toggle Mist Coolant
-            };
-        
         private readonly SynchronizationContext _uiContext;
 
         readonly Subject<Unit> _stopSubject = new Subject<Unit>();
@@ -67,10 +34,12 @@
 
         private int _bufferSizeLimit = 100;
 
-        public CommandSender(IComService comService)
+        public CommandSender(IComService comService, IGrblResponseTypeFinder responseTypeFinder, IGrblCommandPreProcessor commandPreProcessor)
         {
             _uiContext = SynchronizationContext.Current;
             _comService = comService;
+            _responseTypeFinder = responseTypeFinder;
+            _commandPreProcessor = commandPreProcessor;
             _comService.LineReceived += ComServiceLineReceived;
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
         }
@@ -81,20 +50,10 @@
             Observable.Timer(TimeSpan.Zero, TimeSpan.Zero).TakeUntil(_stopSubject).Subscribe(
                 l =>
                     {
-                        //Command cmd;
                         if (_commandQueue.TryPeek(out var cmd) && cmd.Data.Length + _waitingCommandQueue.Select(x => x.Data.Length).Sum() <= _bufferSizeLimit && _commandQueue.TryDequeue(out var command))
                         {
                             Send(command);
                         }
-
-                        //if (_commandQueue.Any() && _commandQueue.Peek().Data.Length
-                        //    + _waitingCommandQueue.Select(x => x.Data.Length).Sum() <= _bufferSizeLimit)
-                        //{
-                        //    lock (_lockObject)
-                        //    {
-                        //        Send(_commandQueue.Dequeue());
-                        //    }
-                        //}
                     });
         }
 
@@ -108,11 +67,8 @@
 
         public event EventHandler<Command> CommandFinished;
 
-        public void Send(string command, CommandType type)
+        public void Send(string command)
         {
-            var realtimeOverride = type != CommandType.Realtime && command.Length == 1
-                                                                && _realtimeCommands.Any(x => x == command[0]);
-
             lock (_lockObject)
             {
                 _uiContext.Send(x => { CommunicationLog.Add("grbl <=" + command); }, null);
@@ -120,9 +76,11 @@
 
             OnCommunicationLogUpdated();
 
-            var cmd = new Command { Data = command, Type = realtimeOverride ? CommandType.Realtime : type };
+            var cmd = new Command { Data = command };
 
-            if (cmd.Type != CommandType.Realtime)
+            _commandPreProcessor.Process(ref cmd);
+
+            if (cmd.Type != RequestType.Realtime)
             {
                 lock (_lockObject)
                 {
@@ -132,19 +90,9 @@
             else Send(cmd);
         }
 
-        public void SendGCode(string command)
+        public void SendAsync(string command)
         {
-            Observable.Start(() => { Send(command, CommandType.GCode); }).Subscribe();
-        }
-
-        public void SendSystem(string command)
-        {
-            Observable.Start(() => { Send(command, CommandType.System); }).Subscribe();
-        }
-
-        public void SendRealtime(string command)
-        {
-            Observable.Start(() => { Send(command, CommandType.Realtime); }).Subscribe();
+            Observable.Start(() => { Send(command); }).Subscribe();
         }
 
         public void PurgeQueues()
@@ -157,8 +105,6 @@
             {
                 _commandQueue.TryDequeue(out var dummy);
             }
-            //_waitingCommandQueue.Clear();
-            //_commandQueue.Clear();
         }
 
         private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
@@ -195,16 +141,15 @@
             {
                 _uiContext.Send(x => { CommunicationLog.Add("grbl =>" + e); }, null);
 
-                if ((e.StartsWith("ok") || e.StartsWith("error")) && _waitingCommandQueue.Any() && _waitingCommandQueue.TryDequeue(out var cmd)) // _waitingCommandQueue.Any())
+                var type = _responseTypeFinder.GetType(e);
+
+                if ((type == ResponseType.Ok || type == ResponseType.Error) && _waitingCommandQueue.Any() && _waitingCommandQueue.TryDequeue(out var cmd))
                 {
-                    //var cmd = _waitingCommandQueue.Dequeue();
-                    //_waitingCommandQueue.TryDequeue(out var cmd);
-                    
-                    if (e.StartsWith("ok"))
+                    if (type == ResponseType.Ok)
                     {
                         cmd.ResultType = CommandResultType.Ok;
                     }
-                    else if (e.StartsWith("error"))
+                    else if (type == ResponseType.Error)
                     {
                         cmd.ResultType = CommandResultType.Error;
                         cmd.CommandResultCause = e.Split(':')[1];
@@ -221,8 +166,6 @@
                 }
                 else if (_waitingCommandQueue.Any() && _waitingCommandQueue.TryPeek(out var comd))
                 {
-                    //var cmd = _waitingCommandQueue.Peek();
-
                     comd.Result += (string.IsNullOrEmpty(comd.Result) ? "" : Environment.NewLine) + e;
                 }
             }
@@ -233,7 +176,7 @@
             if (cmd == null)
                 return;
 
-            if (cmd.Type != CommandType.Realtime && cmd.Type != CommandType.System)
+            if (cmd.Type != RequestType.Realtime)
             {
                 lock (_lockObject)
                 {
