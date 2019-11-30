@@ -5,72 +5,72 @@
     public enum CommandType
     {
         [Description("$")]
-        [Regex("\\$")]
+        [Regex("^\\$$")]
         [ExpectedResponse(ResponseType.HelpMessage, ResponseType.Ok)]
         [RequestType(RequestType.System)]
         Help,
         [Description("$$")]
-        [Regex("\\${2}")]
+        [Regex("^\\${2}$")]
         [ExpectedResponse(ResponseType.SettingPrintout, ResponseType.Ok)]
         [RequestType(RequestType.System)]
         VIewSettings,
         [Description("$x=val")]
-        [Regex("\\$\\d+=.+")]
+        [Regex("^\\$\\d+=.+$")]
         [ExpectedResponse(ResponseType.Ok)]
         [RequestType(RequestType.System)]
         SaveSetting,
         [Description("$#")]
-        [Regex("\\$#")]
+        [Regex("^\\$#$")]
         [ExpectedResponse(ResponseType.ParameterPrintout, ResponseType.Ok)]
         [RequestType(RequestType.System)]
         ViewGCodeParams,
         [Description("$G")]
-        [Regex("\\$G")]
+        [Regex("^\\$G$")]
         [ExpectedResponse(ResponseType.GCodeState, ResponseType.Ok)]
         [RequestType(RequestType.System)]
         ViewGCodeParser,
         [Description("$I")]
-        [Regex("\\$I")]
+        [Regex("^\\$I$")]
         [ExpectedResponse(ResponseType.BuildInfo, ResponseType.Ok)]
         [RequestType(RequestType.System)]
         ViewBuildInfo,
         [Description("$N")]
-        [Regex("\\$N")]
+        [Regex("^\\$N$")]
         [ExpectedResponse(ResponseType.StartupLinePrintout, ResponseType.Ok)]
         [RequestType(RequestType.System)]
         ViewStartUpBlock,
         [Description("$Nx=line")]
-        [Regex("\\$Nx=.*")]
+        [Regex("^\\$Nx=.*$")]
         [ExpectedResponse(ResponseType.Ok)]
         [RequestType(RequestType.System)]
         SaveStartupBlock,
         [Description("$C")]
-        [Regex("\\$C")]
+        [Regex("^\\$C$")]
         [ExpectedResponse(ResponseType.Ok)]
         [RequestType(RequestType.System)]
         CheckGCodeMode,
         [Description("$X")]
-        [Regex("\\$X")]
+        [Regex("^\\$X$")]
         [ExpectedResponse(ResponseType.Ok)]
         [RequestType(RequestType.System)]
         KillAlarm,
         [Description("$H")]
-        [Regex("\\$H")]
+        [Regex("^\\$H$")]
         [ExpectedResponse(ResponseType.Ok)]
         [RequestType(RequestType.System)]
         RunHoming,
         [Description("$J=line")]
-        [Regex("\\$J=.*")]
+        [Regex("^\\$J=.*$")]
         [ExpectedResponse(ResponseType.Ok)]
         [RequestType(RequestType.System)]
         RunJogging,
         [Description("$RST=$/#/*")]
-        [Regex("\\$RST=.*")]
+        [Regex("^\\$RST=.*$")]
         [ExpectedResponse(ResponseType.Ok)]
         [RequestType(RequestType.System)]
         RestoreEEPROM,
         [Description("$SLP")]
-        [Regex("\\$SLP")]
+        [Regex("^\\$SLP$")]
         [ExpectedResponse(ResponseType.Ok)]
         [RequestType(RequestType.System)]
         EnableSleep,
@@ -79,12 +79,10 @@
         //Realtime
         [Description("0x18")]
         [CharList(0x18)]
-        [ExpectedResponse(ResponseType.Ok)]
         [RequestType(RequestType.Realtime)]
         SoftReset,
         [Description("?")]
         [CharList(0x3F)]
-        [ExpectedResponse(ResponseType.StatusReport, ResponseType.Ok)]
         [RequestType(RequestType.Realtime)]
         ViewStatusReport,
         [Description("~")]

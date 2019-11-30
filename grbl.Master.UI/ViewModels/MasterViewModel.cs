@@ -39,155 +39,155 @@
             ICommandSender commandSender,
             IGrblDispatcher grblDispatcher)
         {
-            this._grblDispatcher = grblDispatcher;
-            this.ComConnectionViewModel = new COMConnectionViewModel(comService);
-            this._comService = comService;
-            this._grblStatus = grblStatus;
-            this._commandSender = commandSender;
+            _grblDispatcher = grblDispatcher;
+            ComConnectionViewModel = new COMConnectionViewModel(comService);
+            _comService = comService;
+            _grblStatus = grblStatus;
+            _commandSender = commandSender;
 
-            this._grblStatus.GrblStatusModel.MachineStateChanged += this.GrblStatusModelMachineStateChanged;
-            this._comService.ConnectionStateChanged += this.ComServiceConnectionStateChanged;
-            this._commandSender.CommandListUpdated += this.CommandSenderCommandListUpdated;
-            this._commandSender.CommunicationLogUpdated += this.CommandSenderCommunicationLogUpdated;
+            _grblStatus.GrblStatusModel.MachineStateChanged += GrblStatusModelMachineStateChanged;
+            _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
+            _commandSender.CommandListUpdated += CommandSenderCommandListUpdated;
+            _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
         }
 
         public double ManualDistance
         {
-            get => this._manualDistance;
+            get => _manualDistance;
             set
             {
-                this._manualDistance = value;
-                this.NotifyOfPropertyChange(() => this.ManualDistance);
+                _manualDistance = value;
+                NotifyOfPropertyChange(() => ManualDistance);
             }
         }
 
         public double ManualSpeed
         {
-            get => this._manualSpeed;
+            get => _manualSpeed;
             set
             {
-                this._manualSpeed = value;
-                this.NotifyOfPropertyChange(() => this.ManualSpeed);
+                _manualSpeed = value;
+                NotifyOfPropertyChange(() => ManualSpeed);
             }
         }
 
-        public GrblStatusModel GrblStatus => this._grblStatus.GrblStatusModel;
+        public GrblStatusModel GrblStatus => _grblStatus.GrblStatusModel;
 
-        public ObservableCollection<Command> CommandList => this._commandSender.CommandList;
+        public ObservableCollection<Command> CommandList => _commandSender.CommandList;
 
-        public ObservableCollection<string> CommunicationLog => this._commandSender.CommunicationLog;
+        public ObservableCollection<string> CommunicationLog => _commandSender.CommunicationLog;
 
         public COMConnectionViewModel ComConnectionViewModel { get; }
 
         public string ManualCommand
         {
-            get => this._manualCommand;
+            get => _manualCommand;
             set
             {
-                this._manualCommand = value;
-                this.NotifyOfPropertyChange(() => this.ManualCommand);
-                this.NotifyOfPropertyChange(() => this.CanSendManualCommand);
+                _manualCommand = value;
+                NotifyOfPropertyChange(() => ManualCommand);
+                NotifyOfPropertyChange(() => CanSendManualCommand);
             }
         }
 
         public bool CanSendManualCommand =>
-            !string.IsNullOrWhiteSpace(this.ManualCommand) && this._comService.IsConnected;
+            !string.IsNullOrWhiteSpace(ManualCommand) && _comService.IsConnected;
 
         private bool BasicCanSendCommand =>
-            this._comService.IsConnected && this._grblStatus.GrblStatusModel.MachineState != MachineState.Offline
-                                         && this._grblStatus.GrblStatusModel.MachineState != MachineState.Online;
+            _comService.IsConnected && _grblStatus.GrblStatusModel.MachineState != MachineState.Offline
+                                         && _grblStatus.GrblStatusModel.MachineState != MachineState.Online;
 
-        public bool CanSendEnterCommand => this.BasicCanSendCommand;
+        public bool CanSendEnterCommand => BasicCanSendCommand;
 
-        public bool CanGCommand => this.BasicCanSendCommand;
+        public bool CanGCommand => BasicCanSendCommand;
 
-        public bool CanSystemCommand => this.BasicCanSendCommand;
+        public bool CanSystemCommand => BasicCanSendCommand;
 
-        public bool CanRealtimeCommand => this.BasicCanSendCommand;
+        public bool CanRealtimeCommand => BasicCanSendCommand;
 
-        public bool CanRealtimeIntCommand => this.BasicCanSendCommand;
+        public bool CanRealtimeIntCommand => BasicCanSendCommand;
 
-        public bool CanJoggingCommand => this.BasicCanSendCommand;
+        public bool CanJoggingCommand => BasicCanSendCommand;
 
-        public bool CanCancelJogging => this.BasicCanSendCommand;
+        public bool CanCancelJogging => BasicCanSendCommand;
 
         private void GrblStatusModelMachineStateChanged(object sender, MachineState e)
         {
-            this.NotifyOfPropertyChange(() => this.CanSendManualCommand);
-            this.NotifyOfPropertyChange(() => this.CanSendEnterCommand);
-            this.NotifyOfPropertyChange(() => this.CanGCommand);
-            this.NotifyOfPropertyChange(() => this.CanSystemCommand);
-            this.NotifyOfPropertyChange(() => this.CanRealtimeCommand);
-            this.NotifyOfPropertyChange(() => this.CanRealtimeIntCommand);
-            this.NotifyOfPropertyChange(() => this.CanJoggingCommand);
+            NotifyOfPropertyChange(() => CanSendManualCommand);
+            NotifyOfPropertyChange(() => CanSendEnterCommand);
+            NotifyOfPropertyChange(() => CanGCommand);
+            NotifyOfPropertyChange(() => CanSystemCommand);
+            NotifyOfPropertyChange(() => CanRealtimeCommand);
+            NotifyOfPropertyChange(() => CanRealtimeIntCommand);
+            NotifyOfPropertyChange(() => CanJoggingCommand);
         }
 
         private void CommandSenderCommunicationLogUpdated(object sender, EventArgs e)
         {
-            this.NotifyOfPropertyChange(() => this.CommunicationLog);
+            NotifyOfPropertyChange(() => CommunicationLog);
         }
 
         private void CommandSenderCommandListUpdated(object sender, EventArgs e)
         {
-            this.NotifyOfPropertyChange(() => this.CommandList);
+            NotifyOfPropertyChange(() => CommandList);
         }
 
         private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
         {
-            this.NotifyOfPropertyChange(() => this.CanSendManualCommand);
-            this.NotifyOfPropertyChange(() => this.CanSendEnterCommand);
-            this.NotifyOfPropertyChange(() => this.CanGCommand);
-            this.NotifyOfPropertyChange(() => this.CanSystemCommand);
-            this.NotifyOfPropertyChange(() => this.CanRealtimeCommand);
-            this.NotifyOfPropertyChange(() => this.CanRealtimeIntCommand);
-            this.NotifyOfPropertyChange(() => this.CanJoggingCommand);
+            NotifyOfPropertyChange(() => CanSendManualCommand);
+            NotifyOfPropertyChange(() => CanSendEnterCommand);
+            NotifyOfPropertyChange(() => CanGCommand);
+            NotifyOfPropertyChange(() => CanSystemCommand);
+            NotifyOfPropertyChange(() => CanRealtimeCommand);
+            NotifyOfPropertyChange(() => CanRealtimeIntCommand);
+            NotifyOfPropertyChange(() => CanJoggingCommand);
         }
 
         public void SendManualCommand()
         {
-            this._commandSender.SendGCode(this.ManualCommand);
+            _commandSender.SendAsync(ManualCommand);
         }
 
         public void SendEnterCommand()
         {
-            this.SendManualCommand();
+            SendManualCommand();
         }
 
         public void GCommand(string code)
         {
-            this._commandSender.SendGCode(code);
+            _commandSender.SendAsync(code);
         }
 
         public void SystemCommand(string code)
         {
-            this._commandSender.SendSystem(code);
+            _commandSender.SendAsync(code);
         }
 
         public void RealtimeCommand(string code)
         {
-            this._commandSender.SendRealtime(code);
+            _commandSender.SendAsync(code);
         }
 
         public void RealtimeIntCommand(int code)
         {
-            this._commandSender.SendRealtime(((char)code).ToString());
+            _commandSender.SendAsync(((char)code).ToString());
         }
 
         public void JoggingCommand(string code)
         {
-            this._jogStopSubject.OnNext(Unit.Default);
-            Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(1)).TakeUntil(this._jogStopSubject).Subscribe(
+            _jogStopSubject.OnNext(Unit.Default);
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(500)).TakeUntil(_jogStopSubject).Subscribe(
                 l =>
                     {
-                        this._commandSender.SendGCode(
-                            "$J=" + string.Format(code, this.ManualDistance, this.ManualSpeed));
+                        _commandSender.SendAsync(
+                            "$J=" + string.Format(code, ManualDistance, ManualSpeed));
                     });
         }
 
         public void CancelJogging()
         {
-            this._jogStopSubject.OnNext(Unit.Default);
-            if (this._grblStatus.GrblStatusModel.MachineState == MachineState.Jog) this.RealtimeCommand("!");
+            _jogStopSubject.OnNext(Unit.Default);
+            RealtimeIntCommand(0x85);
         }
     }
 }

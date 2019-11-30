@@ -16,6 +16,8 @@
             get;
         }
 
+        event EventHandler<Response> ResponseReceived;
+
         event EventHandler CommandListUpdated;
 
         event EventHandler CommunicationLogUpdated;

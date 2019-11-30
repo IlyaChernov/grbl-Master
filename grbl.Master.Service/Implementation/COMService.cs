@@ -93,7 +93,7 @@
 
             var serialData = System.Text.Encoding.UTF8.GetString(buffer);
 
-            Console.WriteLine("Incoming: {0}", serialData);
+            //Console.WriteLine("Incoming: {0}", serialData);
 
             var lines = (_buffer + serialData).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
@@ -102,7 +102,7 @@
                 if (lines.Last() == string.Empty)
                 {
                     _buffer = string.Empty;
-                    Console.WriteLine("Buf: {0}", _buffer);
+                    //Console.WriteLine("Buf: {0}", _buffer);
                     foreach (var line in lines)
                     {
                         OnLineReceived(line);
@@ -111,7 +111,7 @@
                 else
                 {
                     _buffer = lines.Last();
-                    Console.WriteLine("Buf: {0}", _buffer);
+                    //Console.WriteLine("Buf: {0}", _buffer);
                     foreach (var line in lines.Take(lines.Length - 1))
                     {
                         OnLineReceived(line);

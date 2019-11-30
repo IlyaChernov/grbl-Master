@@ -61,6 +61,8 @@
 
         public ObservableCollection<string> CommunicationLog { get; } = new ObservableCollection<string>();
 
+        public event EventHandler<Response> ResponseReceived;
+
         public event EventHandler CommandListUpdated;
 
         public event EventHandler CommunicationLogUpdated;
@@ -130,6 +132,11 @@
             CommunicationLogUpdated?.Invoke(this, EventArgs.Empty);
         }
 
+        private void OnResponseReceived(Response rsp)
+        {
+            ResponseReceived?.Invoke(this, rsp);
+        }
+
         private void OnCommandFinished(Command cmd)
         {
             CommandFinished?.Invoke(this, cmd);
@@ -142,6 +149,8 @@
                 _uiContext.Send(x => { CommunicationLog.Add("grbl =>" + e); }, null);
 
                 var type = _responseTypeFinder.GetType(e);
+
+                OnResponseReceived(new Response{Data = e, Type = type});
 
                 if ((type == ResponseType.Ok || type == ResponseType.Error) && _waitingCommandQueue.Any() && _waitingCommandQueue.TryDequeue(out var cmd))
                 {
@@ -166,7 +175,22 @@
                 }
                 else if (_waitingCommandQueue.Any() && _waitingCommandQueue.TryPeek(out var comd))
                 {
-                    comd.Result += (string.IsNullOrEmpty(comd.Result) ? "" : Environment.NewLine) + e;
+                    if (comd.ExpectedResponses.Any(x => x == type))
+                    {
+                        comd.Result += (string.IsNullOrEmpty(comd.Result) ? "" : Environment.NewLine) + e;
+                    }
+                    else
+                    {
+                        var newCommand = new Command { Result = e };
+                        _uiContext.Send(
+                            x =>
+                                {
+                                    CommandList.Add(newCommand);
+                                    OnCommandFinished(newCommand);
+                                    OnCommandListUpdated();
+                                },
+                            null);
+                    }
                 }
             }
         }
