@@ -281,7 +281,49 @@
 
                         <TextBox  Grid.Row="1" Grid.Column="0" Text="{Binding GrblStatus.MachineState}" FontWeight="Bold" FontSize="15" />
 
-                        <GroupBox Header="Jogging" Grid.Row="2" >
+                    </Grid>
+                    <Grid Grid.Column="2" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="95"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="26"/>
+                            <RowDefinition Height="26"/>
+                            <RowDefinition Height="26"/>
+                            <RowDefinition Height="26"/>
+                            <RowDefinition Height="26"/>
+                            <RowDefinition Height="26"/>
+                            <RowDefinition Height="26"/>
+                            <RowDefinition Height="26"/>
+                            <RowDefinition Height="26"/>
+                        </Grid.RowDefinitions>
+                        <Label HorizontalAlignment="Right" Content="Active offset:" Grid.Column="0" Grid.Row="0"    />
+                        <Label HorizontalAlignment="Right" Content="Distance mode:" Grid.Column="0" Grid.Row="1"    />
+                        <Label HorizontalAlignment="Right"  Content="FeedRate mode:" Grid.Column="0" Grid.Row="2"   />
+                        <Label HorizontalAlignment="Right" Content="Units:" Grid.Column="0" Grid.Row="3"   />
+                        <Label HorizontalAlignment="Right" Content="Work offset:" Grid.Column="0" Grid.Row="4"   />
+                        <Label HorizontalAlignment="Right" Content="Spindle state:" Grid.Column="0" Grid.Row="5"   />
+                        <Label HorizontalAlignment="Right" Content="Coolant state:" Grid.Column="0" Grid.Row="6"   />
+                        <Label HorizontalAlignment="Right" Content="Active plane:" Grid.Column="0" Grid.Row="7"   />
+
+                        <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding GrblStatus.CoordinateSystem}" FontWeight="Bold" FontSize="15" />
+                        <ComboBox Grid.Row="1" Grid.Column="1" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" />
+                        <ComboBox Grid.Row="3" Grid.Column="1" />
+                        <ComboBox Grid.Row="4" Grid.Column="1" />
+                        <ComboBox Grid.Row="5" Grid.Column="1" />
+                        <ComboBox Grid.Row="6" Grid.Column="1" />
+                        <ComboBox Grid.Row="7" Grid.Column="1" />
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="180" />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <GroupBox Header="Jogging" Grid.Row="0" >
                             <Grid   >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
@@ -347,93 +389,60 @@
 
                         </GroupBox>
 
-                    </Grid>
-                    <Grid Grid.Column="2" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="95"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                        </Grid.RowDefinitions>
-                        <Label HorizontalAlignment="Right" Content="Active offset:" Grid.Column="0" Grid.Row="0"    />
-                        <Label HorizontalAlignment="Right" Content="Distance mode:" Grid.Column="0" Grid.Row="1"    />
-                        <Label HorizontalAlignment="Right"  Content="FeedRate mode:" Grid.Column="0" Grid.Row="2"   />
-                        <Label HorizontalAlignment="Right" Content="Units:" Grid.Column="0" Grid.Row="3"   />
-                        <Label HorizontalAlignment="Right" Content="Work offset:" Grid.Column="0" Grid.Row="4"   />
-                        <Label HorizontalAlignment="Right" Content="Spindle state:" Grid.Column="0" Grid.Row="5"   />
-                        <Label HorizontalAlignment="Right" Content="Coolant state:" Grid.Column="0" Grid.Row="6"   />
-                        <Label HorizontalAlignment="Right" Content="Active plane:" Grid.Column="0" Grid.Row="7"   />
-
-                        <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding GrblStatus.CoordinateSystem}" FontWeight="Bold" FontSize="15" />
-                        <ComboBox Grid.Row="1" Grid.Column="1" />
-                        <ComboBox Grid.Row="2" Grid.Column="1" />
-                        <ComboBox Grid.Row="3" Grid.Column="1" />
-                        <ComboBox Grid.Row="4" Grid.Column="1" />
-                        <ComboBox Grid.Row="5" Grid.Column="1" />
-                        <ComboBox Grid.Row="6" Grid.Column="1" />
-                        <ComboBox Grid.Row="7" Grid.Column="1" />
-                    </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="180" />
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
 
 
-                        <TabControl Grid.Column="0"  Grid.Row="2">
-                            <TabItem Header="Commands">
-                                <ListView  ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                    <ListView.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel />
-                                        </ItemsPanelTemplate>
-                                    </ListView.ItemsPanel>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid ToolTip="{Binding Result}">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="30" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}"></TextBlock>
-                                                <TextBlock Padding="1, 0, 5, 0" Grid.Column="1" Text="{Binding Path=Data}"></TextBlock>
-                                                <TextBlock Grid.Column="2" Text="{Binding Path=Result}"></TextBlock>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </TabItem>
-                            <TabItem Header="Communication">
-                                <ListView  ItemsSource="{Binding CommunicationLog}" VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                    <ListView.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel />
-                                        </ItemsPanelTemplate>
-                                    </ListView.ItemsPanel>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" ToolTip="{Binding}"></TextBlock>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </TabItem>
-                        </TabControl>
                     </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Grbl config">
                 <Grid Background="#FFE5E5E5" />
+            </TabItem>
+            <TabItem Header="Communication">
+                <Grid Background="#FFE5E5E5" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="Commands log" />
+                    <Label Grid.Row="0" Grid.Column="1" Content="Communication log" />
+                    <ListView  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding CommandList}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ToolTip="{Binding Result}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}"></TextBlock>
+                                    <TextBlock Padding="1, 0, 5, 0" Grid.Column="1" Text="{Binding Path=Data}"></TextBlock>
+                                    <TextBlock Grid.Column="2" Text="{Binding Path=Result}"></TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView Grid.Column="1" Grid.Row="1" ItemsSource="{Binding CommunicationLog}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" ToolTip="{Binding}"></TextBlock>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
