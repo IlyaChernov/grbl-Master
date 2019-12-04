@@ -27,9 +27,9 @@
 
         private const string HelpTag = "^\\[HLP:.*?\\]$";
 
-        private const string ParameterTag = "^\\[((G54:) | (G55:) | (G56:) | (G57:) | (G58:) | (G59:) | (G28:) | (G30:) | (G92:) | (TLO:) | (PRB:)).*?\\]$";
+        private const string ParameterTag = "^\\[(G54|G55|G56|G57|G58|G59|G28|G30|G92|TLO|PRB):.*?\\]$";
 
-        private const string BuildInfoTag = "^\\[((VER:) | (OPT:)).*?\\]$";
+        private const string BuildInfoTag = "^\\[(VER|OPT):.*?\\]$";
 
         private const string EchoTag = "^\\[echo:.*?\\]$";
 

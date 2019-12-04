@@ -186,7 +186,6 @@
                                                                                                 } }
                                                                }
                                 }
-
                                   },
                                   {ResponseType.GCodeState, new ResponseProcessingDefinition{
                                            SplitAction = s => s.Split(new []{':', ' '}, StringSplitOptions.RemoveEmptyEntries),
