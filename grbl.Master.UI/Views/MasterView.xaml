@@ -6,7 +6,6 @@
         xmlns:cal="http://www.caliburnproject.org"        
         mc:Ignorable="d"
         xmlns:viewModel="clr-namespace:grbl.Master.UI.ViewModels"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         d:DataContext="{d:DesignInstance Type=viewModel:MasterViewModel, IsDesignTimeCreatable=False}"
         Title="grbl Master" Height="660" Width="800" MinWidth="800" MinHeight="600">
     <Grid>

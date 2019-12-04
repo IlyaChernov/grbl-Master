@@ -9,12 +9,11 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
+    using System.Text;
 
     public class COMService : IComService
     {
         readonly SerialPort _sp = new SerialPort();
-
-        public event EventHandler<string> DataReceived;
 
         public event EventHandler<string> LineReceived;
 
@@ -23,11 +22,6 @@
         private string _buffer = "";
 
         readonly Subject<Unit> _stopSubject = new Subject<Unit>();
-
-        public virtual void OnDataReceived(string e)
-        {
-            DataReceived?.Invoke(this, e);
-        }
 
         public virtual void OnLineReceived(string e)
         {
@@ -52,10 +46,11 @@
             {
                 return;
             }
-            
+
             _sp.PortName = portName;
             _sp.BaudRate = baudRate;
             _sp.ReadTimeout = 5000;
+            _sp.Encoding = Encoding.GetEncoding(28591);
             _sp.Open();
             _sp.DiscardInBuffer();
             _sp.DiscardOutBuffer();
@@ -91,9 +86,7 @@
             }
             _sp.Read(buffer, 0, cnt);
 
-            var serialData = System.Text.Encoding.UTF8.GetString(buffer);
-
-            //Console.WriteLine("Incoming: {0}", serialData);
+            var serialData = Encoding.UTF8.GetString(buffer);
 
             var lines = (_buffer + serialData).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
@@ -102,7 +95,6 @@
                 if (lines.Last() == string.Empty)
                 {
                     _buffer = string.Empty;
-                    //Console.WriteLine("Buf: {0}", _buffer);
                     foreach (var line in lines)
                     {
                         OnLineReceived(line);
@@ -111,15 +103,12 @@
                 else
                 {
                     _buffer = lines.Last();
-                    //Console.WriteLine("Buf: {0}", _buffer);
                     foreach (var line in lines.Take(lines.Length - 1))
                     {
                         OnLineReceived(line);
                     }
                 }
             }
-
-            //OnDataReceived(serialData);
         }
 
         public void SendImmediate(string data)
@@ -142,7 +131,7 @@
                             _sp.DiscardInBuffer();
                             _sp.DiscardOutBuffer();
                             _sp.Close();
-                        }                        
+                        }
 
                         _buffer = string.Empty;
                         OnConnectionStateChanged();

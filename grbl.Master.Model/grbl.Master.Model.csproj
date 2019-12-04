@@ -37,7 +37,17 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccessoryState.cs" />
+    <Compile Include="Enum\CoolantState.cs" />
+    <Compile Include="Enum\SpindleState.cs" />
+    <Compile Include="Enum\ProgramMode.cs" />
+    <Compile Include="Enum\ToolLengthMode.cs" />
+    <Compile Include="Enum\CutterRaduisCompensation.cs" />
+    <Compile Include="Enum\UnitsMode.cs" />
+    <Compile Include="Enum\FeedRateMode.cs" />
+    <Compile Include="Enum\ArcDistanceMode.cs" />
+    <Compile Include="Enum\ActivePlane.cs" />
+    <Compile Include="Enum\CoordinateSystem.cs" />
+    <Compile Include="Enum\MotionMode.cs" />
     <Compile Include="GrblStatusModel.cs" />
     <Compile Include="OverrideValues.cs" />
     <Compile Include="InputPinState.cs" />

@@ -170,15 +170,19 @@
 
         public void RealtimeIntCommand(int code)
         {
-            _commandSender.SendAsync(((char)code).ToString());
+            _commandSender.SendAsync(new string(new[] { (char)code }));
         }
+
+        private int _joggingCount;
 
         public void JoggingCommand(string code)
         {
+            this._joggingCount = 0;
             _jogStopSubject.OnNext(Unit.Default);
             Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(500)).TakeUntil(_jogStopSubject).Subscribe(
                 l =>
                     {
+                        this._joggingCount++;
                         _commandSender.SendAsync(
                             "$J=" + string.Format(code, ManualDistance, ManualSpeed));
                     });
@@ -187,7 +191,8 @@
         public void CancelJogging()
         {
             _jogStopSubject.OnNext(Unit.Default);
-            RealtimeIntCommand(0x85);
+            if (this._joggingCount > 1)
+                RealtimeIntCommand(0x0085);
         }
     }
 }

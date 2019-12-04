@@ -37,7 +37,7 @@
 
         private const string StartupLineTag = " ^>((.+?:((ok)|(error:.*?)))|(:error:7))$";
 
-        private Dictionary<ResponseType, Regex> regexes = new Dictionary<ResponseType, Regex>
+        private readonly Dictionary<ResponseType, Regex> _regexes = new Dictionary<ResponseType, Regex>
                                                               {
                                                                   { ResponseType.Ok, new Regex(OkTag) },
                                                                   { ResponseType.Error, new Regex(ErrorTag) },
@@ -57,7 +57,7 @@
 
         public ResponseType GetType(string line)
         {
-            return regexes.Single(x => x.Value.IsMatch(line)).Key;
+            return this._regexes.Single(x => x.Value.IsMatch(line)).Key;
         }
     }
 }

@@ -10,9 +10,11 @@
 
         private long _speed;
 
+        private long _tool;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public long Feed
+        public long FeedRate
         {
             get => _feed;
             set
@@ -22,7 +24,17 @@
             }
         }
 
-        public long Speed
+        public long ToolNumber
+        {
+            get => _tool;
+            set
+            {
+                _tool = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public long SpindleSpeed
         {
             get => _speed;
             set

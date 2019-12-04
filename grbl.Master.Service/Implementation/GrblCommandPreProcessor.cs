@@ -33,7 +33,7 @@
             public List<ResponseType> ExpectedTypes;
         }
 
-        private Dictionary<CommandType, Metadata> regexeTable;
+        private Dictionary<CommandType, Metadata> _regexeTable;
 
         public GrblCommandPreProcessor()
         {
@@ -42,7 +42,7 @@
 
         private void PrepareregexTable()
         {
-            regexeTable = System.Enum.GetValues(typeof(CommandType)).Cast<CommandType>().ToDictionary(
+            this._regexeTable = System.Enum.GetValues(typeof(CommandType)).Cast<CommandType>().ToDictionary(
                 type => type,
                 type => new Metadata
                 {
@@ -58,9 +58,9 @@
         {
             var line = cmd.Data;
             var result = line.Length > 1
-                             ? regexeTable.Where(x => x.Value.Regex != null)
+                             ? this._regexeTable.Where(x => x.Value.Regex != null)
                                  .SingleOrDefault(x => x.Value.Regex.IsMatch(line))
-                             : regexeTable.Where(x => x.Value.CharList != null)
+                             : this._regexeTable.Where(x => x.Value.CharList != null)
                                  .SingleOrDefault(x => x.Value.CharList.Any(y => y == line[0]));
 
             if (!result.Equals(default))
