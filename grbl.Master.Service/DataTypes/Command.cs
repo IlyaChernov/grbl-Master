@@ -6,7 +6,6 @@
     using grbl.Master.Service.Enum;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
-    using System.Text;
 
     /// <summary>
     /// Command that will be stored in memory after sending. Can be updated with results.
@@ -14,8 +13,6 @@
     public class Command : INotifyPropertyChanged
     {
         private string _data;
-
-        private byte[] _dataBytes;
 
         private RequestType? _type;
 
@@ -32,23 +29,10 @@
         /// </summary>
         public string Data
         {
-            get => _data ??= _dataBytes != null ? Encoding.Unicode.GetString(_dataBytes) : default;
+            get => _data;
             set
             {
                 _data = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Data sent
-        /// </summary>
-        public byte[] DataBytes
-        {
-            get => _dataBytes ??= !string.IsNullOrEmpty(_data) ? Encoding.Unicode.GetBytes(_data) : default;
-            set
-            {
-                _dataBytes = value;
                 OnPropertyChanged();
             }
         }

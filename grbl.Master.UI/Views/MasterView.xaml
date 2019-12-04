@@ -373,7 +373,7 @@
                         <Label HorizontalAlignment="Right" Content="Coolant state:" Grid.Column="0" Grid.Row="6"   />
                         <Label HorizontalAlignment="Right" Content="Active plane:" Grid.Column="0" Grid.Row="7"   />
 
-                        <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding GrblStatus.WorkOffset}" FontWeight="Bold" FontSize="15" />
+                        <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding GrblStatus.CoordinateSystem}" FontWeight="Bold" FontSize="15" />
                         <ComboBox Grid.Row="1" Grid.Column="1" />
                         <ComboBox Grid.Row="2" Grid.Column="1" />
                         <ComboBox Grid.Row="3" Grid.Column="1" />
