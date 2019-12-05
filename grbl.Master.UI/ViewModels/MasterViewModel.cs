@@ -54,10 +54,9 @@
             _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
         }
 
-        public List<double> JoggingDistances => new List<double> { 0.001, 0.01, 0.1, 1, 5, 10, 100 };
+        public List<double> JoggingDistances => new List<double> { 0.01, 0.1, 1, 5, 10, 100 };
 
-        public List<double> FeedRates => new List<double> {5, 10, 50, 100, 500, 800 };
-
+        public List<double> FeedRates => new List<double> { 5, 10, 50, 100, 500, 800 };
 
         public double SelectedJoggingDistance
         {
@@ -66,7 +65,7 @@
             {
                 _selectedJoggingDistance = value;
                 NotifyOfPropertyChange(() => SelectedJoggingDistance);
-            } 
+            }
         }
 
         public double SelectedFeedRate
