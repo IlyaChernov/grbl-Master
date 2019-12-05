@@ -11,30 +11,18 @@
         public event EventHandler<MachineState> MachineStateChanged;
 
         private MachineState _machineState;
-
         private MotionMode _motionMode;
-
         private CoordinateSystem _coordinateSystem;
-
         private ActivePlane _activePlane;
-
+        private DistanceMode _distanceMode;
         private ArcDistanceMode _arcDistanceMode;
-
         private FeedRateMode _feedRateMode;
-
         private UnitsMode _unitsMode;
-
-
         private CutterRaduisCompensation _cutterRaduisCompensation;
-
         private ToolLengthMode _toolLengthMode;
-
         private ProgramMode _programMode;
-
         private SpindleState _spindleState;
-
         private CoolantState _coolantState;
-
         private Position _machinePosition = new Position();
         private Position _workPosition = new Position();
         private Position _workOffset = new Position();
@@ -98,6 +86,19 @@
             }
         }
 
+        public DistanceMode DistanceMode
+        {
+            get => this._distanceMode;
+            set
+            {
+                if (_distanceMode != value)
+                {
+                    _distanceMode = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+         
         public ArcDistanceMode ArcDistanceMode
         {
             get => this._arcDistanceMode;

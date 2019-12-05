@@ -97,11 +97,6 @@
             Observable.Start(() => { Send(command); }).Subscribe();
         }
 
-        //public void SendAsync(byte[] command)
-        //{
-        //    Observable.Start(() => { Send(command); }).Subscribe();
-        //}
-
         public void PurgeQueues()
         {
             while (_waitingCommandQueue.Any())

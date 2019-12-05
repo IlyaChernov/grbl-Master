@@ -209,6 +209,12 @@
                                                                                                      Enum.TryParse<ActivePlane>(s.Replace('.', '_'), true, out var result);
                                                                                                      GrblStatusModel.ActivePlane = result;
                                                                                                  }},
+                                                                    new ResponseProcessor{TagExpression = "^G9(0|1)$", Action =
+                                                                                             s =>
+                                                                                                 {
+                                                                                                     Enum.TryParse<DistanceMode>(s.Replace('.', '_'), true, out var result);
+                                                                                                     GrblStatusModel.DistanceMode = result;
+                                                                                                 }},
                                                                     new ResponseProcessor{TagExpression = "^G91\\.1$", Action =
                                                                                              s =>
                                                                                                  {

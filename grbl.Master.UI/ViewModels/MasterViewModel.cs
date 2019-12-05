@@ -1,6 +1,7 @@
 ﻿namespace grbl.Master.UI.ViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Reactive;
     using System.Reactive.Linq;
@@ -29,9 +30,9 @@
 
         private string _manualCommand;
 
-        private double _manualDistance = 1;
+        private double _selectedJoggingDistance = 1;
 
-        private double _manualSpeed = 500;
+        private double _selectedFeedRate = 500;
 
         public MasterViewModel(
             IComService comService,
@@ -51,23 +52,28 @@
             _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
         }
 
-        public double ManualDistance
+        public List<double> JoggingDistances => new List<double> { 0.001, 0.01, 0.1, 1, 5, 10, 100 };
+
+        public List<double> FeedRates => new List<double> {5, 10, 50, 100, 500, 800 };
+
+
+        public double SelectedJoggingDistance
         {
-            get => _manualDistance;
+            get => _selectedJoggingDistance;
             set
             {
-                _manualDistance = value;
-                NotifyOfPropertyChange(() => ManualDistance);
-            }
+                _selectedJoggingDistance = value;
+                NotifyOfPropertyChange(() => SelectedJoggingDistance);
+            } 
         }
 
-        public double ManualSpeed
+        public double SelectedFeedRate
         {
-            get => _manualSpeed;
+            get => _selectedFeedRate;
             set
             {
-                _manualSpeed = value;
-                NotifyOfPropertyChange(() => ManualSpeed);
+                _selectedFeedRate = value;
+                NotifyOfPropertyChange(() => SelectedFeedRate);
             }
         }
 
@@ -184,7 +190,7 @@
                     {
                         this._joggingCount++;
                         _commandSender.SendAsync(
-                            "$J=" + string.Format(code, ManualDistance, ManualSpeed));
+                            "$J=" + string.Format(code, SelectedJoggingDistance, SelectedFeedRate));
                     });
         }
 

@@ -37,6 +37,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enum\DistanceMode.cs" />
     <Compile Include="Enum\CoolantState.cs" />
     <Compile Include="Enum\SpindleState.cs" />
     <Compile Include="Enum\ProgramMode.cs" />

@@ -42,7 +42,7 @@
 
         private void PrepareregexTable()
         {
-            this._regexeTable = System.Enum.GetValues(typeof(CommandType)).Cast<CommandType>().ToDictionary(
+            _regexeTable = System.Enum.GetValues(typeof(CommandType)).Cast<CommandType>().ToDictionary(
                 type => type,
                 type => new Metadata
                 {
@@ -57,23 +57,22 @@
         public void Process(ref Command cmd)
         {
             var line = cmd.Data;
-            var result = line.Length > 1
-                             ? this._regexeTable.Where(x => x.Value.Regex != null)
-                                 .SingleOrDefault(x => x.Value.Regex.IsMatch(line))
-                             : this._regexeTable.Where(x => x.Value.CharList != null)
-                                 .SingleOrDefault(x => x.Value.CharList.Any(y => y == line[0]));
-
-            if (!result.Equals(default))
+            try
             {
+                var result = line.Length > 1
+                                 ? _regexeTable.Where(x => x.Value.Regex != null)
+                                     .Single(x => x.Value.Regex.IsMatch(line))
+                                 : _regexeTable.Where(x => x.Value.CharList != null)
+                                     .Single(x => x.Value.CharList.Any(y => y == line[0]));
+
                 cmd.Type = result.Value.Type;
                 cmd.ExpectedResponses = result.Value.ExpectedTypes;
             }
-            else
+            catch
             {
                 cmd.Type = RequestType.GCode;
-                cmd.ExpectedResponses = new List<ResponseType>{ResponseType.Ok};
+                cmd.ExpectedResponses = new List<ResponseType> { ResponseType.Ok };
             }
         }
-
     }
 }
