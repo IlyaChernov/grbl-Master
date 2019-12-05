@@ -1,7 +1,5 @@
 ﻿namespace grbl.Master.Model.Enum
 {
-    using System.ComponentModel;
-
     public enum CoordinateSystem
     {
         G54, 

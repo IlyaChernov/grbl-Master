@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
@@ -22,6 +23,7 @@
 
         private readonly IComService _comService;
 
+        [SuppressMessage("ReSharper", "NotAccessedField.Local")]
         private readonly IGrblDispatcher _grblDispatcher;
 
         private readonly IGrblStatus _grblStatus;

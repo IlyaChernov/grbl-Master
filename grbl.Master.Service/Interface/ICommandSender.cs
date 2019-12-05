@@ -28,8 +28,6 @@
 
         void SendAsync(string command);
 
-        //void SendAsync(byte command);
-
         void PurgeQueues();
     }
 }
