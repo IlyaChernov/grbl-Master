@@ -33,7 +33,9 @@ using System;
 
 namespace grbl.Master.Service.Annotations
 {
-  /// <summary>
+    using Attribute = System.Attribute;
+
+    /// <summary>
   /// Indicates that the value of the marked element could be <c>null</c> sometimes,
   /// so the check for <c>null</c> is necessary before its usage.
   /// </summary>

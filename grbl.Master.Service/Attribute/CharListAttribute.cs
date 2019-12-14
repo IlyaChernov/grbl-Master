@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace grbl.Master.Service.Enum
+﻿namespace grbl.Master.Service.Attribute
 {
+    using System;
+
     [AttributeUsage(AttributeTargets.All)]
     public class CharListAttribute : Attribute
     {

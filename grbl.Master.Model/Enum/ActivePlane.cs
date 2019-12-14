@@ -2,13 +2,16 @@
 {
     using System.ComponentModel;
 
+    using grbl.Master.Model.Converters;
+
+    [TypeConverter(typeof(EnumToDescription))]
     public enum ActivePlane
     {
-        [Description("XY plane selection")]
+        [Description("XY plane")]
         G17,
-        [Description("XZ plane selection")]
+        [Description("XZ plane")]
         G18,
-        [Description("YZ plane selection")]
+        [Description("YZ plane")]
         G19
     }
 }

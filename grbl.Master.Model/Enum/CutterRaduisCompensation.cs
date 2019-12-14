@@ -2,6 +2,9 @@
 {
     using System.ComponentModel;
 
+    using grbl.Master.Model.Converters;
+
+    [TypeConverter(typeof(EnumToDescription))]
     public enum CutterRaduisCompensation
     {
         [Description("Disabled")]

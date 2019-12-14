@@ -6,8 +6,14 @@
         xmlns:cal="http://www.caliburnproject.org"        
         mc:Ignorable="d"
         xmlns:viewModel="clr-namespace:grbl.Master.UI.ViewModels"
+        xmlns:converters="clr-namespace:grbl.Master.UI.Converters"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:enum="clr-namespace:grbl.Master.Model.Enum;assembly=grbl.Master.Model"
         d:DataContext="{d:DesignInstance Type=viewModel:MasterViewModel, IsDesignTimeCreatable=False}"
-        Title="grbl Master" Height="660" Width="800" MinWidth="800" MinHeight="600">
+        Title="grbl Master" Height="630" Width="900" MinWidth="900" MinHeight="630">
+    <Window.Resources>
+        <converters:EnumToDescription x:Key="EnumConverter"></converters:EnumToDescription>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="46" />
@@ -20,7 +26,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <GroupBox  Header="Grbl connection">
-                <ContentControl  x:Name="ComConnectionViewModel" />
+                <ContentControl x:Name="ComConnectionViewModel" />
             </GroupBox>
             <GroupBox  Header="Manual commands" Grid.Column="1">
                 <Grid>
@@ -39,13 +45,12 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="300"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="250"/>
                     </Grid.ColumnDefinitions>
-
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="230"/>
-                            <RowDefinition Height="320"/>
+                            <RowDefinition Height="260"/>
+                            <RowDefinition Height="260"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" >
@@ -83,12 +88,12 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
+                                <RowDefinition Height="30"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="30"/>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="28"/>
-                                <ColumnDefinition Width="30"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Foreground="Red" >X</Label>
                             <Label  Grid.Row="1" Grid.Column="0" Foreground="Green">Y</Label>
@@ -118,10 +123,7 @@
                                     <RotateTransform Angle="-90"></RotateTransform>
                                 </Button.LayoutTransform> Z=0
                             </Button>
-                            <Button FontSize="28"  Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" cal:Message.Attach="SystemCommand('G90 G10 L20 P0 X0 Y0 Z0')">
-                                <Button.LayoutTransform>
-                                    <RotateTransform Angle="-90"></RotateTransform>
-                                </Button.LayoutTransform>
+                            <Button FontSize="28"  Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="0" cal:Message.Attach="SystemCommand('G90 G10 L20 P0 X0 Y0 Z0')">
                                 Zero X Y Z
                             </Button>
 
@@ -151,21 +153,16 @@
                                     </Style>
                                 </Grid.Resources>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition />
-                                    <RowDefinition />
+                                    <RowDefinition Height="30*"  />
+                                    <RowDefinition Height="30*"  />
+                                    <RowDefinition Height="30*"  />
+                                    <RowDefinition Height="31*"  />
+                                    <RowDefinition Height="30*"  />
+                                    <RowDefinition Height="28*"  />
+                                    <RowDefinition Height="30*"  />
+                                    <RowDefinition Height="30*"  />
+                                    <RowDefinition Height="27*"  />
+                                    <RowDefinition Height="31*" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="30" />
@@ -175,74 +172,60 @@
                                     <ColumnDefinition Width="30" />
                                 </Grid.ColumnDefinitions>
 
-                                <Label Style="{StaticResource ColHeader}" Content="X" Grid.Column="1"   />
-                                <Label Style="{StaticResource ColHeader}" Content="Y" Grid.Row="0" Grid.Column="2"  />
-                                <Label Style="{StaticResource ColHeader}" Content="Z" Grid.Row="0" Grid.Column="3"   />
+                                <Label Style="{StaticResource ColHeader}" Content="X" Grid.Column="1" Grid.Row="1"   />
+                                <Label Style="{StaticResource ColHeader}" Content="Y" Grid.Row="1" Grid.Column="2"  />
+                                <Label Style="{StaticResource ColHeader}" Content="Z" Grid.Row="1" Grid.Column="3"   />
+                                <Label Content="Tool length offset:" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" />
+                                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding GrblStatus.MachinePosition.Z}"/>
+                                <Button Grid.Row="0" Grid.Column="4">0</Button>
 
-                                <Label Content="Current machine position:" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5"  />
-
+                                <Button  Grid.Column="0" Grid.Row="2">G54</Button>
                                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
                                 <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
                                 <TextBox Grid.Column="3" Grid.Row="2" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+                                <Button  Grid.Column="4" Grid.Row="2">0</Button>
 
-                                <Label Content="Tool length offset:" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="5"   />
-                                <Label Content="G43.1" Grid.Column="0" Grid.Row="4" />
+                                <Button  Grid.Column="0" Grid.Row="3">G55</Button>
+                                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
+                                <TextBox Grid.Column="2" Grid.Row="3" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
+                                <TextBox Grid.Column="3" Grid.Row="3" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+                                <Button  Grid.Column="4" Grid.Row="3">0</Button>
+
+                                <Button  Grid.Column="0" Grid.Row="4">G56</Button>
+                                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
+                                <TextBox Grid.Column="2" Grid.Row="4" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
                                 <TextBox Grid.Column="3" Grid.Row="4" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
                                 <Button  Grid.Column="4" Grid.Row="4">0</Button>
 
-                                <Label Content="Work offsets:" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="5" Padding="0"  />
+                                <Button  Grid.Column="0" Grid.Row="5">G57</Button>
+                                <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
+                                <TextBox Grid.Column="2" Grid.Row="5" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
+                                <TextBox Grid.Column="3" Grid.Row="5" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
+                                <Button  Grid.Column="4" Grid.Row="5">0</Button>
 
-                                <Button  Grid.Column="0" Grid.Row="6">G54</Button>
+                                <Button  Grid.Column="0" Grid.Row="6">G58</Button>
                                 <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
                                 <TextBox Grid.Column="2" Grid.Row="6" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
                                 <TextBox Grid.Column="3" Grid.Row="6" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
                                 <Button  Grid.Column="4" Grid.Row="6">0</Button>
 
-                                <Button  Grid.Column="0" Grid.Row="7">G55</Button>
+                                <Button  Grid.Column="0" Grid.Row="7">G59</Button>
                                 <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
                                 <TextBox Grid.Column="2" Grid.Row="7" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
                                 <TextBox Grid.Column="3" Grid.Row="7" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
                                 <Button  Grid.Column="4" Grid.Row="7">0</Button>
 
-                                <Button  Grid.Column="0" Grid.Row="8">G56</Button>
+                                <Button  Grid.Column="0" Grid.Row="8">G28</Button>
                                 <TextBox Grid.Column="1" Grid.Row="8" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
                                 <TextBox Grid.Column="2" Grid.Row="8" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
                                 <TextBox Grid.Column="3" Grid.Row="8" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
                                 <Button  Grid.Column="4" Grid.Row="8">0</Button>
 
-                                <Button  Grid.Column="0" Grid.Row="9">G57</Button>
+                                <Button  Grid.Column="0" Grid.Row="9">G30</Button>
                                 <TextBox Grid.Column="1" Grid.Row="9" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
                                 <TextBox Grid.Column="2" Grid.Row="9" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
                                 <TextBox Grid.Column="3" Grid.Row="9" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
                                 <Button  Grid.Column="4" Grid.Row="9">0</Button>
-
-                                <Button  Grid.Column="0" Grid.Row="10">G58</Button>
-                                <TextBox Grid.Column="1" Grid.Row="10" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
-                                <TextBox Grid.Column="2" Grid.Row="10" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
-                                <TextBox Grid.Column="3" Grid.Row="10" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
-                                <Button  Grid.Column="4" Grid.Row="10">0</Button>
-
-                                <Button  Grid.Column="0" Grid.Row="11">G59</Button>
-                                <TextBox Grid.Column="1" Grid.Row="11" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
-                                <TextBox Grid.Column="2" Grid.Row="11" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
-                                <TextBox Grid.Column="3" Grid.Row="11" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
-                                <Button  Grid.Column="4" Grid.Row="11">0</Button>
-
-                                <Button  Grid.Column="0" Grid.Row="12">G28</Button>
-                                <TextBox Grid.Column="1" Grid.Row="12" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
-                                <TextBox Grid.Column="2" Grid.Row="12" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
-                                <TextBox Grid.Column="3" Grid.Row="12" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
-                                <Button  Grid.Column="4" Grid.Row="12">0</Button>
-
-                                <Button  Grid.Column="0" Grid.Row="13">G30</Button>
-                                <TextBox Grid.Column="1" Grid.Row="13" Text="{Binding GrblStatus.MachinePosition.X}"></TextBox>
-                                <TextBox Grid.Column="2" Grid.Row="13" Text="{Binding GrblStatus.MachinePosition.Y}"></TextBox>
-                                <TextBox Grid.Column="3" Grid.Row="13" Text="{Binding GrblStatus.MachinePosition.Z}"></TextBox>
-                                <Button  Grid.Column="4" Grid.Row="13">0</Button>
-
-                                <Button  Grid.Column="1" Grid.Row="14" >Load</Button>
-                                <Button  Grid.Column="2" Grid.Row="14" >Save</Button>
-                                <Button  Grid.Column="3" Grid.Row="14" >Retrieve</Button>
 
 
                             </Grid>
@@ -252,19 +235,25 @@
 
                     </Grid>
                     <Grid Grid.Column="2" >
+                        <Grid.Resources>
+                            <Style TargetType="Label">
+                                <Setter Property="Margin" Value="0"></Setter>
+                                <Setter Property="Padding" Value="0"></Setter>
+                            </Style>
+                        </Grid.Resources>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="95"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
-                            <RowDefinition Height="26"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
                         </Grid.RowDefinitions>
                         <Label HorizontalAlignment="Right" Content="Work offset:" Grid.Column="0" Grid.Row="0"    />
                         <Label HorizontalAlignment="Right" Content="Distance mode:" Grid.Column="0" Grid.Row="1"    />
@@ -274,7 +263,9 @@
                         <Label HorizontalAlignment="Right" Content="Coolant state:" Grid.Column="0" Grid.Row="5"   />
                         <Label HorizontalAlignment="Right" Content="Active plane:" Grid.Column="0" Grid.Row="6"   />
 
-                        <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding GrblStatus.CoordinateSystem}"/>
+                        <!--<TextBox Visibility="Collapsed"  Grid.Row="0" Grid.Column="1" Text="{Binding GrblStatus.CoordinateSystem}"/>-->
+                        <ComboBox  Grid.Row="0" Grid.Column="1" ItemsSource="{converters:EnumToItemsSource {x:Type enum:CoordinateSystem}}"
+                                   SelectedValue="{Binding GrblStatus.CoordinateSystem}"></ComboBox>
                         <TextBox  Grid.Row="1" Grid.Column="1" Text="{Binding GrblStatus.DistanceMode}"/>
                         <TextBox  Grid.Row="2" Grid.Column="1" Text="{Binding GrblStatus.FeedRateMode}"/>
                         <TextBox  Grid.Row="3" Grid.Column="1" Text="{Binding GrblStatus.UnitsMode}"/>
@@ -282,10 +273,10 @@
                         <TextBox  Grid.Row="5" Grid.Column="1" Text="{Binding GrblStatus.CoolantState}"/>
                         <TextBox  Grid.Row="6" Grid.Column="1" Text="{Binding GrblStatus.ActivePlane}"/>
                     </Grid>
-                    <Grid Grid.Column="1">
+                    <Grid Width="330" Grid.Column="1" HorizontalAlignment="Left">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="180" />
-                            <RowDefinition />
+                            <RowDefinition Height="90" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
 

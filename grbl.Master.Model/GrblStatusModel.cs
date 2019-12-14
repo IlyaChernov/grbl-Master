@@ -75,7 +75,7 @@
 
         public ActivePlane ActivePlane
         {
-            get => this._activePlane;
+            get => _activePlane;
             set
             {
                 if (_activePlane != value)
@@ -88,7 +88,7 @@
 
         public DistanceMode DistanceMode
         {
-            get => this._distanceMode;
+            get => _distanceMode;
             set
             {
                 if (_distanceMode != value)
@@ -101,7 +101,7 @@
          
         public ArcDistanceMode ArcDistanceMode
         {
-            get => this._arcDistanceMode;
+            get => _arcDistanceMode;
             set
             {
                 if (_arcDistanceMode != value)
@@ -114,7 +114,7 @@
 
         public FeedRateMode FeedRateMode
         {
-            get => this._feedRateMode;
+            get => _feedRateMode;
             set
             {
                 if (_feedRateMode != value)
@@ -127,7 +127,7 @@
 
         public UnitsMode UnitsMode
         {
-            get => this._unitsMode;
+            get => _unitsMode;
             set
             {
                 if (_unitsMode != value)
@@ -140,7 +140,7 @@
 
         public CutterRaduisCompensation CutterRaduisCompensation
         {
-            get => this._cutterRaduisCompensation;
+            get => _cutterRaduisCompensation;
             set
             {
                 if (_cutterRaduisCompensation != value)
@@ -153,7 +153,7 @@
 
         public ToolLengthMode ToolLengthMode
         {
-            get => this._toolLengthMode;
+            get => _toolLengthMode;
             set
             {
                 if (_toolLengthMode != value)
@@ -166,7 +166,7 @@
 
         public ProgramMode ProgramMode
         {
-            get => this._programMode;
+            get => _programMode;
             set
             {
                 if (_programMode != value)
@@ -179,7 +179,7 @@
 
         public SpindleState SpindleState
         {
-            get => this._spindleState;
+            get => _spindleState;
             set
             {
                 if (_spindleState != value)
@@ -192,7 +192,7 @@
 
         public CoolantState CoolantState
         {
-            get => this._coolantState;
+            get => _coolantState;
             set
             {
                 if (_coolantState != value)

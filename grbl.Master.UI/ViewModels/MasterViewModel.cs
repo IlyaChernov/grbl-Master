@@ -52,6 +52,13 @@
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _commandSender.CommandListUpdated += CommandSenderCommandListUpdated;
             _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
+
+            _grblStatus.GrblStatusModel.PropertyChanged += GrblStatusModel_PropertyChanged;
+        }
+
+        private void GrblStatusModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            
         }
 
         public List<double> JoggingDistances => new List<double> { 0.01, 0.1, 1, 5, 10, 100 };
@@ -184,12 +191,12 @@
 
         public void JoggingCommand(string code)
         {
-            this._joggingCount = 0;
+            _joggingCount = 0;
             _jogStopSubject.OnNext(Unit.Default);
             Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(500)).TakeUntil(_jogStopSubject).Subscribe(
                 l =>
                     {
-                        this._joggingCount++;
+                        _joggingCount++;
                         _commandSender.SendAsync(
                             "$J=" + string.Format(code, SelectedJoggingDistance, SelectedFeedRate));
                     });
@@ -198,7 +205,7 @@
         public void CancelJogging()
         {
             _jogStopSubject.OnNext(Unit.Default);
-            if (this._joggingCount > 1)
+            if (_joggingCount > 1)
                 RealtimeIntCommand(0x0085);
         }
     }

@@ -289,9 +289,9 @@
 
         private void CommandSenderResponseReceived(object sender, Response e)
         {
-            if (!this._processingTable.ContainsKey(e.Type)) return;
+            if (!_processingTable.ContainsKey(e.Type)) return;
 
-            var processor = this._processingTable[e.Type];
+            var processor = _processingTable[e.Type];
 
             if (!processor.Equals(default))
             {

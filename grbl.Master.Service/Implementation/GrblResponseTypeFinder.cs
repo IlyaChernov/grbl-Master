@@ -57,7 +57,7 @@
 
         public ResponseType GetType(string line)
         {
-            return this._regexes.Single(x => x.Value.IsMatch(line)).Key;
+            return _regexes.Single(x => x.Value.IsMatch(line)).Key;
         }
     }
 }

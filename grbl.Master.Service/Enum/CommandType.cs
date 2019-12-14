@@ -2,6 +2,8 @@
 {
     using System.ComponentModel;
 
+    using grbl.Master.Service.Attribute;
+
     public enum CommandType
     {
         [Description("$")]

@@ -2,6 +2,9 @@
 {
     using System.ComponentModel;
 
+    using grbl.Master.Model.Converters;
+
+    [TypeConverter(typeof(EnumToDescription))]
     public enum ToolLengthMode
     {
         [Description("Dynamic tool length offset")]

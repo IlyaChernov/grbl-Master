@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.UI", "grbl.Master.UI\grbl.Master.UI.csproj", "{87BDE971-0324-4408-9286-68C369A8E7F0}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.Model", "grbl.Master.Model\grbl.Master.Model.csproj", "{B21C205E-5CE2-436E-AFA4-F2A3DAC60D21}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.BL", "grbl.Master.BL\grbl.Master.BL.csproj", "{A8D81938-5739-42C5-AD7E-EB78C63295B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Mater.UI.Core", "grbl.Mater.UI.Core\grbl.Mater.UI.Core.csproj", "{6BA41A9A-70D0-499A-AF9A-E4A04ABD142C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{A8D81938-5739-42C5-AD7E-EB78C63295B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8D81938-5739-42C5-AD7E-EB78C63295B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8D81938-5739-42C5-AD7E-EB78C63295B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BA41A9A-70D0-499A-AF9A-E4A04ABD142C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BA41A9A-70D0-499A-AF9A-E4A04ABD142C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BA41A9A-70D0-499A-AF9A-E4A04ABD142C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BA41A9A-70D0-499A-AF9A-E4A04ABD142C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -55,13 +55,13 @@
   <ItemGroup>
     <Compile Include="DataTypes\Response.cs" />
     <Compile Include="DataTypes\Command.cs" />
-    <Compile Include="Enum\RequestTypeAttribute.cs" />
+    <Compile Include="Attribute\RequestTypeAttribute.cs" />
     <Compile Include="Enum\EnumHelper.cs" />
-    <Compile Include="Enum\ExpectedResponseAttribute.cs" />
+    <Compile Include="Attribute\ExpectedResponseAttribute.cs" />
     <Compile Include="Enum\CommandResultType.cs" />
     <Compile Include="Enum\CommandType.cs" />
-    <Compile Include="Enum\CharListAttribute.cs" />
-    <Compile Include="Enum\RegexAttribute.cs" />
+    <Compile Include="Attribute\CharListAttribute.cs" />
+    <Compile Include="Attribute\RegexAttribute.cs" />
     <Compile Include="Enum\RequestType.cs" />
     <Compile Include="Enum\ConnectionState.cs" />
     <Compile Include="Enum\ResponseType.cs" />
@@ -80,5 +80,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,7 +1,9 @@
-﻿using System;
-
-namespace grbl.Master.Service.Enum
+﻿namespace grbl.Master.Service.Attribute
 {
+    using System;
+
+    using grbl.Master.Service.Enum;
+
     [AttributeUsage(AttributeTargets.All)]
     public class ExpectedResponseAttribute : Attribute
     {
