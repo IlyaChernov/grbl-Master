@@ -24,6 +24,8 @@
 
         private string _commandResultCause;
 
+        public string CommandOnResult { get; set; }
+
         /// <summary>
         /// Data sent
         /// </summary>

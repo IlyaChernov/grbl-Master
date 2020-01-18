@@ -30,6 +30,7 @@
 
         private void GrblPromptPromptReceived(object sender, string e)
         {
+            _grblStatus.InitialRequest();
             _grblStatus.StartRequesting(TimeSpan.FromMilliseconds(500));
         }
     }

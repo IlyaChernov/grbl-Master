@@ -3,73 +3,28 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:grbl.Mater.UI.Core"
         xmlns:customControls="clr-namespace:grbl.Mater.UI.Core.CustomControls"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="grbl Master" MinHeight="600" MinWidth="800" Height="450" Width="800" WindowStartupLocation="CenterScreen" Foreground="White" Icon="/Resources/favicon.ico">
-    <Window.Resources>
-        <Storyboard x:Key="MenuOpen">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
-                <EasingDoubleKeyFrame KeyTime="0" Value="60"></EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="200"></EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Key="MenuClose">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
-                <EasingDoubleKeyFrame KeyTime="0" Value="200"></EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="60"></EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-    </Window.Resources>
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
-            <BeginStoryboard Storyboard="{StaticResource MenuOpen}"></BeginStoryboard>
-        </EventTrigger>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonCloseMenu">
-            <BeginStoryboard Storyboard="{StaticResource MenuClose}"></BeginStoryboard>
-        </EventTrigger>
-    </Window.Triggers>
-    <Grid>
+    <Grid Background="{StaticResource MaterialDesignLightBackground}">
         <Grid Height="70" VerticalAlignment="Top" Background="{StaticResource MaterialDesignDarkBackground}">
             <TextBlock Text="Title" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"></TextBlock>
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Text="Menu" VerticalAlignment="Center" FontSize="18"></TextBlock>
                 <materialDesign:PopupBox HorizontalAlignment="Right" Margin="10" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
                     <StackPanel Width="150">
-                        <Button Content="Account"></Button>
                         <Button Content="Settings"></Button>
-                        <Separator></Separator>
-                        <Button Content="Help"></Button>
+                        <Separator Visibility="Collapsed"></Separator>
+                        <Button Visibility="Collapsed" Content="Help"></Button>
                     </StackPanel>
                 </materialDesign:PopupBox>
             </StackPanel>
         </Grid>
-        <Grid x:Name="GridMenu" Width="60" HorizontalAlignment="Left" Background="{StaticResource MaterialDesignDarkBackground}">
-            <StackPanel>
-                <Grid Height="150" Background="White">
-                    <Button x:Name="ButtonCloseMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Visibility="Collapsed" Click="ButtonCloseMenu_Click">
-                        <materialDesign:PackIcon Width="25" Height="25" Foreground="{StaticResource MaterialDesignDarkBackground}" Kind="ArrowLeft"></materialDesign:PackIcon>
-                    </Button>
-                    <Button x:Name="ButtonOpenMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Click="ButtonOpenMenu_Click">
-                        <materialDesign:PackIcon Width="25" Height="25" Foreground="{StaticResource MaterialDesignDarkBackground}" Kind="Menu"></materialDesign:PackIcon>
-                    </Button>
-                </Grid>
-                <ListView ScrollViewer.HorizontalScrollBarVisibility="Disabled" Foreground="White">
-                    <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="ViewDashboard" Margin="10" Width="25" Height="25" VerticalAlignment="Center"></materialDesign:PackIcon>
-                            <TextBlock Text="Home" VerticalAlignment="Center" Margin="20 10"></TextBlock>
-                        </StackPanel>
-                    </ListViewItem>
-                    <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Pencil" Width="25" Margin="10" Height="25" VerticalAlignment="Center"></materialDesign:PackIcon>
-                            <TextBlock Text="Create" VerticalAlignment="Center" Margin="20 10"></TextBlock>
-                        </StackPanel>
-                    </ListViewItem>
-                </ListView>
-            </StackPanel>
-        </Grid>
+        <DockPanel>
+            <customControls:NavigationDrawer DockPanel.Dock="Left" SelectionChanged="NavigationDrawer_OnSelectionChanged" />
+            <customControls:DashBoard Margin="0, 70, 0, 0" DockPanel.Dock="Left"/>
+        </DockPanel>
+
     </Grid>
 </Window>

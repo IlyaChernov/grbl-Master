@@ -10,31 +10,18 @@
     public class GrblResponseTypeFinder : IGrblResponseTypeFinder
     {
         private const string OkTag = "^ok$";
-
         private const string ErrorTag = "^error:(\\d+?)$";
-
         private const string StatusReportTag = "^<(.*?)>$";
-
         private const string WelcomeTag = "^Grbl .{4} \\['\\$' for help\\]$";
-
         private const string AlarmTag = "^ALARM:(\\d+?)$";
-
         private const string SettingTag = "^\\$\\d{1,3}=.+?$";
-
         private const string FeedbackTag = "^\\[MSG:.*?\\]$";
-
         private const string GCodeStateTag = "^\\[GC:.*?\\]$";
-
         private const string HelpTag = "^\\[HLP:.*?\\]$";
-
         private const string ParameterTag = "^\\[(G54|G55|G56|G57|G58|G59|G28|G30|G92|TLO|PRB):.*?\\]$";
-
         private const string BuildInfoTag = "^\\[(VER|OPT):.*?\\]$";
-
         private const string EchoTag = "^\\[echo:.*?\\]$";
-
         private const string StartupLinePrintoutTag = "\\$N\\d+=.*";
-
         private const string StartupLineTag = " ^>((.+?:((ok)|(error:.*?)))|(:error:7))$";
 
         private readonly Dictionary<ResponseType, Regex> _regexes = new Dictionary<ResponseType, Regex>
@@ -57,7 +44,8 @@
 
         public ResponseType GetType(string line)
         {
-            return _regexes.Single(x => x.Value.IsMatch(line)).Key;
+            var result = _regexes.Single(x => x.Value.IsMatch(line));
+            return result.Key;
         }
     }
 }

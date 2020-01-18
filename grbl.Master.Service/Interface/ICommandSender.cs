@@ -24,9 +24,9 @@
 
         event EventHandler<Command> CommandFinished;
 
-        void Send(string command);
+        void SendAsync(string command, string onResult = null);
 
-        void SendAsync(string command);
+        void Send(string command, string onResult = null);
 
         void PurgeQueues();
     }

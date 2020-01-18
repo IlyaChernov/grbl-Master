@@ -2,6 +2,8 @@
 
 namespace grbl.Mater.UI.Core
 {
+    using System.Windows.Controls;
+
     using grbl.Mater.UI.Core.Services;
 
     using Microsoft.Extensions.Options;
@@ -17,21 +19,13 @@ namespace grbl.Mater.UI.Core
         public MainWindow(ISampleService sampleService, IOptions<AppSettings> settings)
         {
             InitializeComponent();
-
             this.sampleService = sampleService;
             this.settings = settings.Value;
         }
 
-        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
+        private void NavigationDrawer_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.ButtonCloseMenu.Visibility = Visibility.Visible;
-            this.ButtonOpenMenu.Visibility = Visibility.Collapsed;
-        }
-
-        private void ButtonCloseMenu_Click(object sender, RoutedEventArgs e)
-        {
-            this.ButtonCloseMenu.Visibility = Visibility.Collapsed;
-            this.ButtonOpenMenu.Visibility = Visibility.Visible;
+            
         }
     }
 }

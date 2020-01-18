@@ -25,6 +25,20 @@
         private CoolantState _coolantState;
         private Position _machinePosition = new Position();
         private Position _workPosition = new Position();
+
+        private decimal _toolLengthOffset;
+        private Position _probePosition = new Position();
+        private bool _probeState;
+        private Position _g54Position = new Position();
+        private Position _g55Position = new Position();
+        private Position _g56Position = new Position();
+        private Position _g57Position = new Position();
+        private Position _g58Position = new Position();
+        private Position _g59Position = new Position();
+        private Position _g28Position = new Position();
+        private Position _g30Position = new Position();
+        private Position _g92Position = new Position();
+
         private Position _workOffset = new Position();
         private BufferState _bufferState = new BufferState();
         private FeedAndSpeed _feedAndSpeed = new FeedAndSpeed();
@@ -228,6 +242,127 @@
             }
         }
 
+        public decimal ToolLengthOffset
+        {
+            get => _toolLengthOffset;
+            set
+            {
+                _toolLengthOffset = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ProbeState
+        {
+            get => _probeState;
+            set
+            {
+                _probeState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Position ProbePosition
+        {
+            get => _probePosition;
+            set
+            {
+                _probePosition = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Position G54Position
+        {
+            get => _g54Position;
+            set
+            {
+                _g54Position = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Position G55Position
+        {
+            get => _g55Position;
+            set
+            {
+                _g55Position = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Position G56Position
+        {
+            get => _g56Position;
+            set
+            {
+                _g56Position = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Position G57Position
+        {
+            get => _g57Position;
+            set
+            {
+                _g57Position = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Position G58Position
+        {
+            get => _g58Position;
+            set
+            {
+                _g58Position = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Position G59Position
+        {
+            get => _g59Position;
+            set
+            {
+                _g59Position = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Position G28Position
+        {
+            get => _g28Position;
+            set
+            {
+                _g28Position = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Position G30Position
+        {
+            get => _g30Position;
+            set
+            {
+                _g30Position = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Position G92Position
+        {
+            get => _g92Position;
+            set
+            {
+                _g92Position = value;
+                OnPropertyChanged();
+            }
+        }
+
         public Position WorkOffset
         {
             get => _workOffset;
@@ -287,6 +422,8 @@
                 OnPropertyChanged();
             }
         }
+
+      
 
         //public AccessoryState AccessoryState
         //{

@@ -6,6 +6,7 @@
     public interface IGrblStatus
     {
         void StartRequesting(TimeSpan interval);
+        void InitialRequest();
         void StopRequesting();  
 
         bool IsRunning

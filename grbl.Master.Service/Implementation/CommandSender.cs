@@ -69,7 +69,7 @@
 
         public event EventHandler<Command> CommandFinished;
 
-        public void Send(string command)
+        public void Send(string command, string onResult = null)
         {
             lock (_lockObject)
             {
@@ -78,7 +78,7 @@
 
             OnCommunicationLogUpdated();
 
-            var cmd = new Command { Data = command };
+            var cmd = new Command { Data = command, CommandOnResult = onResult};
 
             _commandPreProcessor.Process(ref cmd);
 
@@ -92,9 +92,9 @@
             else Send(cmd);
         }
 
-        public void SendAsync(string command)
+        public void SendAsync(string command, string onResult = null)
         {
-            Observable.Start(() => { Send(command); }).Subscribe();
+             Observable.Start(() => { Send(command, onResult); }).Subscribe();
         }
 
         public void PurgeQueues()
@@ -150,7 +150,7 @@
 
                 var type = _responseTypeFinder.GetType(e);
 
-                OnResponseReceived(new Response{Data = e, Type = type});
+                OnResponseReceived(new Response { Data = e, Type = type });
 
                 if ((type == ResponseType.Ok || type == ResponseType.Error) && _waitingCommandQueue.Any() && _waitingCommandQueue.TryDequeue(out var cmd))
                 {
@@ -164,14 +164,19 @@
                         cmd.CommandResultCause = e.Split(':')[1];
                     }
 
+                    if (!string.IsNullOrEmpty(cmd.CommandOnResult))
+                    {
+                        SendAsync(cmd.CommandOnResult);
+                    }
+
                     _uiContext.Send(
-                        x =>
-                            {
-                                CommandList.Add(cmd);
-                                OnCommandFinished(cmd);
-                                OnCommandListUpdated();
-                            },
-                        null);
+                    x =>
+                        {
+                            CommandList.Add(cmd);
+                            OnCommandFinished(cmd);
+                            OnCommandListUpdated();
+                        },
+                    null);
                 }
                 else if (_waitingCommandQueue.Any() && _waitingCommandQueue.TryPeek(out var comd))
                 {

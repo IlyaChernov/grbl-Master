@@ -116,18 +116,18 @@
                                                                                                             GrblStatusModel.FeedAndSpeed.FeedRate = feed;
                                                                                                 } },
                                                                    new ResponseProcessor{ TagExpression = "^FS:\\d+,\\d+$", Action =
-                                                                                                                             part =>
-                                                                                                                                 {
-                                                                                                                                     var feedSpeedParts = part.Split(new[] { ':', ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                                                                                                                     if (feedSpeedParts.Length == 3)
-                                                                                                                                         if (int.TryParse(feedSpeedParts[1], out var feed) && int.TryParse(
-                                                                                                                                                 feedSpeedParts[2],
-                                                                                                                                                 out var speed))
-                                                                                                                                         {
-                                                                                                                                             GrblStatusModel.FeedAndSpeed.FeedRate = feed;
-                                                                                                                                             GrblStatusModel.FeedAndSpeed.SpindleSpeed = speed;
-                                                                                                                                         }
-                                                                                                                                 } },
+                                                                                            part =>
+                                                                                                {
+                                                                                                    var feedSpeedParts = part.Split(new[] { ':', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                                                                                    if (feedSpeedParts.Length == 3)
+                                                                                                        if (int.TryParse(feedSpeedParts[1], out var feed) && int.TryParse(
+                                                                                                                feedSpeedParts[2],
+                                                                                                                out var speed))
+                                                                                                        {
+                                                                                                            GrblStatusModel.FeedAndSpeed.FeedRate = feed;
+                                                                                                            GrblStatusModel.FeedAndSpeed.SpindleSpeed = speed;
+                                                                                                        }
+                                                                                                } },
                                                                    new ResponseProcessor{ TagExpression = "^Pn:[A-Z]*$", Action =
                                                                                             part =>
                                                                                                 {
@@ -182,6 +182,107 @@
                                                                                                         {
                                                                                                             GrblStatusModel.CoolantState = CoolantState.M9;
                                                                                                         }
+                                                                                                    }
+                                                                                                } }
+                                                               }
+                                }
+                                  },
+                                  {ResponseType.ParameterPrintout, new ResponseProcessingDefinition{
+                                          SplitAction   =s =>s.Split(new[]{'[', ']'},StringSplitOptions.RemoveEmptyEntries),
+                                          ProcessActions = new List<ResponseProcessor>
+                                                               {
+                                                                   new ResponseProcessor{ TagExpression = "^TLO:\\d+.\\d+$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    var lineParts = part.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                                                                                                    if (lineParts.Length == 2)
+                                                                                                        if (ParseSingleAxisPosition(lineParts[1], out var line))
+                                                                                                            GrblStatusModel.ToolLengthOffset = line;
+                                                                                                } },
+                                                                   new ResponseProcessor{ TagExpression = "^PRB:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}:\\d$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    var lineParts = part.Split(new[] { ':', '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    {
+                                                                                                        GrblStatusModel.ProbePosition.Update(position);
+                                                                                                    }
+
+                                                                                                    if (lineParts.Length == 5 && int.TryParse(lineParts.Last().Trim(), out var probingResult))
+                                                                                                    {
+                                                                                                        GrblStatusModel.ProbeState = probingResult!= 0;
+                                                                                                    }
+                                                                                                } },
+                                                                   new ResponseProcessor{ TagExpression = "^G54:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    {
+                                                                                                        GrblStatusModel.G54Position.Update(position);
+                                                                                                    }
+                                                                                                } },
+                                                                   new ResponseProcessor{ TagExpression = "^G55:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    {
+                                                                                                        GrblStatusModel.G55Position.Update(position);
+                                                                                                    }
+                                                                                                } },
+                                                                   new ResponseProcessor{ TagExpression = "^G56:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    {
+                                                                                                        GrblStatusModel.G56Position.Update(position);
+                                                                                                    }
+                                                                                                } },
+                                                                   new ResponseProcessor{ TagExpression = "^G57:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    {
+                                                                                                        GrblStatusModel.G57Position.Update(position);
+                                                                                                    }
+                                                                                                } },
+                                                                   new ResponseProcessor{ TagExpression = "^G58:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    {
+                                                                                                        GrblStatusModel.G58Position.Update(position);
+                                                                                                    }
+                                                                                                } },
+                                                                   new ResponseProcessor{ TagExpression = "^G59:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    {
+                                                                                                        GrblStatusModel.G59Position.Update(position);
+                                                                                                    }
+                                                                                                } },
+                                                                   new ResponseProcessor{ TagExpression = "^G28:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    {
+                                                                                                        GrblStatusModel.G28Position.Update(position);
+                                                                                                    }
+                                                                                                } },
+                                                                   new ResponseProcessor{ TagExpression = "^G30:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    {
+                                                                                                        GrblStatusModel.G30Position.Update(position);
+                                                                                                    }
+                                                                                                } },
+                                                                   new ResponseProcessor{ TagExpression = "^G92:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                                            part =>
+                                                                                                {
+                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    {
+                                                                                                        GrblStatusModel.G92Position.Update(position);
                                                                                                     }
                                                                                                 } }
                                                                }
@@ -320,6 +421,11 @@
             }
         }
 
+        public void InitialRequest()
+        {
+            _commandSender.Send("$#");
+        }
+
         public void StopRequesting()
         {
             if (IsRunning)
@@ -341,14 +447,26 @@
                 e == ConnectionState.Online ? MachineState.Online : MachineState.Offline;
         }
 
+        private bool ParseSingleAxisPosition(string data, out decimal result)
+        {
+            result = 0;
+            if (data.Length > 0)
+                if (decimal.TryParse(data.Replace(".", _decimalSeparator), out result))
+                {
+                    return true;
+                }
+
+            return false;
+        }
+
         private bool ParsePosition(string data, out Position result)
         {
             result = new Position();
             var posParts = data.Split(new[] { '[', ']', ':', ',' }, StringSplitOptions.RemoveEmptyEntries);
             if (posParts.Length == 4)
-                if (decimal.TryParse(posParts[1].Replace(".", _decimalSeparator), out var xPos)
-                    && decimal.TryParse(posParts[2].Replace(".", _decimalSeparator), out var yPos)
-                    && decimal.TryParse(posParts[3].Replace(".", _decimalSeparator), out var zPos))
+                if (ParseSingleAxisPosition(posParts[1], out var xPos) &&
+                    ParseSingleAxisPosition(posParts[2], out var yPos) &&
+                    ParseSingleAxisPosition(posParts[3], out var zPos))
                 {
                     result.X = xPos;
                     result.Y = yPos;

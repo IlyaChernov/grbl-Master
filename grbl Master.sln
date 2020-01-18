@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.Model", "grbl.M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.BL", "grbl.Master.BL\grbl.Master.BL.csproj", "{A8D81938-5739-42C5-AD7E-EB78C63295B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Mater.UI.Core", "grbl.Mater.UI.Core\grbl.Mater.UI.Core.csproj", "{6BA41A9A-70D0-499A-AF9A-E4A04ABD142C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grbl.Master.Utilities", "grbl.Master.Utilities\grbl.Master.Utilities.csproj", "{9FE0DAFE-CC25-420D-9909-F4D53FD966B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{A8D81938-5739-42C5-AD7E-EB78C63295B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8D81938-5739-42C5-AD7E-EB78C63295B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8D81938-5739-42C5-AD7E-EB78C63295B9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6BA41A9A-70D0-499A-AF9A-E4A04ABD142C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BA41A9A-70D0-499A-AF9A-E4A04ABD142C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BA41A9A-70D0-499A-AF9A-E4A04ABD142C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BA41A9A-70D0-499A-AF9A-E4A04ABD142C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FE0DAFE-CC25-420D-9909-F4D53FD966B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FE0DAFE-CC25-420D-9909-F4D53FD966B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FE0DAFE-CC25-420D-9909-F4D53FD966B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FE0DAFE-CC25-420D-9909-F4D53FD966B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

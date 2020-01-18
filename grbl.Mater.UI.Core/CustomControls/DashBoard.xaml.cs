@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace grbl.Mater.UI.Core.CustomControls
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Interaction logic for DashBoard.xaml
     /// </summary>
-    public partial class UserControl1 : UserControl
+    public partial class DashBoard : UserControl
     {
-        public UserControl1()
+        public DashBoard()
         {
             InitializeComponent();
         }

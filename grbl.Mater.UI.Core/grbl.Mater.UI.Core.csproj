@@ -18,6 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\grbl.Master.BL\grbl.Master.BL.csproj" />
+    <ProjectReference Include="..\grbl.Master.UI\grbl.Master.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\favicon.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
