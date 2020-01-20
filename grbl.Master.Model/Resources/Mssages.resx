@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Alarm:1" xml:space="preserve">
+    <value>Hard limit triggered. Machine position is likely lost due to sudden and immediate halt. Re-homing is highly recommended.</value>
+  </data>
+  <data name="Alarm:2" xml:space="preserve">
+    <value>G-code motion target exceeds machine travel. Machine position safely retained. Alarm may be unlocked.</value>
+  </data>
+  <data name="Alarm:3" xml:space="preserve">
+    <value>Reset while in motion. Grbl cannot guarantee position. Lost steps are likely. Re-homing is highly recommended.</value>
+  </data>
+  <data name="Alarm:4" xml:space="preserve">
+    <value>Probe fail. The probe is not in the expected initial state before starting probe cycle, where G38.2 and G38.3 is not triggered and G38.4 and G38.5 is triggered.</value>
+  </data>
+  <data name="Alarm:5" xml:space="preserve">
+    <value>Probe fail. Probe did not contact the workpiece within the programmed travel for G38.2 and G38.4.</value>
+  </data>
+  <data name="Alarm:6" xml:space="preserve">
+    <value>Homing fail. Reset during active homing cycle.</value>
+  </data>
+  <data name="Alarm:7" xml:space="preserve">
+    <value>Homing fail. Safety door was opened during active homing cycle.</value>
+  </data>
+  <data name="Alarm:8" xml:space="preserve">
+    <value>Homing fail. Cycle failed to clear limit switch when pulling off. Try increasing pull-off setting or check wiring.</value>
+  </data>
+  <data name="Alarm:9" xml:space="preserve">
+    <value>Homing fail. Could not find limit switch within search distance. Defined as 1.5 * max_travel on search and 5 * pulloff on locate phases.</value>
+  </data>
+  <data name="Door:0" xml:space="preserve">
+    <value>Door closed. Ready to resume.</value>
+  </data>
+  <data name="Door:1" xml:space="preserve">
+    <value>Machine stopped. Door still ajar. Can't resume until closed.</value>
+  </data>
+  <data name="Door:2" xml:space="preserve">
+    <value>Door opened. Hold (or parking retract) in-progress. Reset will throw an alarm.</value>
+  </data>
+  <data name="Door:3" xml:space="preserve">
+    <value>Door closed and resuming. Restoring from park, if applicable. Reset will throw an alarm.</value>
+  </data>
+  <data name="error:1" xml:space="preserve">
+    <value>G-code words consist of a letter and a value. Letter was not found.</value>
+  </data>
+  <data name="error:10" xml:space="preserve">
+    <value>Soft limits cannot be enabled without homing also enabled.</value>
+  </data>
+  <data name="error:11" xml:space="preserve">
+    <value>Max characters per line exceeded. Line was not processed and executed.</value>
+  </data>
+  <data name="error:12" xml:space="preserve">
+    <value>(Compile Option) Grbl '$' setting value exceeds the maximum step rate supported.</value>
+  </data>
+  <data name="error:13" xml:space="preserve">
+    <value>Safety door detected as opened and door state initiated.</value>
+  </data>
+  <data name="error:14" xml:space="preserve">
+    <value>(Grbl-Mega Only) Build info or startup line exceeded EEPROM line length limit.</value>
+  </data>
+  <data name="error:15" xml:space="preserve">
+    <value>Jog target exceeds machine travel. Command ignored.</value>
+  </data>
+  <data name="error:16" xml:space="preserve">
+    <value>Jog command with no '=' or contains prohibited g-code.</value>
+  </data>
+  <data name="error:17" xml:space="preserve">
+    <value>Laser mode requires PWM output.</value>
+  </data>
+  <data name="error:2" xml:space="preserve">
+    <value>Numeric value format is not valid or missing an expected value.</value>
+  </data>
+  <data name="error:20" xml:space="preserve">
+    <value>Unsupported or invalid g-code command found in block.</value>
+  </data>
+  <data name="error:21" xml:space="preserve">
+    <value>More than one g-code command from same modal group found in block.</value>
+  </data>
+  <data name="error:22" xml:space="preserve">
+    <value>Feed rate has not yet been set or is undefined.</value>
+  </data>
+  <data name="error:23" xml:space="preserve">
+    <value>G-code command in block requires an integer value.</value>
+  </data>
+  <data name="error:24" xml:space="preserve">
+    <value>Two G-code commands that both require the use of the XYZ axis words were detected in the block.</value>
+  </data>
+  <data name="error:25" xml:space="preserve">
+    <value>A G-code word was repeated in the block.</value>
+  </data>
+  <data name="error:26" xml:space="preserve">
+    <value>A G-code command implicitly or explicitly requires XYZ axis words in the block, but none were detected.</value>
+  </data>
+  <data name="error:27" xml:space="preserve">
+    <value>N line number value is not within the valid range of 1 - 9,999,999.</value>
+  </data>
+  <data name="error:28" xml:space="preserve">
+    <value>A G-code command was sent, but is missing some required P or L value words in the line.</value>
+  </data>
+  <data name="error:29" xml:space="preserve">
+    <value>Grbl supports six work coordinate systems G54-G59. G59.1, G59.2, and G59.3 are not supported.</value>
+  </data>
+  <data name="error:3" xml:space="preserve">
+    <value>Grbl '$' system command was not recognized or supported.</value>
+  </data>
+  <data name="error:30" xml:space="preserve">
+    <value>The G53 G-code command requires either a G0 seek or G1 feed motion mode to be active. A different motion was active.</value>
+  </data>
+  <data name="error:31" xml:space="preserve">
+    <value>There are unused axis words in the block and G80 motion mode cancel is active.</value>
+  </data>
+  <data name="error:32" xml:space="preserve">
+    <value>A G2 or G3 arc was commanded but there are no XYZ axis words in the selected plane to trace the arc.</value>
+  </data>
+  <data name="error:33" xml:space="preserve">
+    <value>The motion command has an invalid target. G2, G3, and G38.2 generates this error, if the arc is impossible to generate or if the probe target is the current position.</value>
+  </data>
+  <data name="error:34" xml:space="preserve">
+    <value>A G2 or G3 arc, traced with the radius definition, had a mathematical error when computing the arc geometry. Try either breaking up the arc into semi-circles or quadrants, or redefine them with the arc offset definition.</value>
+  </data>
+  <data name="error:35" xml:space="preserve">
+    <value>A G2 or G3 arc, traced with the offset definition, is missing the IJK offset word in the selected plane to trace the arc.</value>
+  </data>
+  <data name="error:36" xml:space="preserve">
+    <value>There are unused, leftover G-code words that aren't used by any command in the block.</value>
+  </data>
+  <data name="error:37" xml:space="preserve">
+    <value>The G43.1 dynamic tool length offset command cannot apply an offset to an axis other than its configured axis. The Grbl default axis is the Z-axis.</value>
+  </data>
+  <data name="error:38" xml:space="preserve">
+    <value>Tool number greater than max supported value.</value>
+  </data>
+  <data name="error:4" xml:space="preserve">
+    <value>Negative value received for an expected positive value.</value>
+  </data>
+  <data name="error:5" xml:space="preserve">
+    <value>Homing cycle is not enabled via settings.</value>
+  </data>
+  <data name="error:6" xml:space="preserve">
+    <value>Minimum step pulse time must be greater than 3usec</value>
+  </data>
+  <data name="error:7" xml:space="preserve">
+    <value>EEPROM read failed. Reset and restored to default values.</value>
+  </data>
+  <data name="error:8" xml:space="preserve">
+    <value>Grbl '$' command cannot be used unless Grbl is IDLE. Ensures smooth operation during a job.</value>
+  </data>
+  <data name="error:9" xml:space="preserve">
+    <value>G-code locked out during alarm or jog state</value>
+  </data>
+  <data name="Hold:0" xml:space="preserve">
+    <value>Hold complete. Ready to resume.</value>
+  </data>
+  <data name="Hold:1" xml:space="preserve">
+    <value>Hold in-progress. Reset will throw an alarm.</value>
+  </data>
+</root>

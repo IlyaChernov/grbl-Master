@@ -91,6 +91,8 @@
             }
         }
 
+        public CommandSourceType Source { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

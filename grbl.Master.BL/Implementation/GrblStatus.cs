@@ -42,6 +42,11 @@
 
         private readonly Dictionary<ResponseType, ResponseProcessingDefinition> _processingTable;
 
+        private string TranslateMessageKey(string key)
+        {
+            return Model.Resources.Mssages.ResourceManager.GetString(key);
+        }
+
         public GrblStatus(IComService comService, ICommandSender commandSender)
         {
             _commandSender = commandSender;
@@ -50,17 +55,81 @@
 
             _processingTable = new Dictionary<ResponseType, ResponseProcessingDefinition>
                               {
+                                  { ResponseType.Alarm, new ResponseProcessingDefinition
+                                                            {
+                                                                ProcessActions = new List<ResponseProcessor>
+                                                                                     {
+                                                                                         new ResponseProcessor
+                                                                                             {
+                                                                                                 TagExpression = "ALARM:.*",
+                                                                                                 Action = s =>
+                                                                                                     {
+                                                                                                         var msg = TranslateMessageKey(s.Replace("ALARM","Alarm"));
+                                                                                                         GrblStatusModel.LastMessage = msg;
+                                                                                                         GrblStatusModel.MachineState = MachineState.Alarm;
+                                                                                                     }
+                                                                                             }
+                                                                                     }
+                                                            }},
+                                  { ResponseType.FeedbackMessage, new ResponseProcessingDefinition
+                                                                      {
+                                                                          SplitAction =s =>s.Split(new[]{'[', ']'},StringSplitOptions.RemoveEmptyEntries),
+                                                                          ProcessActions = new List<ResponseProcessor>{new ResponseProcessor()
+                                                                                                                           {
+                                                                              TagExpression = "MSG:.*",
+                                                                              Action = s =>
+                                                                                  {
+                                                                                      GrblStatusModel.LastMessage =s.Replace("MSG:", string.Empty);
+                                                                                  }
+                                                                                                                           }}
+                                                                      }},
+                                  { ResponseType.HelpMessage, new ResponseProcessingDefinition
+                                                                      {
+                                                                          SplitAction =s =>s.Split(new[]{'[', ']'},StringSplitOptions.RemoveEmptyEntries),
+                                                                          ProcessActions = new List<ResponseProcessor>{new ResponseProcessor()
+                                                                                                                           {
+                                                                                                                               TagExpression = "HLP:.*",
+                                                                                                                               Action = s =>
+                                                                                                                                   {
+                                                                                                                                       GrblStatusModel.LastMessage =s.Replace("HLP:", string.Empty);
+                                                                                                                                   }
+                                                                                                                           }}
+                                                                      }},
+                                  { ResponseType.Error, new ResponseProcessingDefinition
+                                                                  {
+                                                                      ProcessActions = new List<ResponseProcessor>{new ResponseProcessor()
+                                                                                                                       {
+                                                                                                                           TagExpression = "error:.*",
+                                                                                                                           Action = s =>
+                                                                                                                               {
+                                                                                                                                   var msg = TranslateMessageKey(s);
+                                                                                                                                   GrblStatusModel.LastMessage = msg;
+                                                                                                                               }
+                                                                                                                       }}
+                                                                  }},
                                   {ResponseType.StatusReport, new ResponseProcessingDefinition{
                                           SplitAction   =s =>s.Split(new[]{'<', '>', '|'},StringSplitOptions.RemoveEmptyEntries),
                                           ProcessActions = new List<ResponseProcessor>
                                                                {
-                                                                   new ResponseProcessor{TagExpression = "Idle|Run|Hold|Jog|Alarm|Door|Check|Home|Sleep", Action =
+                                                                   new ResponseProcessor{TagExpression = "Alarm|Hold|Door", Action =
                                                                                            s =>
                                                                                                {
+                                                                                                   if(s.Contains(':'))
+                                                                                                   {
+                                                                                                       var msg = TranslateMessageKey(s);
+                                                                                                       GrblStatusModel.LastMessage = msg;
+                                                                                                   }
                                                                                                    var parts = s.Split(new []{':'}, StringSplitOptions.RemoveEmptyEntries);
                                                                                                    Enum.TryParse<MachineState>(parts.FirstOrDefault(), true, out var result);
                                                                                                    GrblStatusModel.MachineState = result;
                                                                                                }},
+                                                                   new ResponseProcessor{TagExpression = "Idle|Run|Jog|Check|Home|Sleep", Action =
+                                                                                            s =>
+                                                                                                {
+                                                                                                    var parts = s.Split(new []{':'}, StringSplitOptions.RemoveEmptyEntries);
+                                                                                                    Enum.TryParse<MachineState>(parts.FirstOrDefault(), true, out var result);
+                                                                                                    GrblStatusModel.MachineState = result;
+                                                                                                }},
                                                                    new ResponseProcessor{ TagExpression = "^MPos:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
                                                                                             part =>
                                                                                                 {

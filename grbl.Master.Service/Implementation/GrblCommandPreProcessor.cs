@@ -72,7 +72,7 @@
             catch
             {
                 cmd.Type = RequestType.GCode;
-                cmd.ExpectedResponses = new List<ResponseType> { ResponseType.Ok };
+                cmd.ExpectedResponses = new List<ResponseType> { ResponseType.Ok, ResponseType.Error };
             }
         }
     }

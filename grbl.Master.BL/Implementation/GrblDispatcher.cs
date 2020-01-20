@@ -24,7 +24,6 @@
             if (e == ConnectionState.Offline)
             {
                 _grblStatus.StopRequesting();
-                _commandSender.PurgeQueues();
             }
         }
 

@@ -4,12 +4,13 @@
     using System;
     using System.Collections.ObjectModel;
 
+    using grbl.Master.Service.Implementation;
+
     public interface ICommandSender
     {
-        ObservableCollection<Command> CommandList
-        {
-            get;
-        }
+        CommandSource SystemCommands { get; }
+         CommandSource ManualCommands { get; }
+        CommandSource FileCommands { get; }
 
         ObservableCollection<string> CommunicationLog
         {
@@ -18,15 +19,13 @@
 
         event EventHandler<Response> ResponseReceived;
 
-        event EventHandler CommandListUpdated;
-
         event EventHandler CommunicationLogUpdated;
-
-        event EventHandler<Command> CommandFinished;
 
         void SendAsync(string command, string onResult = null);
 
         void Send(string command, string onResult = null);
+
+        Command Prepare(string command);
 
         void PurgeQueues();
     }

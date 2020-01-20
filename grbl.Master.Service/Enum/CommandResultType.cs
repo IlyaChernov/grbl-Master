@@ -3,6 +3,7 @@
     public enum CommandResultType
     {
         Ok,
-        Error
+        Error,
+        Alarm
     }
 }

@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
@@ -14,7 +15,6 @@
 
     public class CommandSender : ICommandSender
     {
-        private readonly ConcurrentQueue<Command> _commandQueue = new ConcurrentQueue<Command>();
 
         private readonly IComService _comService;
 
@@ -50,14 +50,44 @@
             Observable.Timer(TimeSpan.Zero, TimeSpan.Zero).TakeUntil(_stopSubject).Subscribe(
                 l =>
                     {
-                        if (_commandQueue.TryPeek(out var cmd) && cmd.Data.Length + _waitingCommandQueue.Select(x => x.Data.Length).Sum() <= _bufferSizeLimit && _commandQueue.TryDequeue(out var command))
+                        //Debug.WriteLine("Peek");
+
+                        if ((SystemCommands.TryPeekCommand(out var cmd) || ManualCommands.TryPeekCommand(out cmd) || FileCommands.TryPeekCommand(out cmd)) && cmd != null && cmd.Data.Length + _waitingCommandQueue.Sum(x => x.Data.Length) <= _bufferSizeLimit)
                         {
-                            Send(command);
+                            Debug.WriteLine("Peeking successful");
+                            var continueProcess = false;
+                            switch (cmd.Source)
+                            {
+                                case CommandSourceType.System:
+                                    continueProcess = SystemCommands.TryGetCommand(out cmd);
+                                    break;
+                                case CommandSourceType.Manual:
+                                    continueProcess = ManualCommands.TryGetCommand(out cmd);
+                                    break;
+                                case CommandSourceType.File:
+                                    continueProcess = FileCommands.TryGetCommand(out cmd);
+                                    break;
+                            }
+
+                            if (!continueProcess) return;
+
+                            _commandPreProcessor.Process(ref cmd);
+
+                            Send(cmd);
+                        }
+
+                        if (cmd != null)
+                        {
+                            Debug.WriteLine($"Current buffer length {cmd.Data.Length + _waitingCommandQueue.Sum(x => x.Data.Length)}");
                         }
                     });
         }
 
-        public ObservableCollection<Command> CommandList { get; } = new ObservableCollection<Command>();
+        public CommandSource SystemCommands { get; } = new CommandSource(CommandSourceType.System);
+
+        public CommandSource ManualCommands { get; } = new CommandSource(CommandSourceType.Manual);
+
+        public CommandSource FileCommands { get; } = new CommandSource(CommandSourceType.File);
 
         public ObservableCollection<string> CommunicationLog { get; } = new ObservableCollection<string>();
 
@@ -78,35 +108,60 @@
 
             OnCommunicationLogUpdated();
 
-            var cmd = new Command { Data = command, CommandOnResult = onResult};
+            var cmd = new Command { Data = command, CommandOnResult = onResult };
 
             _commandPreProcessor.Process(ref cmd);
 
-            if (cmd.Type != RequestType.Realtime)
+            switch (cmd.Type)
             {
-                lock (_lockObject)
-                {
-                    _commandQueue.Enqueue(cmd);
-                }
+                case RequestType.Realtime:
+                    Send(cmd);
+                    break;
+                case RequestType.System:
+                    {
+                        lock (_lockObject)
+                        {
+                            SystemCommands.Add(command);
+                        }
+
+                        break;
+                    }
+                default:
+                    {
+                        lock (_lockObject)
+                        {
+                            ManualCommands.Add(command);
+                        }
+
+                        break;
+                    }
             }
-            else Send(cmd);
+        }
+
+        public Command Prepare(string command)
+        {
+            var cmd = new Command { Data = command };
+
+            _commandPreProcessor.Process(ref cmd);
+
+            return cmd;
         }
 
         public void SendAsync(string command, string onResult = null)
         {
-             Observable.Start(() => { Send(command, onResult); }).Subscribe();
+            Observable.Start(() => { Send(command, onResult); }).Subscribe();
         }
 
         public void PurgeQueues()
         {
-            while (_waitingCommandQueue.Any())
+            while (_waitingCommandQueue.Count > 0)
             {
                 _waitingCommandQueue.TryDequeue(out var dummy);
             }
-            while (_commandQueue.Any())
-            {
-                _commandQueue.TryDequeue(out var dummy);
-            }
+
+            SystemCommands.Purge();
+            ManualCommands.Purge();
+            FileCommands.Purge();
         }
 
         private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
@@ -115,10 +170,15 @@
             {
                 if (!_processing)
                     ProcessQueue();
+                SystemCommands.StartProcessing();
+                ManualCommands.StartProcessing();
             }
             else
             {
                 _stopSubject.OnNext(Unit.Default);
+                SystemCommands.PauseProcessing();
+                ManualCommands.PauseProcessing();
+
             }
         }
 
@@ -152,7 +212,7 @@
 
                 OnResponseReceived(new Response { Data = e, Type = type });
 
-                if ((type == ResponseType.Ok || type == ResponseType.Error) && _waitingCommandQueue.Any() && _waitingCommandQueue.TryDequeue(out var cmd))
+                if ((type == ResponseType.Ok || type == ResponseType.Error || type == ResponseType.Alarm) && _waitingCommandQueue.Any() && _waitingCommandQueue.TryDequeue(out var cmd))
                 {
                     if (type == ResponseType.Ok)
                     {
@@ -162,6 +222,21 @@
                     {
                         cmd.ResultType = CommandResultType.Error;
                         cmd.CommandResultCause = e.Split(':')[1];
+
+                        if (cmd.Source == CommandSourceType.File)
+                        {
+                            FileCommands.PauseProcessing();
+                        }
+                    }
+                    else if(type == ResponseType.Alarm)
+                    {
+                        cmd.ResultType = CommandResultType.Alarm;
+                        cmd.CommandResultCause = e.Split(':')[1];
+
+                        if (cmd.Source == CommandSourceType.File)
+                        {
+                            FileCommands.PauseProcessing();
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(cmd.CommandOnResult))
@@ -172,7 +247,21 @@
                     _uiContext.Send(
                     x =>
                         {
-                            CommandList.Add(cmd);
+                            switch (cmd.Source)
+                            {
+                                case CommandSourceType.System:
+                                    SystemCommands.CommandList.Add(cmd);
+                                    break;
+                                case CommandSourceType.Manual:
+                                    ManualCommands.CommandList.Add(cmd);
+                                    break;
+                                case CommandSourceType.File:
+                                    FileCommands.CommandList.Add(cmd);
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+
                             OnCommandFinished(cmd);
                             OnCommandListUpdated();
                         },
@@ -184,22 +273,9 @@
                     {
                         comd.Result += (string.IsNullOrEmpty(comd.Result) ? "" : Environment.NewLine) + e;
                     }
-                    else
-                    {
-                        var newCommand = new Command { Result = e };
-                        _uiContext.Send(
-                            x =>
-                                {
-                                    CommandList.Add(newCommand);
-                                    OnCommandFinished(newCommand);
-                                    OnCommandListUpdated();
-                                },
-                            null);
-                    }
                 }
             }
         }
-
 
         private void Send(Command cmd)
         {

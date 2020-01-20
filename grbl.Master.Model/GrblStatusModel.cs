@@ -3,12 +3,18 @@
     using grbl.Master.Model.Enum;
     using grbl.Master.Service.Annotations;
     using System;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Linq;
     using System.Runtime.CompilerServices;
+
+    using Meziantou.Framework.WPF.Collections;
 
     public class GrblStatusModel : INotifyPropertyChanged //, IGrblStatus
     {
         public event EventHandler<MachineState> MachineStateChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private MachineState _machineState;
         private MotionMode _motionMode;
@@ -23,6 +29,7 @@
         private ProgramMode _programMode;
         private SpindleState _spindleState;
         private CoolantState _coolantState;
+        private string _lastMessage;
         private Position _machinePosition = new Position();
         private Position _workPosition = new Position();
 
@@ -46,6 +53,27 @@
         private OverrideValues _overrideValues = new OverrideValues();
 
         private long _lineNumber;
+
+        public ConcurrentObservableCollection<string> Messages { get; } = new ConcurrentObservableCollection<string>();
+
+        public string LastMessage
+        {
+            get => _lastMessage;
+            set
+            {
+                if (_lastMessage != value)
+                {
+                    _lastMessage = value;
+                    Messages.Insert(0, value);
+                    if (Messages.Count > 10)
+                    {
+                        Messages.Remove(Messages.Last());
+                    }
+
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public MachineState MachineState
         {
@@ -112,7 +140,7 @@
                 }
             }
         }
-         
+
         public ArcDistanceMode ArcDistanceMode
         {
             get => _arcDistanceMode;
@@ -423,8 +451,6 @@
             }
         }
 
-      
-
         //public AccessoryState AccessoryState
         //{
         //    get => _accessoryState;
@@ -434,8 +460,6 @@
         //        OnPropertyChanged();
         //    }
         //}
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

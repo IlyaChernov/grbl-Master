@@ -56,6 +56,8 @@
     <Compile Include="DataTypes\Response.cs" />
     <Compile Include="DataTypes\Command.cs" />
     <Compile Include="Attribute\RequestTypeAttribute.cs" />
+    <Compile Include="Enum\CommandSourceType.cs" />
+    <Compile Include="Enum\CommandSourceState.cs" />
     <Compile Include="Enum\EnumHelper.cs" />
     <Compile Include="Attribute\ExpectedResponseAttribute.cs" />
     <Compile Include="Enum\CommandResultType.cs" />
@@ -69,7 +71,9 @@
     <Compile Include="Implementation\CommandSender.cs" />
     <Compile Include="Implementation\COMService.cs" />
     <Compile Include="Implementation\GrblResponseTypeFinder.cs" />
+    <Compile Include="Implementation\CommandSource.cs" />
     <Compile Include="Interface\ICommandSender.cs" />
+    <Compile Include="Interface\ICommandSource.cs" />
     <Compile Include="Interface\ICOMService.cs" />
     <Compile Include="Interface\IGrblCommandPreProcessor.cs" />
     <Compile Include="Interface\IGrblResponseTypeFinder.cs" />
