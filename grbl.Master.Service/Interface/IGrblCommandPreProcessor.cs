@@ -1,6 +1,6 @@
 ﻿namespace grbl.Master.Service.Interface
 {
-    using grbl.Master.Service.DataTypes;
+    using grbl.Master.Model;
 
     public interface IGrblCommandPreProcessor
     {

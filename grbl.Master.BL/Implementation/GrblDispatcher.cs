@@ -9,11 +9,11 @@
     {
         private readonly IGrblStatus _grblStatus;
 
-        private readonly ICommandSender _commandSender;
+//        private readonly ICommandSender _commandSender;
 
-        public GrblDispatcher(IComService comService, IGrblPrompt grblPrompt, IGrblStatus grblStatus, ICommandSender commandSender)
+        public GrblDispatcher(IComService comService, IGrblPrompt grblPrompt, IGrblStatus grblStatus/*, ICommandSender commandSender*/)
         {
-            _commandSender = commandSender;
+           // _commandSender = commandSender;
             _grblStatus = grblStatus;
             grblPrompt.PromptReceived += GrblPromptPromptReceived;
             comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
@@ -30,7 +30,7 @@
         private void GrblPromptPromptReceived(object sender, string e)
         {
             _grblStatus.InitialRequest();
-            _grblStatus.StartRequesting(TimeSpan.FromMilliseconds(500));
+            _grblStatus.StartRequesting(TimeSpan.FromMilliseconds(500), TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2) );
         }
     }
 }

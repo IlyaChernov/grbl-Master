@@ -33,9 +33,25 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Meziantou.Framework.WPF, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Meziantou.Framework.WPF.1.1.0\lib\net461\Meziantou.Framework.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.7.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Reactive, Version=4.3.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.3.2\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
@@ -53,27 +69,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataTypes\Response.cs" />
-    <Compile Include="DataTypes\Command.cs" />
-    <Compile Include="Attribute\RequestTypeAttribute.cs" />
-    <Compile Include="Enum\CommandSourceType.cs" />
-    <Compile Include="Enum\CommandSourceState.cs" />
     <Compile Include="Enum\EnumHelper.cs" />
-    <Compile Include="Attribute\ExpectedResponseAttribute.cs" />
-    <Compile Include="Enum\CommandResultType.cs" />
-    <Compile Include="Enum\CommandType.cs" />
-    <Compile Include="Attribute\CharListAttribute.cs" />
-    <Compile Include="Attribute\RegexAttribute.cs" />
-    <Compile Include="Enum\RequestType.cs" />
     <Compile Include="Enum\ConnectionState.cs" />
-    <Compile Include="Enum\ResponseType.cs" />
     <Compile Include="Implementation\GrblCommandPreProcessor.cs" />
     <Compile Include="Implementation\CommandSender.cs" />
     <Compile Include="Implementation\COMService.cs" />
     <Compile Include="Implementation\GrblResponseTypeFinder.cs" />
-    <Compile Include="Implementation\CommandSource.cs" />
     <Compile Include="Interface\ICommandSender.cs" />
-    <Compile Include="Interface\ICommandSource.cs" />
     <Compile Include="Interface\ICOMService.cs" />
     <Compile Include="Interface\IGrblCommandPreProcessor.cs" />
     <Compile Include="Interface\IGrblResponseTypeFinder.cs" />
@@ -83,6 +85,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\grbl.Master.Model\grbl.Master.Model.csproj">
+      <Project>{b21c205e-5ce2-436e-afa4-f2a3dac60d21}</Project>
+      <Name>grbl.Master.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

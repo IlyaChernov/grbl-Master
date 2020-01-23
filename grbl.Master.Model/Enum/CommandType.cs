@@ -1,8 +1,8 @@
-﻿namespace grbl.Master.Service.Enum
+﻿namespace grbl.Master.Model.Enum
 {
     using System.ComponentModel;
 
-    using grbl.Master.Service.Attribute;
+    using grbl.Master.Model.Attribute;
 
     public enum CommandType
     {

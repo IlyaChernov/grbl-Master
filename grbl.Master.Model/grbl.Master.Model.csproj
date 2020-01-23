@@ -33,6 +33,9 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=2019.1.3.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.2019.1.3\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Meziantou.Framework.WPF, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Meziantou.Framework.WPF.1.1.0\lib\net461\Meziantou.Framework.WPF.dll</HintPath>
     </Reference>
@@ -59,9 +62,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attribute\ChangeCommandAttribute.cs" />
+    <Compile Include="Attribute\CharListAttribute.cs" />
+    <Compile Include="Attribute\ExpectedResponseAttribute.cs" />
+    <Compile Include="Attribute\RegexAttribute.cs" />
+    <Compile Include="Attribute\RequestTypeAttribute.cs" />
+    <Compile Include="Command.cs" />
+    <Compile Include="CommandSource.cs" />
     <Compile Include="Converters\EnumToDescription.cs" />
+    <Compile Include="Enum\CommandResultType.cs" />
+    <Compile Include="Enum\CommandSourceRunMode.cs" />
+    <Compile Include="Enum\CommandSourceState.cs" />
+    <Compile Include="Enum\CommandSourceType.cs" />
+    <Compile Include="Enum\CommandType.cs" />
     <Compile Include="Enum\DistanceMode.cs" />
     <Compile Include="Enum\CoolantState.cs" />
+    <Compile Include="Enum\RequestType.cs" />
+    <Compile Include="Enum\ResponseType.cs" />
     <Compile Include="Enum\SpindleState.cs" />
     <Compile Include="Enum\ProgramMode.cs" />
     <Compile Include="Enum\ToolLengthMode.cs" />
@@ -85,12 +101,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Mssages.resx</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\grbl.Master.Service\grbl.Master.Service.csproj">
-      <Project>{5233400E-E720-4DE5-8BED-6B11F2AE14C6}</Project>
-      <Name>grbl.Master.Service</Name>
-    </ProjectReference>
+    <Compile Include="Response.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

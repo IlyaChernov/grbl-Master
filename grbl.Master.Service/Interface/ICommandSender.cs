@@ -1,10 +1,9 @@
 ﻿namespace grbl.Master.Service.Interface
 {
-    using grbl.Master.Service.DataTypes;
     using System;
     using System.Collections.ObjectModel;
 
-    using grbl.Master.Service.Implementation;
+    using grbl.Master.Model;
 
     public interface ICommandSender
     {

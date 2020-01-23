@@ -377,77 +377,77 @@
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Tool length offset:" />
                                     <TextBox Grid.Row="0" Grid.Column="3" cal:Message.Attach="[Event LostFocus] = [Action SetToolLengthOffset($this)];[Key Enter] = [Action SetToolLengthOffset($this)]"
                                              Text="{Binding GrblStatus.ToolLengthOffset}" />
-                                    <Button Grid.Row="0" Grid.Column="4" cal:Message.Attach="GCommand('G43.1 Z0', '$#')" ToolTip="Set zero">
+                                    <Button Grid.Row="0" Grid.Column="4" cal:Message.Attach="GCommand('G43.1 Z0')" ToolTip="Set zero">
                                         0
                                     </Button>
 
-                                    <Button Grid.Row="2" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P1 X{3} Y{4} Z{5}', '$#')" ToolTip="Set current machine position">
+                                    <Button Grid.Row="2" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P1 X{3} Y{4} Z{5}')" ToolTip="Set current machine position">
                                         G54
                                     </Button>
                                     <ContentControl Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G54Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
                                                     Tag="G10 L2 P1" />
-                                    <Button Grid.Row="2" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P1 X0 Y0 Z0', '$#')" ToolTip="Set zero position">
+                                    <Button Grid.Row="2" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P1 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
 
-                                    <Button Grid.Row="3" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P2 X{3} Y{4} Z{5}', '$#')" ToolTip="Set current machine position">
+                                    <Button Grid.Row="3" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P2 X{3} Y{4} Z{5}')" ToolTip="Set current machine position">
                                         G55
                                     </Button>
                                     <ContentControl Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G55Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
                                                     Tag="G10 L2 P2" />
-                                    <Button Grid.Row="3" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P2 X0 Y0 Z0', '$#')" ToolTip="Set zero position">
+                                    <Button Grid.Row="3" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P2 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
 
-                                    <Button Grid.Row="4" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P3 X{3} Y{4} Z{5}', '$#')" ToolTip="Set current machine position">
+                                    <Button Grid.Row="4" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P3 X{3} Y{4} Z{5}')" ToolTip="Set current machine position">
                                         G56
                                     </Button>
                                     <ContentControl Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G56Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
                                                     Tag="G10 L2 P3" />
-                                    <Button Grid.Row="4" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P3 X0 Y0 Z0', '$#')" ToolTip="Set zero position">
+                                    <Button Grid.Row="4" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P3 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
 
-                                    <Button Grid.Row="5" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P4 X{3} Y{4} Z{5}', '$#')" ToolTip="Set current machine position">
+                                    <Button Grid.Row="5" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P4 X{3} Y{4} Z{5}')" ToolTip="Set current machine position">
                                         G57
                                     </Button>
                                     <ContentControl Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G57Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
                                                     Tag="G10 L2 P4" />
-                                    <Button Grid.Row="5" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P4 X0 Y0 Z0', '$#')" ToolTip="Set zero position">
+                                    <Button Grid.Row="5" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P4 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
 
-                                    <Button Grid.Row="6" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P5 X{3} Y{4} Z{5}', '$#')" ToolTip="Set current machine position">
+                                    <Button Grid.Row="6" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P5 X{3} Y{4} Z{5}')" ToolTip="Set current machine position">
                                         G58
                                     </Button>
                                     <ContentControl Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G58Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
                                                     Tag="G10 L2 P5" />
-                                    <Button Grid.Row="6" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P5 X0 Y0 Z0', '$#')" ToolTip="Set zero position">
+                                    <Button Grid.Row="6" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P5 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
 
-                                    <Button Grid.Row="7" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P6 X{3} Y{4} Z{5}', '$#')" ToolTip="Set current machine position">
+                                    <Button Grid.Row="7" Grid.Column="0" cal:Message.Attach="GCommand('G10 L2 P6 X{3} Y{4} Z{5}')" ToolTip="Set current machine position">
                                         G59
                                     </Button>
                                     <ContentControl Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G59Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
                                                     Tag="G10 L2 P6" />
-                                    <Button Grid.Row="7" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P6 X0 Y0 Z0', '$#')" ToolTip="Set zero position">
+                                    <Button Grid.Row="7" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P6 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
 
-                                    <Button Grid.Row="8" Grid.Column="0" cal:Message.Attach="GCommand('G28.1', '$#')" ToolTip="Set current machine position">
+                                    <Button Grid.Row="8" Grid.Column="0" cal:Message.Attach="GCommand('G28.1')" ToolTip="Set current machine position">
                                         G28
                                     </Button>
                                     <ContentControl Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="3"
@@ -458,7 +458,7 @@
                                         0
                                     </Button>
 
-                                    <Button Grid.Row="9" Grid.Column="0" cal:Message.Attach="GCommand('G30.1', '$#')" ToolTip="Set current machine position">
+                                    <Button Grid.Row="9" Grid.Column="0" cal:Message.Attach="GCommand('G30.1')" ToolTip="Set current machine position">
                                         G30
                                     </Button>
                                     <ContentControl Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="3"
@@ -476,86 +476,130 @@
 
 
                     </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel.Resources>
-                                <Style TargetType="Button">
-                                    <Setter Property="FontSize" Value="16" />
-                                    <Setter Property="FontWeight" Value="Bold" />
-                                    <Setter Property="Margin" Value="1" />
-                                </Style>
-                            </StackPanel.Resources>
-                            <Button x:Name="FileOpen" ToolTip="Open file">
-                                <materialDesign:PackIcon Width="45" Height="45" Kind="File" />
-                            </Button>
-                            <Button x:Name="StartFileExecution" ToolTip="Run code">
-                                <materialDesign:PackIcon Width="45" Height="45" Kind="PLay" />
-                            </Button>
-                            <Button x:Name="StartStepFileExecution" ToolTip="Single step">
-                                <materialDesign:PackIcon Width="45" Height="45" Kind="StepForward" />
-                            </Button>
-                            <Button x:Name="PauseFileExecution" ToolTip="Pause">
-                                <materialDesign:PackIcon Width="45" Height="45" Kind="Pause" />
-                            </Button>
-                            <Button x:Name="StopFileExecution" ToolTip="Stop">
-                                <materialDesign:PackIcon Width="45" Height="45" Kind="Stop" />
-                            </Button>
-                            <Button x:Name="ReloadFile" ToolTip="Reload file">
-                                <materialDesign:PackIcon Width="45" Height="45" Kind="Reload" />
-                            </Button>
-                        </StackPanel>
-                        <ProgressBar Grid.Row="1" Margin="1" Background="White" Value="80" />
-                        <Grid Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="100" />
-                            </Grid.ColumnDefinitions>
-                            <Label Content="{Binding GrblStatus.LastMessage}" ToolTip="{Binding GrblStatus.LastMessage}" />
-                            <Label Grid.Column="1">Elapsed</Label>
-                        </Grid>
-                        <TabControl Grid.Row="3" Grid.Column="0">
-                            <TabItem Header="File progress">
-                                <ListView ItemsSource="{Binding FileCommandsCollection}" VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                    <ListView.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel />
-                                        </ItemsPanelTemplate>
-                                    </ListView.ItemsPanel>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid ToolTip="{Binding Result}">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="30" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}" />
-                                                <TextBlock Grid.Column="1" Padding="1,0,5,0"
-                                                           Text="{Binding Path=Data}" />
-                                                <TextBlock Grid.Column="2" Text="{Binding Path=Result}" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </TabItem>
-                            <TabItem Header="File data">
-                                <ListView ItemsSource="{Binding FileLines}" VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                    <ListView.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel />
-                                        </ItemsPanelTemplate>
-                                    </ListView.ItemsPanel>
-                                </ListView>
-                            </TabItem>
-                        </TabControl>
+                    <TabControl Grid.Column="1">
+                        <TabItem Width="100" Header="File">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50" />
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="Button">
+                                            <Setter Property="FontSize" Value="16" />
+                                            <Setter Property="FontWeight" Value="Bold" />
+                                            <Setter Property="Margin" Value="1" />
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <Button x:Name="FileOpen" ToolTip="Open file">
+                                        <materialDesign:PackIcon Width="45" Height="45" Kind="File" />
+                                    </Button>
+                                    <Button x:Name="StartFileExecution" ToolTip="Run code">
+                                        <materialDesign:PackIcon Width="45" Height="45" Kind="PLay" />
+                                    </Button>
+                                    <Button x:Name="StartStepFileExecution" ToolTip="Single step">
+                                        <materialDesign:PackIcon Width="45" Height="45" Kind="StepForward" />
+                                    </Button>
+                                    <Button x:Name="PauseFileExecution" ToolTip="Pause">
+                                        <materialDesign:PackIcon Width="45" Height="45" Kind="Pause" />
+                                    </Button>
+                                    <Button x:Name="StopFileExecution" ToolTip="Stop">
+                                        <materialDesign:PackIcon Width="45" Height="45" Kind="Stop" />
+                                    </Button>
+                                    <Button x:Name="ReloadFile" ToolTip="Reload file">
+                                        <materialDesign:PackIcon Width="45" Height="45" Kind="Reload" />
+                                    </Button>
+                                </StackPanel>
+                                <ProgressBar Grid.Row="1" Margin="1" Background="White"
+                                             Maximum="{Binding FileLinesCount, Mode=OneWay}"
+                                             Minimum="0"
+                                             Value="{Binding FileLinesProcessed, Mode=OneWay}">
+                                    <ProgressBar.ToolTip>
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="Processed : {0}/{1}">
+                                                    <Binding Mode="OneWay" Path="FileLinesProcessed" />
+                                                    <Binding Mode="OneWay" Path="FileLinesCount" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </ProgressBar.ToolTip>
 
-                    </Grid>
+                                </ProgressBar>
+                                <TextBlock Grid.Row="1" Margin="1" TextAlignment="Center">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="Processed : {0}/{1}">
+                                            <Binding Mode="OneWay" Path="FileLinesProcessed" />
+                                            <Binding Mode="OneWay" Path="FileLinesCount" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="100" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="{Binding GrblStatus.LastMessage}" ToolTip="{Binding GrblStatus.LastMessage}" />
+                                    <Label Grid.Column="1">Elapsed</Label>
+                                </Grid>
+                                <TabControl Grid.Row="3" Grid.Column="0">
+                                    <TabItem Width="100" Header="File progress">
+                                        <ListView ItemsSource="{Binding FileCommandsCollection}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                            <ListView.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ListView.ItemsPanel>
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid ToolTip="{Binding Result}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="30" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}" />
+                                                        <TextBlock Grid.Column="1" Padding="1,0,5,0"
+                                                                   Text="{Binding Path=Data}" />
+                                                        <TextBlock Grid.Column="2" Text="{Binding Path=Result}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </TabItem>
+                                    <TabItem Width="100" Header="File data">
+                                        <TextBox AcceptsReturn="True" HorizontalScrollBarVisibility="Auto"
+                                                 Text="{Binding FileLines}"
+                                                 VerticalScrollBarVisibility="Auto" />
+                                    </TabItem>
+                                </TabControl>
+
+                            </Grid>
+                        </TabItem>
+                        <TabItem Width="100" Header="Macros">
+                            <WrapPanel Orientation="Vertical">
+                                <WrapPanel.Resources>
+                                    <DataTemplate x:Key="MacrosTemplate">
+                                        <Grid>
+                                            <Expander Header="{Binding}">
+                                                <Button Content="s">
+                                                    <Button.Resources>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="CornerRadius" Value="5" />
+                                                        </Style>
+                                                    </Button.Resources>
+                                                </Button>
+                                            </Expander>
+                                        </Grid>
+                                    </DataTemplate>
+                                </WrapPanel.Resources>
+                                <ItemsControl ItemTemplate="{StaticResource MacrosTemplate}" ItemsSource="{converters:EnumToItemsSource {x:Type enum:ActivePlane}}" />
+                            </WrapPanel>
+                        </TabItem>
+                    </TabControl>
+
                     <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical">
                             <StackPanel.Resources>
@@ -589,21 +633,11 @@
                                             Content="{Binding}"
                                             DataContext="{Binding}" />
                                 </DataTemplate>
-                                <DataTemplate x:Key="ExpanderContentStrings">
-                                    <Label Margin="0,2"
-                                           Content="{Binding}"
-                                           ToolTip="{Binding}" />
-                                </DataTemplate>
                                 <Style BasedOn="{StaticResource {x:Type Expander}}" TargetType="Expander">
                                     <Setter Property="HeaderTemplate" Value="{StaticResource ExpanderHeader}" />
                                 </Style>
                                 <Style BasedOn="{StaticResource {x:Type ItemsControl}}" TargetType="ItemsControl">
                                     <Setter Property="ItemTemplate" Value="{StaticResource ExpanderContent}" />
-                                </Style>
-                                <Style x:Key="StringItems"
-                                       BasedOn="{StaticResource {x:Type ItemsControl}}"
-                                       TargetType="ItemsControl">
-                                    <Setter Property="ItemTemplate" Value="{StaticResource ExpanderContentStrings}" />
                                 </Style>
                             </StackPanel.Resources>
                             <Expander Header="{Binding GrblStatus.CoordinateSystem}" Tag="Work offset">

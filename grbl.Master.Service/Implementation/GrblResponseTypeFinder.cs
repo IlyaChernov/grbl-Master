@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using grbl.Master.Service.Enum;
+    using grbl.Master.Model.Enum;
     using grbl.Master.Service.Interface;
 
     public class GrblResponseTypeFinder : IGrblResponseTypeFinder

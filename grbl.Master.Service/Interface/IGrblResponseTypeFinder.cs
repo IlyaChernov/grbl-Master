@@ -1,6 +1,6 @@
 ﻿namespace grbl.Master.Service.Interface
 {
-    using grbl.Master.Service.Enum;
+    using grbl.Master.Model.Enum;
 
     public interface IGrblResponseTypeFinder
     {

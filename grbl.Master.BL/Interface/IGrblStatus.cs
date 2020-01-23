@@ -5,14 +5,14 @@
 
     public interface IGrblStatus
     {
-        void StartRequesting(TimeSpan interval);
+        void StartRequesting(TimeSpan positionsInterval, TimeSpan gStateInterval,TimeSpan offsetsInterval);
         void InitialRequest();
         void StopRequesting();  
 
-        bool IsRunning
-        {
-            get;           
-        }
+        //bool IsRunning
+        //{
+        //    get;           
+        //}
 
         GrblStatusModel GrblStatusModel { get; set; } 
     }

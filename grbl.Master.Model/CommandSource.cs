@@ -1,24 +1,24 @@
-﻿using System;
-
-namespace grbl.Master.Service.Implementation
+﻿namespace grbl.Master.Model
 {
+    using System;
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Linq;
 
-    using grbl.Master.Service.DataTypes;
-    using grbl.Master.Service.Enum;
-    using grbl.Master.Service.Interface;
+    using grbl.Master.Model.Enum;
 
-    public class CommandSource : ICommandSource
+    public class CommandSource
     {
-        private readonly object _lockObject = new object();
+        //private readonly object _lockObject = new object();
 
         private bool _needsPurge;
         private ConcurrentQueue<string> CommandQueue { get; } = new ConcurrentQueue<string>();
 
+        public int CommandCount => CommandQueue.Count;
+
         public CommandSourceState State { get; internal set; } = CommandSourceState.Stopped;
+
+        public CommandSourceRunMode Mode { get; set; }
 
         public CommandSourceType Type { get; set; }
 
@@ -28,9 +28,10 @@ namespace grbl.Master.Service.Implementation
 
         public event EventHandler<Command> CommandFinished;
 
-        public CommandSource(CommandSourceType type)
+        public CommandSource(CommandSourceType type, CommandSourceRunMode mode)
         {
             Type = type;
+            Mode = mode;
         }
 
         public void StartProcessing()
@@ -43,15 +44,6 @@ namespace grbl.Master.Service.Implementation
             State = CommandSourceState.Running;
         }
 
-        public void StartLineByLineProcessing()
-        {
-            if (State == CommandSourceState.Stopped && _needsPurge)
-            {
-                Purge();
-            }
-
-            State = CommandSourceState.RunningLineByLine;
-        }
 
         public void PauseProcessing()
         {
@@ -69,7 +61,7 @@ namespace grbl.Master.Service.Implementation
 
         public bool TryPeekCommand(out Command command)
         {
-            if ((State == CommandSourceState.Running || State == CommandSourceState.RunningLineByLine) && CommandQueue.TryPeek(out var cmdText))
+            if (State == CommandSourceState.Running && CommandQueue.TryPeek(out var cmdText))
             {
                 command = new Command { Data = cmdText, Source = Type };
                 return true;
@@ -81,12 +73,17 @@ namespace grbl.Master.Service.Implementation
 
         public bool TryGetCommand(out Command command)
         {
-            if ((State == CommandSourceState.Running || State== CommandSourceState.RunningLineByLine) && CommandQueue.TryDequeue(out var cmdText))
+            if (State == CommandSourceState.Running && CommandQueue.TryDequeue(out var cmdText))
             {
                 command = new Command { Data = cmdText, Source = Type };
-                if (State == CommandSourceState.RunningLineByLine)
+                if (Mode == CommandSourceRunMode.LineByLine)
                 {
-                    State = CommandSourceState.Paused;
+                    this.PauseProcessing();
+                }
+
+                if (Mode == CommandSourceRunMode.StopInTheEnd && CommandQueue.IsEmpty)
+                {
+                    this.StopProcessing();
                 }
                 return true;
             }
@@ -107,21 +104,22 @@ namespace grbl.Master.Service.Implementation
 
         public void Add(string command)
         {
-            Debug.WriteLine($"Command {command} added to {Type}");
-            lock (_lockObject)
-            {
-                CommandQueue.Enqueue(command);
-            }
+            Add(command.Split(new[] { Environment.NewLine }, StringSplitOptions.None));
+            //Debug.WriteLine($"Command {command} added to {Type}");
+           // lock (_lockObject)
+           // {
+                //CommandQueue.Enqueue(command);
+           // }
         }
 
         public void Add(string[] commands)
         {
             foreach (var command in commands)
             {
-                lock (_lockObject)
-                {
+                //lock (_lockObject)
+                //{
                     CommandQueue.Enqueue(command);
-                }
+                //}
             }
         }
     }

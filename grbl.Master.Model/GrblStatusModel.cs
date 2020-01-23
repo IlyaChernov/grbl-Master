@@ -1,12 +1,12 @@
 ﻿namespace grbl.Master.Model
 {
     using grbl.Master.Model.Enum;
-    using grbl.Master.Service.Annotations;
     using System;
-    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.CompilerServices;
+
+    using JetBrains.Annotations;
 
     using Meziantou.Framework.WPF.Collections;
 

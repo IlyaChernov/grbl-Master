@@ -1,6 +1,5 @@
 ﻿namespace grbl.Master.Service.Implementation
 {
-    using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System;
@@ -12,6 +11,9 @@
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Threading;
+
+    using grbl.Master.Model;
+    using grbl.Master.Model.Enum;
 
     public class CommandSender : ICommandSender
     {
@@ -78,16 +80,16 @@
 
                         if (cmd != null)
                         {
-                            Debug.WriteLine($"Current buffer length {cmd.Data.Length + _waitingCommandQueue.Sum(x => x.Data.Length)}");
+                            Debug.WriteLine($"Current buffer length {cmd.Data.Length + _waitingCommandQueue.Sum(x => x.Data.Length)} , {_waitingCommandQueue.Aggregate("",  (prev, next) => prev + next.Data )}");
                         }
                     });
         }
 
-        public CommandSource SystemCommands { get; } = new CommandSource(CommandSourceType.System);
+        public CommandSource SystemCommands { get; } = new CommandSource(CommandSourceType.System, CommandSourceRunMode.Infinite);
 
-        public CommandSource ManualCommands { get; } = new CommandSource(CommandSourceType.Manual);
+        public CommandSource ManualCommands { get; } = new CommandSource(CommandSourceType.Manual, CommandSourceRunMode.Infinite);
 
-        public CommandSource FileCommands { get; } = new CommandSource(CommandSourceType.File);
+        public CommandSource FileCommands { get; } = new CommandSource(CommandSourceType.File, CommandSourceRunMode.StopInTheEnd);
 
         public ObservableCollection<string> CommunicationLog { get; } = new ObservableCollection<string>();
 

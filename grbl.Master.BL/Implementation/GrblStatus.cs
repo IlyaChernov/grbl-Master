@@ -14,8 +14,6 @@
     using System.Text.RegularExpressions;
     using System.Threading;
 
-    using grbl.Master.Service.DataTypes;
-
     public class GrblStatus : IGrblStatus
     {
         private readonly ICommandSender _commandSender;
@@ -476,23 +474,25 @@
 
         public GrblStatusModel GrblStatusModel { get; set; } = new GrblStatusModel();
 
-        public bool IsRunning
-        {
-            get; private set;
-        }
+        private bool IsRunning;
+        //{
+        //    get; private set;
+        //}
 
-        public void StartRequesting(TimeSpan interval)
+        public void StartRequesting(TimeSpan positionsInterval, TimeSpan gStateInterval, TimeSpan offsetsInterval)
         {
             if (!IsRunning)
             {
                 IsRunning = true;
-                Observable.Timer(TimeSpan.Zero, interval).TakeUntil(_stopSubject).Subscribe(l => { Request(); });
+                Observable.Timer(TimeSpan.Zero, positionsInterval).TakeUntil(_stopSubject).Subscribe(l => { RequestPositions(); });
+                Observable.Timer(TimeSpan.Zero, gStateInterval).TakeUntil(_stopSubject).Subscribe(l => { RequestGStatus(); });
+                Observable.Timer(TimeSpan.Zero, offsetsInterval).TakeUntil(_stopSubject).Subscribe(l => { RequestOffsets(); });
             }
         }
 
         public void InitialRequest()
         {
-            _commandSender.Send("$#");
+           // _commandSender.Send("$#");
         }
 
         public void StopRequesting()
@@ -504,10 +504,17 @@
             }
         }
 
-        private void Request()
+        private void RequestPositions()
         {
             _commandSender.Send("?");
+        }
+        private void RequestGStatus()
+        {
             _commandSender.Send("$G");
+        }
+        private void RequestOffsets()
+        {
+            _commandSender.Send("$#");
         }
 
         private void ComServiceConnectionStateChanged(object sender, ConnectionState e)

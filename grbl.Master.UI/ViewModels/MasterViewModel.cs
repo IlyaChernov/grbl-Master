@@ -16,7 +16,6 @@
     using grbl.Master.BL.Interface;
     using grbl.Master.Model;
     using grbl.Master.Model.Enum;
-    using grbl.Master.Service.DataTypes;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using grbl.Master.Utilities;
@@ -60,12 +59,19 @@
             _grblStatus.GrblStatusModel.PropertyChanged += GrblStatusModelPropertyChanged;
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
+
+            this._commandSender.FileCommands.CommandList.CollectionChanged += (sender, args) =>
+                {
+                    this.NotifyOfPropertyChange(() => FileLinesProcessed);
+                };
         }
 
         private void GrblStatusModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             OnPropertyChanged(e);
             NotifyCanCommands();
+            //NotifyOfPropertyChange(() => FileLinesCount);
+            //NotifyOfPropertyChange(() => FileLinesProcessed);
         }
 
         public List<double> JoggingDistances =>
@@ -110,6 +116,10 @@
             }
         }
 
+        public int FileLinesCount => _commandSender.FileCommands.CommandCount;
+
+        public int FileLinesProcessed => FileCommandsCollection.Count;
+
         public GrblStatusModel GrblStatus => _grblStatus.GrblStatusModel;
 
         public ObservableCollection<string> CommunicationLog => _commandSender.CommunicationLog;
@@ -120,7 +130,7 @@
 
         public ObservableCollection<Command> FileCommandsCollection => _commandSender.FileCommands.CommandList;
 
-        public List<string> FileLines { get; set; } = new List<string>();
+        public string FileLines { get; set; } = "";
 
         public COMConnectionViewModel ComConnectionViewModel { get; }
 
@@ -145,7 +155,7 @@
         public bool CanSendEnterCommand => BasicCanSendCommand;
 
         public bool CanGCommand =>
-            _grblStatus.GrblStatusModel.MachineState != MachineState.Alarm && BasicCanSendCommand;
+            _grblStatus.GrblStatusModel.MachineState != MachineState.Alarm && BasicCanSendCommand && _commandSender.FileCommands.State != CommandSourceState.Running;
 
         public bool CanSystemCommand => BasicCanSendCommand;
 
@@ -323,12 +333,24 @@
 
         public void StartStepFileExecution()
         {
-            _commandSender.FileCommands.StartLineByLineProcessing();
-            NotifyCanCommands();
+            StartFile(CommandSourceRunMode.LineByLine);
         }
 
         public void StartFileExecution()
         {
+            StartFile(CommandSourceRunMode.StopInTheEnd);
+        }
+
+        private void StartFile(CommandSourceRunMode mode)
+        {
+            if (_commandSender.FileCommands.State == CommandSourceState.Stopped)
+            {
+                _commandSender.FileCommands.Purge();
+                _commandSender.FileCommands.Add(FileLines);
+                this.NotifyOfPropertyChange(() => FileLinesCount);
+            }
+
+            _commandSender.FileCommands.Mode = mode;
             _commandSender.FileCommands.StartProcessing();
             NotifyCanCommands();
         }
@@ -349,11 +371,9 @@
         {
             if (File.Exists(FilePath))
             {
-                FileLines.Clear();
-                FileLines.AddRange(File.ReadAllLines(FilePath));
-                _commandSender.FileCommands.Purge();
-                _commandSender.FileCommands.Add(FileLines.ToArray());
-                
+                FileLines = File.ReadAllText(FilePath);
+
+                NotifyOfPropertyChange(() => FileLines);
                 NotifyCanCommands();
             }
         }

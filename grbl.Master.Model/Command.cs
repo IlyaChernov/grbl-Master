@@ -1,11 +1,12 @@
-﻿namespace grbl.Master.Service.DataTypes
+﻿namespace grbl.Master.Model
 {
     using System.Collections.Generic;
-
-    using grbl.Master.Service.Annotations;
-    using grbl.Master.Service.Enum;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
+
+    using grbl.Master.Model.Enum;
+
+    using JetBrains.Annotations;
 
     /// <summary>
     /// Command that will be stored in memory after sending. Can be updated with results.

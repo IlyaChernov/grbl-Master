@@ -1,10 +1,10 @@
-﻿namespace grbl.Master.Service.Enum
+﻿namespace grbl.Master.Model.Enum
 {
     public enum CommandSourceState
     {
         Stopped,
         Running,
-        RunningLineByLine,
+        //RunningLineByLine,
         Paused
     }
 }

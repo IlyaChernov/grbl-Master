@@ -1,6 +1,6 @@
-﻿namespace grbl.Master.Service.DataTypes
+﻿namespace grbl.Master.Model
 {
-    using grbl.Master.Service.Enum;
+    using grbl.Master.Model.Enum;
 
     /// <summary>
     /// Response that will be processed after receiving

@@ -4,8 +4,9 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using grbl.Master.Service.Attribute;
-    using grbl.Master.Service.DataTypes;
+    using grbl.Master.Model;
+    using grbl.Master.Model.Attribute;
+    using grbl.Master.Model.Enum;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
 

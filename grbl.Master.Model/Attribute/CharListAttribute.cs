@@ -1,4 +1,4 @@
-﻿namespace grbl.Master.Service.Attribute
+﻿namespace grbl.Master.Model.Attribute
 {
     using System;
 
