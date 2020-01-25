@@ -579,24 +579,38 @@
                             </Grid>
                         </TabItem>
                         <TabItem Width="100" Header="Macros">
-                            <WrapPanel Orientation="Vertical">
-                                <WrapPanel.Resources>
-                                    <DataTemplate x:Key="MacrosTemplate">
-                                        <Grid>
-                                            <Expander Header="{Binding}">
-                                                <Button Content="s">
-                                                    <Button.Resources>
-                                                        <Style TargetType="Border">
-                                                            <Setter Property="CornerRadius" Value="5" />
-                                                        </Style>
-                                                    </Button.Resources>
-                                                </Button>
-                                            </Expander>
-                                        </Grid>
-                                    </DataTemplate>
-                                </WrapPanel.Resources>
-                                <ItemsControl ItemTemplate="{StaticResource MacrosTemplate}" ItemsSource="{converters:EnumToItemsSource {x:Type enum:ActivePlane}}" />
-                            </WrapPanel>
+                            <TabItem.Resources>
+                                <DataTemplate x:Key="MacrosTemplate" DataType="model:Macros">
+                                    <!--<Grid.Resources>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Background" Value="Green" />
+                                                    <Setter Property="Margin" Value="10" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Width" Value="200" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Resources>-->
+
+                                    <Button cal:Message.Attach="RunMacro($dataContext)" Content="{Binding Path=Name}">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="5" />
+                                                <Setter Property="Margin" Value="5"></Setter>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </DataTemplate>
+                            </TabItem.Resources>
+                            <ItemsControl ItemTemplate="{StaticResource MacrosTemplate}" ItemsSource="{Binding Macroses}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True"  Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+
                         </TabItem>
                     </TabControl>
 

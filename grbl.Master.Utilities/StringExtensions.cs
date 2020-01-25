@@ -6,5 +6,10 @@
         {
             return value.Replace(',', '.');
         }
+
+        public static string RemoveSpace(this string value)
+        {
+            return value.Replace(" ", "");
+        }
     }
 }

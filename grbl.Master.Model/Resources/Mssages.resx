@@ -253,7 +253,7 @@
     <value>Homing cycle is not enabled via settings.</value>
   </data>
   <data name="error:6" xml:space="preserve">
-    <value>Minimum step pulse time must be greater than 3usec</value>
+    <value>Minimum step pulse time must be greater than 3ms (millisecond)</value>
   </data>
   <data name="error:7" xml:space="preserve">
     <value>EEPROM read failed. Reset and restored to default values.</value>

@@ -9,11 +9,8 @@
     {
         private readonly IGrblStatus _grblStatus;
 
-//        private readonly ICommandSender _commandSender;
-
-        public GrblDispatcher(IComService comService, IGrblPrompt grblPrompt, IGrblStatus grblStatus/*, ICommandSender commandSender*/)
+        public GrblDispatcher(IComService comService, IGrblPrompt grblPrompt, IGrblStatus grblStatus)
         {
-           // _commandSender = commandSender;
             _grblStatus = grblStatus;
             grblPrompt.PromptReceived += GrblPromptPromptReceived;
             comService.ConnectionStateChanged += ComServiceConnectionStateChanged;

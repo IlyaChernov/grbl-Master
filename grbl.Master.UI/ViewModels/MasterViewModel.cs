@@ -60,9 +60,9 @@
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
 
-            this._commandSender.FileCommands.CommandList.CollectionChanged += (sender, args) =>
+            _commandSender.FileCommands.CommandList.CollectionChanged += (sender, args) =>
                 {
-                    this.NotifyOfPropertyChange(() => FileLinesProcessed);
+                    NotifyOfPropertyChange(() => FileLinesProcessed);
                 };
         }
 
@@ -70,8 +70,6 @@
         {
             OnPropertyChanged(e);
             NotifyCanCommands();
-            //NotifyOfPropertyChange(() => FileLinesCount);
-            //NotifyOfPropertyChange(() => FileLinesProcessed);
         }
 
         public List<double> JoggingDistances =>
@@ -95,6 +93,11 @@
                     500,
                     800
                 }; //todo: move to settings
+
+        public List<Macros> Macroses => new List<Macros>
+                                           {
+                                               new Macros { Name = "Test1", Command = "M0"}, new Macros { Name = "Test2", Command = "M0"}
+                                           };
 
         public double SelectedJoggingDistance
         {
@@ -347,7 +350,7 @@
             {
                 _commandSender.FileCommands.Purge();
                 _commandSender.FileCommands.Add(FileLines);
-                this.NotifyOfPropertyChange(() => FileLinesCount);
+                NotifyOfPropertyChange(() => FileLinesCount);
             }
 
             _commandSender.FileCommands.Mode = mode;
@@ -382,6 +385,11 @@
         {
             RealtimeIntCommand(24);
             _commandSender.PurgeQueues();
+        }
+
+        public void RunMacro(Macros macro)
+        {
+
         }
     }
 }

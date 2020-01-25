@@ -11,6 +11,8 @@
     using System.Reactive.Subjects;
     using System.Text;
 
+    using grbl.Master.Utilities;
+
     public class COMService : IComService
     {
         readonly SerialPort _sp = new SerialPort();
@@ -115,7 +117,7 @@
         {
             if (IsConnected)
             {
-                _sp.Write(data);
+                _sp.Write(data.RemoveSpace());
             }
         }
 
@@ -157,7 +159,7 @@
         {
             if (IsConnected)
             {
-                _sp.WriteLine(data);
+                _sp.WriteLine(data.RemoveSpace());
             }
         }
     }

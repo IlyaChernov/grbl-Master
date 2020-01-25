@@ -466,7 +466,7 @@ namespace grbl.Master.Model.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Minimum step pulse time must be greater than 3usec.
+        ///   Looks up a localized string similar to Minimum step pulse time must be greater than 3ms (millisecond).
         /// </summary>
         public static string error_6 {
             get {

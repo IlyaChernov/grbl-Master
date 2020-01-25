@@ -5,7 +5,6 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
@@ -14,6 +13,7 @@
 
     using grbl.Master.Model;
     using grbl.Master.Model.Enum;
+    using grbl.Master.Utilities;
 
     public class CommandSender : ICommandSender
     {
@@ -52,11 +52,8 @@
             Observable.Timer(TimeSpan.Zero, TimeSpan.Zero).TakeUntil(_stopSubject).Subscribe(
                 l =>
                     {
-                        //Debug.WriteLine("Peek");
-
-                        if ((SystemCommands.TryPeekCommand(out var cmd) || ManualCommands.TryPeekCommand(out cmd) || FileCommands.TryPeekCommand(out cmd)) && cmd != null && cmd.Data.Length + _waitingCommandQueue.Sum(x => x.Data.Length) <= _bufferSizeLimit)
+                        if ((SystemCommands.TryPeekCommand(out var cmd) || ManualCommands.TryPeekCommand(out cmd) || FileCommands.TryPeekCommand(out cmd)) && cmd != null && cmd.Data.RemoveSpace().Length + _waitingCommandQueue.Sum(x => x.Data.RemoveSpace().Length) <= _bufferSizeLimit)
                         {
-                            Debug.WriteLine("Peeking successful");
                             var continueProcess = false;
                             switch (cmd.Source)
                             {
@@ -76,11 +73,6 @@
                             _commandPreProcessor.Process(ref cmd);
 
                             Send(cmd);
-                        }
-
-                        if (cmd != null)
-                        {
-                            Debug.WriteLine($"Current buffer length {cmd.Data.Length + _waitingCommandQueue.Sum(x => x.Data.Length)} , {_waitingCommandQueue.Aggregate("",  (prev, next) => prev + next.Data )}");
                         }
                     });
         }
@@ -105,7 +97,15 @@
         {
             lock (_lockObject)
             {
-                _uiContext.Send(x => { CommunicationLog.Add("grbl <=" + command); }, null);
+                _uiContext.Send(
+                    x =>
+                        {
+                            CommunicationLog.Insert(0, "grbl <=" + command);
+                            if (CommunicationLog.Count > 500)
+                            {
+                                CommunicationLog.Remove(CommunicationLog.Last());
+                            }
+                        }, null);
             }
 
             OnCommunicationLogUpdated();
@@ -208,7 +208,15 @@
         {
             lock (_lockObject)
             {
-                _uiContext.Send(x => { CommunicationLog.Add("grbl =>" + e); }, null);
+                _uiContext.Send(
+                    x =>
+                        {
+                            CommunicationLog.Insert(0, "grbl =>" + e);
+                            if (CommunicationLog.Count > 500)
+                            {
+                                CommunicationLog.Remove(CommunicationLog.Last());
+                            }
+                        }, null);
 
                 var type = _responseTypeFinder.GetType(e);
 
@@ -252,10 +260,20 @@
                             switch (cmd.Source)
                             {
                                 case CommandSourceType.System:
-                                    SystemCommands.CommandList.Add(cmd);
+
+                                    SystemCommands.CommandList.Insert(0, cmd);
+                                    if (ManualCommands.CommandList.Count > 500)
+                                    {
+                                        ManualCommands.CommandList.Remove(ManualCommands.CommandList.Last());
+                                    }
                                     break;
                                 case CommandSourceType.Manual:
-                                    ManualCommands.CommandList.Add(cmd);
+
+                                    ManualCommands.CommandList.Insert(0, cmd);
+                                    if (ManualCommands.CommandList.Count > 500)
+                                    {
+                                        ManualCommands.CommandList.Remove(ManualCommands.CommandList.Last());
+                                    }
                                     break;
                                 case CommandSourceType.File:
                                     FileCommands.CommandList.Add(cmd);

@@ -474,16 +474,13 @@
 
         public GrblStatusModel GrblStatusModel { get; set; } = new GrblStatusModel();
 
-        private bool IsRunning;
-        //{
-        //    get; private set;
-        //}
+        private bool _isRunning;
 
         public void StartRequesting(TimeSpan positionsInterval, TimeSpan gStateInterval, TimeSpan offsetsInterval)
         {
-            if (!IsRunning)
+            if (!_isRunning)
             {
-                IsRunning = true;
+                _isRunning = true;
                 Observable.Timer(TimeSpan.Zero, positionsInterval).TakeUntil(_stopSubject).Subscribe(l => { RequestPositions(); });
                 Observable.Timer(TimeSpan.Zero, gStateInterval).TakeUntil(_stopSubject).Subscribe(l => { RequestGStatus(); });
                 Observable.Timer(TimeSpan.Zero, offsetsInterval).TakeUntil(_stopSubject).Subscribe(l => { RequestOffsets(); });
@@ -492,14 +489,15 @@
 
         public void InitialRequest()
         {
-           // _commandSender.Send("$#");
+            _commandSender.Send("$$");
+            // _commandSender.Send("$#");
         }
 
         public void StopRequesting()
         {
-            if (IsRunning)
+            if (_isRunning)
             {
-                IsRunning = false;
+                _isRunning = false;
                 _stopSubject.OnNext(Unit.Default);
             }
         }

@@ -9,8 +9,6 @@
 
     public class CommandSource
     {
-        //private readonly object _lockObject = new object();
-
         private bool _needsPurge;
         private ConcurrentQueue<string> CommandQueue { get; } = new ConcurrentQueue<string>();
 
@@ -24,9 +22,9 @@
 
         public ObservableCollection<Command> CommandList { get; } = new ObservableCollection<Command>();
 
-        public event EventHandler CommandListUpdated;
+       // public event EventHandler CommandListUpdated;
 
-        public event EventHandler<Command> CommandFinished;
+       // public event EventHandler<Command> CommandFinished;
 
         public CommandSource(CommandSourceType type, CommandSourceRunMode mode)
         {
@@ -78,12 +76,12 @@
                 command = new Command { Data = cmdText, Source = Type };
                 if (Mode == CommandSourceRunMode.LineByLine)
                 {
-                    this.PauseProcessing();
+                    PauseProcessing();
                 }
 
                 if (Mode == CommandSourceRunMode.StopInTheEnd && CommandQueue.IsEmpty)
                 {
-                    this.StopProcessing();
+                    StopProcessing();
                 }
                 return true;
             }
@@ -105,21 +103,13 @@
         public void Add(string command)
         {
             Add(command.Split(new[] { Environment.NewLine }, StringSplitOptions.None));
-            //Debug.WriteLine($"Command {command} added to {Type}");
-           // lock (_lockObject)
-           // {
-                //CommandQueue.Enqueue(command);
-           // }
         }
 
         public void Add(string[] commands)
         {
             foreach (var command in commands)
             {
-                //lock (_lockObject)
-                //{
-                    CommandQueue.Enqueue(command);
-                //}
+                CommandQueue.Enqueue(command);
             }
         }
     }

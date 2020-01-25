@@ -1,4 +1,5 @@
-﻿namespace grbl.Master.Model.Enum
+﻿// ReSharper disable UnusedMember.Global
+namespace grbl.Master.Model.Enum
 {
     using System.ComponentModel;
 
