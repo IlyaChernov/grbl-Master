@@ -60,12 +60,12 @@ namespace grbl.Master.UI.ViewModels
 
         public int SelectedBaudRate
         {
-            get => Properties.Settings.Default.SelectedBaudRate;
+            get => Model.Properties.Settings.Default.SelectedBaudRate;
             set
             {
-                Properties.Settings.Default.SelectedBaudRate = value;
-                Properties.Settings.Default.Save();
-                Properties.Settings.Default.Reload();
+                Model.Properties.Settings.Default.SelectedBaudRate = value;
+                Model.Properties.Settings.Default.Save();
+                Model.Properties.Settings.Default.Reload();
 
                 NotifyOfPropertyChange(() => SelectedBaudRate);
                 NotifyOfPropertyChange(() => CanConnect);
@@ -74,12 +74,12 @@ namespace grbl.Master.UI.ViewModels
 
         public string SelectedComPort
         {
-            get => Properties.Settings.Default.SelectedComPort;
+            get => Model.Properties.Settings.Default.SelectedComPort;
             set
             {
-                Properties.Settings.Default.SelectedComPort = value;                
-                Properties.Settings.Default.Save();
-                Properties.Settings.Default.Reload();
+                Model.Properties.Settings.Default.SelectedComPort = value;
+                Model.Properties.Settings.Default.Save();
+                Model.Properties.Settings.Default.Reload();
 
                 NotifyOfPropertyChange(() => SelectedComPort);
                 NotifyOfPropertyChange(() => CanConnect);

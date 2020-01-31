@@ -26,6 +26,8 @@
     {
         private readonly ICommandSender _commandSender;
 
+        private readonly IMacroService _macroService;
+
         private readonly IComService _comService;
 
         [SuppressMessage("ReSharper", "NotAccessedField.Local")]
@@ -47,13 +49,17 @@
             IComService comService,
             IGrblStatus grblStatus,
             ICommandSender commandSender,
-            IGrblDispatcher grblDispatcher)
+            IGrblDispatcher grblDispatcher,
+            IMacroService macroService)
         {
             _grblDispatcher = grblDispatcher;
             ComConnectionViewModel = new COMConnectionViewModel(comService);
             _comService = comService;
             _grblStatus = grblStatus;
             _commandSender = commandSender;
+            _macroService = macroService;
+
+            _macroService.LoadMacroses();
 
             _grblStatus.GrblStatusModel.MachineStateChanged += GrblStatusModelMachineStateChanged;
             _grblStatus.GrblStatusModel.PropertyChanged += GrblStatusModelPropertyChanged;
@@ -94,10 +100,22 @@
                     800
                 }; //todo: move to settings
 
-        public List<Macros> Macroses => new List<Macros>
-                                           {
-                                               new Macros { Name = "Test1", Command = "M0"}, new Macros { Name = "Test2", Command = "M0"}
-                                           };
+        public ObservableCollection<Macros> Macroses => _macroService.Macroses;
+
+        private Macros _macrosSelected;
+
+        public Macros MacrosSelected
+        {
+            get => _macrosSelected;
+            set
+            {
+                _macrosSelected = value;
+                NotifyOfPropertyChange(() => MacrosSelected);
+                NotifyOfPropertyChange(() => IsMacrosSelected);
+            }
+        }
+
+        public bool IsMacrosSelected => MacrosSelected != null;
 
         public double SelectedJoggingDistance
         {
@@ -389,6 +407,60 @@
 
         public void RunMacro(Macros macro)
         {
+            var lines = macro.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            _commandSender.ManualCommands.Add(lines);
+        }
+
+        public void DeleteMacro(Macros macro)
+        {
+            _macroService.DeleteMacros(macro);
+        }
+
+        public void EditMacro(Macros macro)
+        {
+            MacrosSelected = macro;
+        }
+
+        public void SaveMacro(Macros macro)
+        {
+            if (_macroService.Macroses.Any(x => x.Index == macro.Index) && macro.Index >= 0)
+            {
+                _macroService.Macroses.RemoveAt(macro.Index);
+            }
+            _macroService.Macroses.Insert(Math.Max(0, macro.Index), macro);
+            _macroService.SaveMacroses();
+            CancelMacro();
+        }
+
+        public void CancelMacro()
+        {
+            MacrosSelected = null;
+        }
+
+        public void AddMacro()
+        {
+            MacrosSelected = new Macros();
+        }
+
+        public void UpMacro(Macros macro)
+        {
+            if (_macroService.Macroses.Any(x => x.Index == macro.Index) && macro.Index > 0)
+            {
+                _macroService.Macroses.RemoveAt(macro.Index);
+                _macroService.Macroses.Insert(Math.Max(0, macro.Index - 1), macro);
+                _macroService.SaveMacroses();
+            }
+
+        }
+
+        public void DownMacro(Macros macro)
+        {
+            if (_macroService.Macroses.Any(x => x.Index == macro.Index) && macro.Index < _macroService.Macroses.Max(x => x.Index))
+            {
+                _macroService.Macroses.RemoveAt(macro.Index);
+                _macroService.Macroses.Insert(Math.Max(0, macro.Index + 1), macro);
+                _macroService.SaveMacroses();
+            }
 
         }
     }

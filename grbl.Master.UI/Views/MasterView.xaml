@@ -578,42 +578,110 @@
 
                             </Grid>
                         </TabItem>
-                        <TabItem Width="100" Header="Macros">
+                        <TabItem Width="100">
+                            <TabItem.HeaderTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="43*" />
+                                            <ColumnDefinition Width="30" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Content="Macros" />
+                                        <Button Grid.Column="1" Width="20" Height="20" cal:Message.Attach="AddMacro" ToolTip="Add Macros">
+                                            <materialDesign:PackIcon Width="16" Height="16" Foreground="Red" Kind="Add" ToolTip="Add macros" />
+                                        </Button>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </TabItem.HeaderTemplate>
                             <TabItem.Resources>
                                 <DataTemplate x:Key="MacrosTemplate" DataType="model:Macros">
-                                    <!--<Grid.Resources>
-                                                <Style TargetType="Button">
-                                                    <Setter Property="Background" Value="Green" />
-                                                    <Setter Property="Margin" Value="10" />
+                                    <StackPanel x:Name="MacrosPanel" Margin="5">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Background" Value="White" />
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <Button cal:Message.Attach="RunMacro($dataContext)"
+                                                Content="{Binding Path=Name}"
+                                                ToolTip="{Binding Path=Name}">
+                                            <Button.Resources>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="5" />
+                                                    <Setter Property="Margin" Value="0,0,0,2" />
+                                                </Style>
+                                            </Button.Resources>
+                                        </Button>
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Hidden" />
                                                     <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Width" Value="200" />
-                                                        </Trigger>
+                                                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=MacrosPanel}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </Grid.Resources>-->
-
-                                    <Button cal:Message.Attach="RunMacro($dataContext)" Content="{Binding Path=Name}">
-                                        <Button.Resources>
-                                            <Style TargetType="Border">
-                                                <Setter Property="CornerRadius" Value="5" />
-                                                <Setter Property="Margin" Value="5"></Setter>
-                                            </Style>
-                                        </Button.Resources>
-                                    </Button>
+                                            </StackPanel.Style>
+                                            <Button Margin="2" cal:Message.Attach="UpMacro($dataContext)" ToolTip="Edit">
+                                                <materialDesign:PackIcon Width="20" Height="20" Foreground="Black" Kind="ArrowBack" />
+                                            </Button>
+                                            <Button Margin="2" cal:Message.Attach="EditMacro($dataContext)" ToolTip="Edit">
+                                                <materialDesign:PackIcon Width="20" Height="20" Foreground="Black" Kind="FileDocumentEditOutline" />
+                                            </Button>
+                                            <Button Margin="2" cal:Message.Attach="DeleteMacro($dataContext)" ToolTip="Delete">
+                                                <materialDesign:PackIcon Width="20" Height="20" Foreground="Red" Kind="TrashCanOutline" />
+                                            </Button>
+                                            <Button Margin="2" cal:Message.Attach="DownMacro($dataContext)" ToolTip="Edit">
+                                                <materialDesign:PackIcon Width="20" Height="20" Foreground="Black" Kind="ArrowForward" />
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
                                 </DataTemplate>
                             </TabItem.Resources>
-                            <ItemsControl ItemTemplate="{StaticResource MacrosTemplate}" ItemsSource="{Binding Macroses}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel IsItemsHost="True"  Orientation="Horizontal"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
+                            <DockPanel>
+                                <Grid Height="300" DockPanel.Dock="Bottom"
+                                      Visibility="{Binding IsMacrosSelected, Converter={StaticResource BoolToVis}, FallbackValue=Visible}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="26" />
+                                        <RowDefinition Height="26" />
+                                        <RowDefinition Height="26" />
+                                        <RowDefinition />
+                                        <RowDefinition Height="30" />
+                                    </Grid.RowDefinitions>
+                                    <Label Grid.ColumnSpan="3">Name:</Label>
+                                    <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                             Text="{Binding MacrosSelected.Name}" />
+                                    <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+                                        Command:
+                                    </Label>
+                                    <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto"
+                                             Text="{Binding MacrosSelected.Command}"
+                                             VerticalScrollBarVisibility="Auto" />
+                                    <Button Grid.Row="4" Grid.Column="0" Margin="2" cal:Message.Attach="SaveMacro($dataContext)"
+                                            DataContext="{Binding MacrosSelected}"
+                                            ToolTip="Save">
+                                        <materialDesign:PackIcon Width="20" Height="20" Foreground="Green" Kind="ContentSaveOutline" />
+                                    </Button>
+                                    <Button Grid.Row="4" Grid.Column="1" Margin="2" cal:Message.Attach="CancelMacro" ToolTip="Cancel">
+                                        <materialDesign:PackIcon Width="20" Height="20" Foreground="Red" Kind="Cancel" />
+                                    </Button>
+                                </Grid>
+                                <ItemsControl ItemTemplate="{StaticResource MacrosTemplate}" ItemsSource="{Binding Macroses}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
 
+                            </DockPanel>
                         </TabItem>
                     </TabControl>
-
                     <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical">
                             <StackPanel.Resources>

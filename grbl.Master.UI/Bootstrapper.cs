@@ -56,9 +56,8 @@ namespace grbl.Master.UI
             _container.RegisterSingleton(typeof(IGrblResponseTypeFinder), null, typeof(GrblResponseTypeFinder));
             _container.RegisterSingleton(typeof(IGrblCommandPreProcessor), null, typeof(GrblCommandPreProcessor));
             _container.RegisterSingleton(typeof(ICommandSender), null, typeof(CommandSender));
-            //_container.RegisterSingleton(typeof(IGrblStatusRequester), null, typeof(GrblStatusRequester));
+            _container.RegisterSingleton(typeof(IMacroService), null, typeof(MacroService));
 
-            //_container.RegisterSingleton(typeof(IGrblStatus), null, typeof(GrblStatus));
             _container.RegisterSingleton(typeof(IGrblPrompt), null, typeof(GrblPrompt));
             _container.RegisterSingleton(typeof(IGrblStatus), null, typeof(GrblStatus));
 

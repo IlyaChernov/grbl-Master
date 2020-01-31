@@ -67,6 +67,7 @@
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -76,10 +77,12 @@
     <Compile Include="Implementation\CommandSender.cs" />
     <Compile Include="Implementation\COMService.cs" />
     <Compile Include="Implementation\GrblResponseTypeFinder.cs" />
+    <Compile Include="Implementation\MacroService.cs" />
     <Compile Include="Interface\ICommandSender.cs" />
     <Compile Include="Interface\ICOMService.cs" />
     <Compile Include="Interface\IGrblCommandPreProcessor.cs" />
     <Compile Include="Interface\IGrblResponseTypeFinder.cs" />
+    <Compile Include="Interface\IMacroService.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
