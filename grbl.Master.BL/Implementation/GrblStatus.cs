@@ -69,6 +69,30 @@
                                                                                              }
                                                                                      }
                                                             }},
+                                  { ResponseType.SettingPrintout, new ResponseProcessingDefinition
+                                                                      {
+                                                                          ProcessActions = new List<ResponseProcessor>
+                                                                                               {
+                                                                                                   new ResponseProcessor
+                                                                                                       {
+                                                                                                           TagExpression = "^\\$\\d{1,3}=.+?$",
+                                                                                                           Action = s =>
+                                                                                                               {
+                                                                                                                   var parts = s.Split(new []{ '$','=' }, StringSplitOptions.RemoveEmptyEntries);
+                                                                                                                   if(parts.Length == 2 && int.TryParse(parts[0], out var index))
+                                                                                                                   {
+                                                                                                                       var setting = new GrblSetting
+                                                                                                                                         {
+                                                                                                                           Index = index,
+                                                                                                                           Value = parts[1]
+                                                                                                                                         };
+                                                                                                                    
+                                                                                                                       GrblStatusModel.Settings.AddOrUpdate(setting);
+                                                                                                                   }
+                                                                                                               }
+                                                                                                       }
+                                                                                               }
+                                                                      } },
                                   { ResponseType.FeedbackMessage, new ResponseProcessingDefinition
                                                                       {
                                                                           SplitAction =s =>s.Split(new[]{'[', ']'},StringSplitOptions.RemoveEmptyEntries),

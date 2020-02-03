@@ -518,5 +518,311 @@ namespace grbl.Master.Model.Resources {
                 return ResourceManager.GetString("Hold:1", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step pulse time, microseconds.
+        /// </summary>
+        public static string Setting_0_Description {
+            get {
+                return ResourceManager.GetString("Setting:0:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step idle delay, milliseconds.
+        /// </summary>
+        public static string Setting_1_Description {
+            get {
+                return ResourceManager.GetString("Setting:1:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status report options, mask.
+        /// </summary>
+        public static string Setting_10_Description {
+            get {
+                return ResourceManager.GetString("Setting:10:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X-axis steps per millimeter.
+        /// </summary>
+        public static string Setting_100_Description {
+            get {
+                return ResourceManager.GetString("Setting:100:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y-axis steps per millimeter.
+        /// </summary>
+        public static string Setting_101_Description {
+            get {
+                return ResourceManager.GetString("Setting:101:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Z-axis steps per millimeter.
+        /// </summary>
+        public static string Setting_102_Description {
+            get {
+                return ResourceManager.GetString("Setting:102:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Junction deviation, millimeters.
+        /// </summary>
+        public static string Setting_11_Description {
+            get {
+                return ResourceManager.GetString("Setting:11:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X-axis maximum rate, mm/min.
+        /// </summary>
+        public static string Setting_110_Description {
+            get {
+                return ResourceManager.GetString("Setting:110:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y-axis maximum rate, mm/min.
+        /// </summary>
+        public static string Setting_111_Description {
+            get {
+                return ResourceManager.GetString("Setting:111:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Z-axis maximum rate, mm/min.
+        /// </summary>
+        public static string Setting_112_Description {
+            get {
+                return ResourceManager.GetString("Setting:112:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arc tolerance, millimeters.
+        /// </summary>
+        public static string Setting_12_Description {
+            get {
+                return ResourceManager.GetString("Setting:12:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X-axis acceleration, mm/sec^2.
+        /// </summary>
+        public static string Setting_120_Description {
+            get {
+                return ResourceManager.GetString("Setting:120:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y-axis acceleration, mm/sec^2.
+        /// </summary>
+        public static string Setting_121_Description {
+            get {
+                return ResourceManager.GetString("Setting:121:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Z-axis acceleration, mm/sec^2.
+        /// </summary>
+        public static string Setting_122_Description {
+            get {
+                return ResourceManager.GetString("Setting:122:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Report in inches, boolean.
+        /// </summary>
+        public static string Setting_13_Description {
+            get {
+                return ResourceManager.GetString("Setting:13:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X-axis maximum travel, millimeters.
+        /// </summary>
+        public static string Setting_130_Description {
+            get {
+                return ResourceManager.GetString("Setting:130:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y-axis maximum travel, millimeters.
+        /// </summary>
+        public static string Setting_131_Description {
+            get {
+                return ResourceManager.GetString("Setting:131:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Z-axis maximum travel, millimeters.
+        /// </summary>
+        public static string Setting_132_Description {
+            get {
+                return ResourceManager.GetString("Setting:132:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step pulse invert, mask.
+        /// </summary>
+        public static string Setting_2_Description {
+            get {
+                return ResourceManager.GetString("Setting:2:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Soft limits enable, boolean.
+        /// </summary>
+        public static string Setting_20_Description {
+            get {
+                return ResourceManager.GetString("Setting:20:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hard limits enable, boolean.
+        /// </summary>
+        public static string Setting_21_Description {
+            get {
+                return ResourceManager.GetString("Setting:21:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homing cycle enable, boolean.
+        /// </summary>
+        public static string Setting_22_Description {
+            get {
+                return ResourceManager.GetString("Setting:22:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homing direction invert, mask.
+        /// </summary>
+        public static string Setting_23_Description {
+            get {
+                return ResourceManager.GetString("Setting:23:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homing locate feed rate, mm/min.
+        /// </summary>
+        public static string Setting_24_Description {
+            get {
+                return ResourceManager.GetString("Setting:24:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homing search seek rate, mm/min.
+        /// </summary>
+        public static string Setting_25_Description {
+            get {
+                return ResourceManager.GetString("Setting:25:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homing switch debounce delay, milliseconds.
+        /// </summary>
+        public static string Setting_26_Description {
+            get {
+                return ResourceManager.GetString("Setting:26:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homing switch pull-off distance, millimeters.
+        /// </summary>
+        public static string Setting_27_Description {
+            get {
+                return ResourceManager.GetString("Setting:27:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step direction invert, mask.
+        /// </summary>
+        public static string Setting_3_Description {
+            get {
+                return ResourceManager.GetString("Setting:3:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum spindle speed, RPM.
+        /// </summary>
+        public static string Setting_30_Description {
+            get {
+                return ResourceManager.GetString("Setting:30:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum spindle speed, RPM.
+        /// </summary>
+        public static string Setting_31_Description {
+            get {
+                return ResourceManager.GetString("Setting:31:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Laser-mode enable, boolean.
+        /// </summary>
+        public static string Setting_32_Description {
+            get {
+                return ResourceManager.GetString("Setting:32:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invert step enable pin, boolean.
+        /// </summary>
+        public static string Setting_4_Description {
+            get {
+                return ResourceManager.GetString("Setting:4:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invert limit pins, boolean.
+        /// </summary>
+        public static string Setting_5_Description {
+            get {
+                return ResourceManager.GetString("Setting:5:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invert probe pin, boolean.
+        /// </summary>
+        public static string Setting_6_Description {
+            get {
+                return ResourceManager.GetString("Setting:6:Description", resourceCulture);
+            }
+        }
     }
 }

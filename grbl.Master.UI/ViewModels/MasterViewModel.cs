@@ -151,6 +151,8 @@
 
         public ObservableCollection<Command> FileCommandsCollection => _commandSender.FileCommands.CommandList;
 
+        public List<GrblSetting> GrblSettings => _grblStatus.GrblStatusModel.Settings.Settings;
+
         public string FileLines { get; set; } = "";
 
         public COMConnectionViewModel ComConnectionViewModel { get; }

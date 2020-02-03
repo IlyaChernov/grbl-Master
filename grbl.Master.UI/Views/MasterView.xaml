@@ -20,10 +20,12 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="30" />
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="ManualCommand" cal:Message.Attach="[Key Enter] = [SendEnterCommand]" />
-                    <Button x:Name="SendManualCommand" Grid.Column="1">Send</Button>
+                    <Button x:Name="SendManualCommand" Grid.Column="1">
+                        <materialDesign:PackIcon Width="20" Height="20" Foreground="Black" Kind="Send" ToolTip="Add macros" />
+                    </Button>
                 </Grid>
             </GroupBox>
         </Grid>
@@ -477,7 +479,7 @@
 
                     </Grid>
                     <TabControl Grid.Column="1">
-                        <TabItem Width="100" Header="File">
+                        <TabItem Width="120" Header="File">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50" />
@@ -578,7 +580,7 @@
 
                             </Grid>
                         </TabItem>
-                        <TabItem Width="100">
+                        <TabItem Width="120">
                             <TabItem.HeaderTemplate>
                                 <ItemContainerTemplate>
                                     <Grid>
@@ -586,9 +588,10 @@
                                             <ColumnDefinition Width="43*" />
                                             <ColumnDefinition Width="30" />
                                         </Grid.ColumnDefinitions>
-                                        <Label Grid.Column="0" Content="Macros" />
-                                        <Button Grid.Column="1" Width="20" Height="20" cal:Message.Attach="AddMacro" ToolTip="Add Macros">
-                                            <materialDesign:PackIcon Width="16" Height="16" Foreground="Red" Kind="Add" ToolTip="Add macros" />
+                                        <Label Grid.Column="0" Margin="25,0,0,0" Content="Macros" />
+                                        <Button Grid.Column="1" Width="20" Height="20" Padding="0" cal:Message.Attach="AddMacro" Background="Transparent" BorderThickness="0" ToolTip="Add Macros"
+                                                Visibility="{Binding (TabItem.IsSelected), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabItem}}, Converter={StaticResource BoolToVis}}">
+                                            <materialDesign:PackIcon Width="20" Height="20" Foreground="Green" Kind="PlusCircleOutline" ToolTip="Add macros" />
                                         </Button>
                                     </Grid>
                                 </ItemContainerTemplate>
@@ -668,7 +671,7 @@
                                         <materialDesign:PackIcon Width="20" Height="20" Foreground="Green" Kind="ContentSaveOutline" />
                                     </Button>
                                     <Button Grid.Row="4" Grid.Column="1" Margin="2" cal:Message.Attach="CancelMacro" ToolTip="Cancel">
-                                        <materialDesign:PackIcon Width="20" Height="20" Foreground="Red" Kind="Cancel" />
+                                        <materialDesign:PackIcon Width="20" Height="20" Foreground="Red" Kind="CloseCircleOutline" />
                                     </Button>
                                 </Grid>
                                 <ItemsControl ItemTemplate="{StaticResource MacrosTemplate}" ItemsSource="{Binding Macroses}">
@@ -752,7 +755,7 @@
                                     <ItemsControl ItemsSource="{converters:EnumToItemsSource {x:Type enum:CoolantState}}" />
                                 </StackPanel>
                             </Expander>
-                            <Expander Header="{Binding GrblStatus.ActivePlane}" Tag="Active plane">
+                            <Expander Header="{Binding GrblStatus.ActivePlane}" Tag="Arc plane">
                                 <StackPanel>
                                     <ItemsControl ItemsSource="{converters:EnumToItemsSource {x:Type enum:ActivePlane}}" />
                                 </StackPanel>
@@ -777,7 +780,37 @@
                 </Grid>
             </TabItem>
             <TabItem Width="100" Header="Grbl config">
-                <Grid Background="#FFE5E5E5" />
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ListView ItemsSource="{Binding GrblSettings}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="ToolTip">
+                                    <Setter.Value>
+                                        <UniformGrid Columns="1">
+                                            <TextBlock Text="{Binding Path=Description}" />
+                                        </UniformGrid>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Index}" Header="Index" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Value}" Header="Value" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Type" />
+                            </GridView>
+                        </ListView.View>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                </Grid>
             </TabItem>
             <TabItem Width="100" Header="Communication">
                 <Grid Background="#FFE5E5E5">

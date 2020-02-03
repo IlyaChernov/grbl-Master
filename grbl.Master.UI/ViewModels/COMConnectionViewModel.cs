@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace grbl.Master.UI.ViewModels
 {
+    using System.Windows;
+
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
 
@@ -99,13 +101,20 @@ namespace grbl.Master.UI.ViewModels
 
         public void Connect()
         {
-            if (_comService.IsConnected)
+            try
             {
-                _comService.Disconnect();
+                if (_comService.IsConnected)
+                {
+                    _comService.Disconnect();
+                }
+                else
+                {
+                    _comService.Connect(SelectedComPort, SelectedBaudRate);
+                }
             }
-            else
+            catch
             {
-                _comService.Connect(SelectedComPort, SelectedBaudRate);
+                MessageBox.Show("Something goes wrong while changing connection state");
             }
         }
     }

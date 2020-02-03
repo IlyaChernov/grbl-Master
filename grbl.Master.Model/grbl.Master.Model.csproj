@@ -78,6 +78,7 @@
     <Compile Include="Enum\CommandType.cs" />
     <Compile Include="Enum\DistanceMode.cs" />
     <Compile Include="Enum\CoolantState.cs" />
+    <Compile Include="Enum\GrblSettingType.cs" />
     <Compile Include="Enum\RequestType.cs" />
     <Compile Include="Enum\ResponseType.cs" />
     <Compile Include="Enum\SpindleState.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Enum\ActivePlane.cs" />
     <Compile Include="Enum\CoordinateSystem.cs" />
     <Compile Include="Enum\MotionMode.cs" />
+    <Compile Include="GrblSetting.cs" />
+    <Compile Include="GrblSettings.cs" />
     <Compile Include="GrblStatusModel.cs" />
     <Compile Include="Macros.cs" />
     <Compile Include="OverrideValues.cs" />

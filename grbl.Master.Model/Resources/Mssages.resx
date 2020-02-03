@@ -270,4 +270,106 @@
   <data name="Hold:1" xml:space="preserve">
     <value>Hold in-progress. Reset will throw an alarm.</value>
   </data>
+  <data name="Setting:0:Description" xml:space="preserve">
+    <value>Step pulse time, microseconds</value>
+  </data>
+  <data name="Setting:100:Description" xml:space="preserve">
+    <value>X-axis steps per millimeter</value>
+  </data>
+  <data name="Setting:101:Description" xml:space="preserve">
+    <value>Y-axis steps per millimeter</value>
+  </data>
+  <data name="Setting:102:Description" xml:space="preserve">
+    <value>Z-axis steps per millimeter</value>
+  </data>
+  <data name="Setting:10:Description" xml:space="preserve">
+    <value>Status report options, mask</value>
+  </data>
+  <data name="Setting:110:Description" xml:space="preserve">
+    <value>X-axis maximum rate, mm/min</value>
+  </data>
+  <data name="Setting:111:Description" xml:space="preserve">
+    <value>Y-axis maximum rate, mm/min</value>
+  </data>
+  <data name="Setting:112:Description" xml:space="preserve">
+    <value>Z-axis maximum rate, mm/min</value>
+  </data>
+  <data name="Setting:11:Description" xml:space="preserve">
+    <value>Junction deviation, millimeters</value>
+  </data>
+  <data name="Setting:120:Description" xml:space="preserve">
+    <value>X-axis acceleration, mm/sec^2</value>
+  </data>
+  <data name="Setting:121:Description" xml:space="preserve">
+    <value>Y-axis acceleration, mm/sec^2</value>
+  </data>
+  <data name="Setting:122:Description" xml:space="preserve">
+    <value>Z-axis acceleration, mm/sec^2</value>
+  </data>
+  <data name="Setting:12:Description" xml:space="preserve">
+    <value>Arc tolerance, millimeters</value>
+  </data>
+  <data name="Setting:130:Description" xml:space="preserve">
+    <value>X-axis maximum travel, millimeters</value>
+  </data>
+  <data name="Setting:131:Description" xml:space="preserve">
+    <value>Y-axis maximum travel, millimeters</value>
+  </data>
+  <data name="Setting:132:Description" xml:space="preserve">
+    <value>Z-axis maximum travel, millimeters</value>
+  </data>
+  <data name="Setting:13:Description" xml:space="preserve">
+    <value>Report in inches, boolean</value>
+  </data>
+  <data name="Setting:1:Description" xml:space="preserve">
+    <value>Step idle delay, milliseconds</value>
+  </data>
+  <data name="Setting:20:Description" xml:space="preserve">
+    <value>Soft limits enable, boolean</value>
+  </data>
+  <data name="Setting:21:Description" xml:space="preserve">
+    <value>Hard limits enable, boolean</value>
+  </data>
+  <data name="Setting:22:Description" xml:space="preserve">
+    <value>Homing cycle enable, boolean</value>
+  </data>
+  <data name="Setting:23:Description" xml:space="preserve">
+    <value>Homing direction invert, mask</value>
+  </data>
+  <data name="Setting:24:Description" xml:space="preserve">
+    <value>Homing locate feed rate, mm/min</value>
+  </data>
+  <data name="Setting:25:Description" xml:space="preserve">
+    <value>Homing search seek rate, mm/min</value>
+  </data>
+  <data name="Setting:26:Description" xml:space="preserve">
+    <value>Homing switch debounce delay, milliseconds</value>
+  </data>
+  <data name="Setting:27:Description" xml:space="preserve">
+    <value>Homing switch pull-off distance, millimeters</value>
+  </data>
+  <data name="Setting:2:Description" xml:space="preserve">
+    <value>Step pulse invert, mask</value>
+  </data>
+  <data name="Setting:30:Description" xml:space="preserve">
+    <value>Maximum spindle speed, RPM</value>
+  </data>
+  <data name="Setting:31:Description" xml:space="preserve">
+    <value>Minimum spindle speed, RPM</value>
+  </data>
+  <data name="Setting:32:Description" xml:space="preserve">
+    <value>Laser-mode enable, boolean</value>
+  </data>
+  <data name="Setting:3:Description" xml:space="preserve">
+    <value>Step direction invert, mask</value>
+  </data>
+  <data name="Setting:4:Description" xml:space="preserve">
+    <value>Invert step enable pin, boolean</value>
+  </data>
+  <data name="Setting:5:Description" xml:space="preserve">
+    <value>Invert limit pins, boolean</value>
+  </data>
+  <data name="Setting:6:Description" xml:space="preserve">
+    <value>Invert probe pin, boolean</value>
+  </data>
 </root>

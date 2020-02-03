@@ -10,7 +10,7 @@
 
     using Meziantou.Framework.WPF.Collections;
 
-    public class GrblStatusModel : INotifyPropertyChanged //, IGrblStatus
+    public class GrblStatusModel : INotifyPropertyChanged
     {
         public event EventHandler<MachineState> MachineStateChanged;
 
@@ -52,9 +52,12 @@
         private InputPinState _inputPinState = new InputPinState();
         private OverrideValues _overrideValues = new OverrideValues();
 
+
         private long _lineNumber;
 
         public ConcurrentObservableCollection<string> Messages { get; } = new ConcurrentObservableCollection<string>();
+
+        public GrblSettings Settings { get; } = new GrblSettings();
 
         public string LastMessage
         {
