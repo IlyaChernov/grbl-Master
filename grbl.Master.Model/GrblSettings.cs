@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Threading;
 
     using grbl.Master.Model.Enum;
 
@@ -14,6 +15,7 @@
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private readonly SynchronizationContext _uiContext;
 
         private readonly Dictionary<GrblSettingType, int[]> _typeTable = new Dictionary<GrblSettingType, int[]>
                                                                      {
@@ -41,22 +43,50 @@
                                                                                  }
                                                                          },
                                                                          {
-                                                                             GrblSettingType.Mask,
+                                                                             GrblSettingType.Mask3,
                                                                              new[]
                                                                                  {
-                                                                                     2, 3, 10, 23
+                                                                                     10
+                                                                                 }
+                                                                         },
+                                                                         {
+                                                                             GrblSettingType.Mask8,
+                                                                             new[]
+                                                                                 {
+                                                                                     2, 3, 23
                                                                                  }
                                                                          }
                                                                      };
 
-        public List<GrblSetting> Settings { get; } = new List<GrblSetting>();
+        public ObservableCollection<GrblSetting> SettingsList { get; } = new ObservableCollection<GrblSetting>();
+
+        public GrblSettings()
+        {
+            _uiContext = SynchronizationContext.Current;
+        }
 
         public void AddOrUpdate(GrblSetting setting)
         {
-            Settings.Remove(Settings.FirstOrDefault(x => x.Index == setting.Index));
-            setting.Type = FindType(setting.Index);
-            Settings.Add(setting);
-            OnPropertyChanged(nameof(Settings));
+            _uiContext.Send(
+                x =>
+                    {
+                        var index = SettingsList.IndexOf(SettingsList.FirstOrDefault(y => y.Index == setting.Index));
+
+                        setting.Type = FindType(setting.Index);
+                        
+                        if (index >= 0)
+                        {
+                            SettingsList.RemoveAt(index);
+                            SettingsList.Insert(index, setting);
+                        }
+                        else
+                        {
+                            SettingsList.Add(setting);
+                        }
+                        
+                        OnPropertyChanged(nameof(SettingsList));
+                    },
+                null);
         }
 
         private GrblSettingType FindType(int index)

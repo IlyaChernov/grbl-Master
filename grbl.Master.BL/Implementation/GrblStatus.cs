@@ -84,7 +84,8 @@
                                                                                                                        var setting = new GrblSetting
                                                                                                                                          {
                                                                                                                            Index = index,
-                                                                                                                           Value = parts[1]
+                                                                                                                           Value = parts[1], 
+                                                                                                                           OriginalValue = parts[1]
                                                                                                                                          };
                                                                                                                     
                                                                                                                        GrblStatusModel.Settings.AddOrUpdate(setting);

@@ -2,6 +2,6 @@
 {
     public enum GrblSettingType
     {
-        Integer, Boolean, Decimal, Mask
+        Integer, Boolean, Decimal, Mask8, Mask3
     }
 }

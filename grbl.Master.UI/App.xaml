@@ -1,4 +1,4 @@
-﻿<Application x:Class="grbl.Master.UI.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:grbl.Master.UI">
+﻿<Application x:Class="grbl.Master.UI.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:converters="clr-namespace:grbl.Master.UI.Converters" xmlns:local="clr-namespace:grbl.Master.UI">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -7,6 +7,9 @@
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <converters:StringIntegerToBool x:Key="StrIntToBool" />
+            <converters:IntegerToBinaryString x:Key="IntegerToBinaryString" />
+            <converters:IntegerMaskToAxisState x:Key="IntegerMaskToAxisState" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

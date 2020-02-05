@@ -7,6 +7,7 @@
         public int Index { get; set; }
 
         public string Value { get; set; }
+        public string OriginalValue { get; set; }
 
         public string Description => Resources.Mssages.ResourceManager.GetString($"Setting:{Index}:Description");
 

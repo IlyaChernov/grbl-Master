@@ -151,11 +151,11 @@
 
         public ObservableCollection<Command> FileCommandsCollection => _commandSender.FileCommands.CommandList;
 
-        public List<GrblSetting> GrblSettings => _grblStatus.GrblStatusModel.Settings.Settings;
-
         public string FileLines { get; set; } = "";
 
         public COMConnectionViewModel ComConnectionViewModel { get; }
+
+        public List<string> Mask8Items { get; } = new List<string> { "0", "1", "2", "3", "4", "5", "6", "7" };
 
         public string ManualCommand
         {
@@ -215,6 +215,10 @@
 
         public bool CanReloadFile => _commandSender.FileCommands.State == CommandSourceState.Stopped && File.Exists(FilePath);
 
+        public bool CanSaveSettings => BasicCanSendCommand;
+        
+        public bool CanRunMacro => BasicCanSendCommand;
+
         private void NotifyCanCommands()
         {
             NotifyOfPropertyChange(() => CanSendManualCommand);
@@ -235,6 +239,8 @@
             NotifyOfPropertyChange(() => CanPauseFileExecution);
             NotifyOfPropertyChange(() => CanStopFileExecution);
             NotifyOfPropertyChange(() => CanReloadFile);
+            NotifyOfPropertyChange(()=> CanSaveSettings);
+            NotifyOfPropertyChange(()=> CanRunMacro);
         }
 
         public void SetToolLengthOffset(string val)
@@ -464,6 +470,17 @@
                 _macroService.SaveMacroses();
             }
 
+        }
+
+        public void SaveSettings()
+        {
+            foreach (var grblSetting in this._grblStatus.GrblStatusModel.Settings.SettingsList)
+            {
+                if (grblSetting.Value != grblSetting.OriginalValue)
+                {
+                    SystemCommand($"${grblSetting.Index} = {grblSetting.Value}");
+                }
+            }
         }
     }
 }
