@@ -930,10 +930,17 @@
                                             </ComboBox>
                                         </DataTemplate>
                                         <DataTemplate x:Key="Mask3Template" DataType="model:GrblSetting">
-                                            <ComboBox SelectedValue="{Binding Value}">
-                                                <ComboBoxItem>0</ComboBoxItem>
-                                                <ComboBoxItem>1</ComboBoxItem>
-                                                <ComboBoxItem>2</ComboBoxItem>
+                                            <ComboBox Margin="2"
+                                                      ItemsSource="{Binding DataContext.Mask3Items, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                                      SelectedValue="{Binding Value}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Width="50" Text="{Binding}" />
+                                                            <TextBlock Text="{Binding Converter={StaticResource IntegerMask3ToDescription}}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
                                             </ComboBox>
                                         </DataTemplate>
 

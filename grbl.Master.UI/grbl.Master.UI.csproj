@@ -128,6 +128,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\IntegerMask3ToDescription.cs" />
     <Compile Include="Converters\IntegerMaskToAxisState.cs" />
     <Compile Include="Converters\IntegerToBinaryString.cs" />
     <Compile Include="Converters\StringIntegerToBool.cs" />

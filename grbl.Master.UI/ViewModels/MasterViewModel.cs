@@ -157,6 +157,8 @@
 
         public List<string> Mask8Items { get; } = new List<string> { "0", "1", "2", "3", "4", "5", "6", "7" };
 
+        public List<string> Mask3Items { get; } = new List<string> { "0", "1", "2" };
+
         public string ManualCommand
         {
             get => _manualCommand;
