@@ -258,22 +258,21 @@
                                                                                                     if (accessoryParts.Length == 2)
                                                                                                     {
                                                                                                         if(accessoryParts[1].Contains('S'))
-                                                                                                        { GrblStatusModel.SpindleState = SpindleState.M3;}
+                                                                                                        { 
+                                                                                                         GrblStatusModel.AccessoryState.Spindle = SpindleState.M3;
+                                                                                                        }
                                                                                                         else if(accessoryParts[1].Contains('C'))
                                                                                                         {
-                                                                                                            GrblStatusModel.SpindleState = SpindleState.M4;
+                                                                                                            GrblStatusModel.AccessoryState.Spindle = SpindleState.M4;
                                                                                                         }
                                                                                                         else
                                                                                                         {
-                                                                                                            GrblStatusModel.SpindleState = SpindleState.M5;
+                                                                                                            GrblStatusModel.AccessoryState.Spindle = SpindleState.M5;
                                                                                                         }
 
-                                                                                                        if(accessoryParts[1].Contains('F')){GrblStatusModel.CoolantState = CoolantState.M8;}
-                                                                                                        else if(accessoryParts[1].Contains('M')) {GrblStatusModel.CoolantState = CoolantState.M7;}
-                                                                                                        else
-                                                                                                        {
-                                                                                                            GrblStatusModel.CoolantState = CoolantState.M9;
-                                                                                                        }
+                                                                                                        GrblStatusModel.AccessoryState.Flood = accessoryParts[1].Contains('F');
+
+                                                                                                        GrblStatusModel.AccessoryState.Mist = accessoryParts[1].Contains('M');
                                                                                                     }
                                                                                                 } }
                                                                }

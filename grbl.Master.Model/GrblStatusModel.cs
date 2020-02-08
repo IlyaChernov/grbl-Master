@@ -51,6 +51,7 @@
         private FeedAndSpeed _feedAndSpeed = new FeedAndSpeed();
         private InputPinState _inputPinState = new InputPinState();
         private OverrideValues _overrideValues = new OverrideValues();
+        private AccessoryState _accessoryState = new AccessoryState();
 
 
         private long _lineNumber;
@@ -454,15 +455,15 @@
             }
         }
 
-        //public AccessoryState AccessoryState
-        //{
-        //    get => _accessoryState;
-        //    set
-        //    {
-        //        _accessoryState = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
+        public AccessoryState AccessoryState
+        {
+            get => _accessoryState;
+            set
+            {
+                _accessoryState = value;
+                OnPropertyChanged();
+            }
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
@@ -26,9 +27,9 @@
     {
         private readonly ICommandSender _commandSender;
 
-        private readonly IMacroService _macroService;
-
         private readonly IComService _comService;
+
+        private readonly FileSystemWatcher _fileSystemWatcher = new FileSystemWatcher();
 
         [SuppressMessage("ReSharper", "NotAccessedField.Local")]
         private readonly IGrblDispatcher _grblDispatcher;
@@ -37,13 +38,17 @@
 
         private readonly Subject<Unit> _jogStopSubject = new Subject<Unit>();
 
+        private readonly IMacroService _macroService;
+
+        private int _joggingCount;
+
+        private Macros _macrosSelected;
+
         private string _manualCommand;
 
-        private double _selectedJoggingDistance = 1;
+        private double _selectedFeedRate = 1000;
 
-        private double _selectedFeedRate = 500;
-
-        public string FilePath { get; set; }
+        private double _selectedJoggingDistance = 10;
 
         public MasterViewModel(
             IComService comService,
@@ -65,18 +70,24 @@
             _grblStatus.GrblStatusModel.PropertyChanged += GrblStatusModelPropertyChanged;
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
+            _fileSystemWatcher.Deleted += FileSystemWatcherDeleted;
+            _fileSystemWatcher.Created += FileSystemWatcherCreated;
+            _fileSystemWatcher.Renamed += FileSystemWatcherRenamed;
+            _fileSystemWatcher.Changed += FileSystemWatcherChanged;
 
             _commandSender.FileCommands.CommandList.CollectionChanged += (sender, args) =>
                 {
                     NotifyOfPropertyChange(() => FileLinesProcessed);
                 };
+
+            StartNotifications();
         }
 
-        private void GrblStatusModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            OnPropertyChanged(e);
-            NotifyCanCommands();
-        }
+
+
+        public string FilePath { get; set; }
+
+        public FileState FileState { get; set; }
 
         public List<double> JoggingDistances =>
             new List<double>
@@ -97,12 +108,12 @@
                     50,
                     100,
                     500,
-                    800
+                    1000
                 }; //todo: move to settings
 
         public ObservableCollection<Macros> Macroses => _macroService.Macroses;
 
-        private Macros _macrosSelected;
+        public TimeSpan Elapsed => _commandSender.FileCommands.Elapsed;
 
         public Macros MacrosSelected
         {
@@ -155,7 +166,17 @@
 
         public COMConnectionViewModel ComConnectionViewModel { get; }
 
-        public List<string> Mask8Items { get; } = new List<string> { "0", "1", "2", "3", "4", "5", "6", "7" };
+        public List<string> Mask8Items { get; } = new List<string>
+                                                      {
+                                                          "0",
+                                                          "1",
+                                                          "2",
+                                                          "3",
+                                                          "4",
+                                                          "5",
+                                                          "6",
+                                                          "7"
+                                                      };
 
         public List<string> Mask3Items { get; } = new List<string> { "0", "1", "2" };
 
@@ -180,7 +201,10 @@
         public bool CanSendEnterCommand => BasicCanSendCommand;
 
         public bool CanGCommand =>
-            _grblStatus.GrblStatusModel.MachineState != MachineState.Alarm && BasicCanSendCommand && _commandSender.FileCommands.State != CommandSourceState.Running;
+            _grblStatus.GrblStatusModel.MachineState != MachineState.Alarm && BasicCanSendCommand
+                                                                                && _commandSender.FileCommands
+                                                                                    .State != CommandSourceState
+                                                                                    .Running;
 
         public bool CanSystemCommand => BasicCanSendCommand;
 
@@ -209,17 +233,70 @@
 
         public bool CanStartFileExecution => BasicCanSendCommand && FileLines.Any();
 
-        public bool CanStartStepFileExecution => BasicCanSendCommand && _commandSender.FileCommands.State != CommandSourceState.Running && FileLines.Any();
+        public bool CanStartStepFileExecution =>
+            BasicCanSendCommand && _commandSender.FileCommands.State != CommandSourceState.Running
+                                     && FileLines.Any();
 
-        public bool CanPauseFileExecution => BasicCanSendCommand && _commandSender.FileCommands.State == CommandSourceState.Running && _commandSender.FileCommands.State != CommandSourceState.Paused;
+        public bool CanPauseFileExecution =>
+            BasicCanSendCommand && _commandSender.FileCommands.State == CommandSourceState.Running
+                                     && _commandSender.FileCommands.State != CommandSourceState.Paused;
 
         public bool CanStopFileExecution => _commandSender.FileCommands.State != CommandSourceState.Stopped;
 
-        public bool CanReloadFile => _commandSender.FileCommands.State == CommandSourceState.Stopped && File.Exists(FilePath);
+        public bool CanReloadFile =>
+            _commandSender.FileCommands.State == CommandSourceState.Stopped && File.Exists(FilePath);
 
         public bool CanSaveSettings => BasicCanSendCommand;
-        
+
         public bool CanRunMacro => BasicCanSendCommand;
+
+        private void FileSystemWatcherRenamed(object sender, RenamedEventArgs e)
+        {
+            if (e.OldName == Path.GetFileName(FilePath))
+            {
+                FileState = FileState.Deleted;
+                NotifyOfPropertyChange(nameof(FileState));
+            }
+        }
+
+        private void FileSystemWatcherCreated(object sender, FileSystemEventArgs e)
+        {
+            if (e.Name == Path.GetFileName(FilePath))
+            {
+                FileState = FileState.Updated;
+                NotifyOfPropertyChange(nameof(FileState));
+            }
+        }
+
+        private void FileSystemWatcherDeleted(object sender, FileSystemEventArgs e)
+        {
+            if (e.Name == Path.GetFileName(FilePath))
+            {
+                FileState = FileState.Deleted;
+                NotifyOfPropertyChange(nameof(FileState));
+            }
+        }
+
+        private void FileSystemWatcherChanged(object sender, FileSystemEventArgs e)
+        {
+            if (e.Name == Path.GetFileName(FilePath))
+            {
+                FileState = FileState.Updated;
+                NotifyOfPropertyChange(nameof(FileState));
+            }
+        }
+
+        private void StartNotifications()
+        {
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(1)). /*TakeUntil(_stopSubject).*/
+                Subscribe(l => { NotifyOfPropertyChange(nameof(Elapsed)); });
+        }
+
+        private void GrblStatusModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e);
+            NotifyCanCommands();
+        }
 
         private void NotifyCanCommands()
         {
@@ -241,8 +318,8 @@
             NotifyOfPropertyChange(() => CanPauseFileExecution);
             NotifyOfPropertyChange(() => CanStopFileExecution);
             NotifyOfPropertyChange(() => CanReloadFile);
-            NotifyOfPropertyChange(()=> CanSaveSettings);
-            NotifyOfPropertyChange(()=> CanRunMacro);
+            NotifyOfPropertyChange(() => CanSaveSettings);
+            NotifyOfPropertyChange(() => CanRunMacro);
         }
 
         public void SetToolLengthOffset(string val)
@@ -323,8 +400,6 @@
             _commandSender.SendAsync(new string(new[] { (char)code }));
         }
 
-        private int _joggingCount;
-
         public void JoggingCommand(string code)
         {
             _joggingCount = 0;
@@ -357,6 +432,10 @@
             if (openFileDialog.ShowDialog() == true && File.Exists(openFileDialog.FileName))
             {
                 FilePath = openFileDialog.FileName;
+                _fileSystemWatcher.Path = Path.GetDirectoryName(FilePath);
+                FileState = FileState.Unchanged;
+                _fileSystemWatcher.EnableRaisingEvents = true;
+                NotifyOfPropertyChange(nameof(FilePath));
                 ReloadFile();
                 NotifyCanCommands();
             }
@@ -403,8 +482,10 @@
             if (File.Exists(FilePath))
             {
                 FileLines = File.ReadAllText(FilePath);
+                FileState = FileState.Unchanged;
 
                 NotifyOfPropertyChange(() => FileLines);
+                NotifyOfPropertyChange(nameof(FileState));
                 NotifyCanCommands();
             }
         }
@@ -434,9 +515,7 @@
         public void SaveMacro(Macros macro)
         {
             if (_macroService.Macroses.Any(x => x.Index == macro.Index) && macro.Index >= 0)
-            {
                 _macroService.Macroses.RemoveAt(macro.Index);
-            }
             _macroService.Macroses.Insert(Math.Max(0, macro.Index), macro);
             _macroService.SaveMacroses();
             CancelMacro();
@@ -460,29 +539,24 @@
                 _macroService.Macroses.Insert(Math.Max(0, macro.Index - 1), macro);
                 _macroService.SaveMacroses();
             }
-
         }
 
         public void DownMacro(Macros macro)
         {
-            if (_macroService.Macroses.Any(x => x.Index == macro.Index) && macro.Index < _macroService.Macroses.Max(x => x.Index))
+            if (_macroService.Macroses.Any(x => x.Index == macro.Index)
+                && macro.Index < _macroService.Macroses.Max(x => x.Index))
             {
                 _macroService.Macroses.RemoveAt(macro.Index);
                 _macroService.Macroses.Insert(Math.Max(0, macro.Index + 1), macro);
                 _macroService.SaveMacroses();
             }
-
         }
 
         public void SaveSettings()
         {
-            foreach (var grblSetting in this._grblStatus.GrblStatusModel.Settings.SettingsList)
-            {
+            foreach (var grblSetting in _grblStatus.GrblStatusModel.Settings.SettingsList)
                 if (grblSetting.Value != grblSetting.OriginalValue)
-                {
                     SystemCommand($"${grblSetting.Index} = {grblSetting.Value}");
-                }
-            }
         }
     }
 }

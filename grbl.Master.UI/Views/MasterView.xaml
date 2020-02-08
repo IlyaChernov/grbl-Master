@@ -484,6 +484,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50" />
                                     <RowDefinition Height="20" />
+                                    <RowDefinition Height="20" />
                                     <RowDefinition Height="30" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
@@ -511,10 +512,61 @@
                                         <materialDesign:PackIcon Width="45" Height="45" Kind="Stop" />
                                     </Button>
                                     <Button x:Name="ReloadFile" ToolTip="Reload file">
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding FileState}" Value="Unchanged">
+                                                        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding FileState}" Value="Deleted">
+                                                        <Setter Property="Background" Value="Red" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding FileState}" Value="Updated">
+                                                        <Setter Property="Background" Value="Orange" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
                                         <materialDesign:PackIcon Width="45" Height="45" Kind="Reload" />
                                     </Button>
                                 </StackPanel>
-                                <ProgressBar Grid.Row="1" Margin="1" Background="White"
+                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="materialDesign:PackIcon">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding FileState}" Value="Unchanged">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding FileState}" Value="Deleted">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding FileState}" Value="Updated">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding FileState}" Value="Unchanged">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding FileState}" Value="Deleted">
+                                                    <Setter Property="Background" Value="Red" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding FileState}" Value="Updated">
+                                                    <Setter Property="Background" Value="Orange" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <materialDesign:PackIcon Width="20" Height="20" Kind="FileWarning" />
+                                    <Label Padding="2" VerticalContentAlignment="Center"
+                                           Content="{Binding FilePath}"
+                                           ToolTip="{Binding FilePath}" />
+                                </StackPanel>
+                                <ProgressBar Grid.Row="2" Margin="1" Background="White"
                                              Maximum="{Binding FileLinesCount, Mode=OneWay}"
                                              Minimum="0"
                                              Value="{Binding FileLinesProcessed, Mode=OneWay}">
@@ -530,7 +582,7 @@
                                     </ProgressBar.ToolTip>
 
                                 </ProgressBar>
-                                <TextBlock Grid.Row="1" Margin="1" TextAlignment="Center">
+                                <TextBlock Grid.Row="2" Margin="1" TextAlignment="Center">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="Processed : {0}/{1}">
                                             <Binding Mode="OneWay" Path="FileLinesProcessed" />
@@ -538,15 +590,19 @@
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
-                                <Grid Grid.Row="2">
+                                <Grid Grid.Row="3">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
-                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Content="{Binding GrblStatus.LastMessage}" ToolTip="{Binding GrblStatus.LastMessage}" />
-                                    <Label Grid.Column="1">Elapsed</Label>
+                                    <Label Padding="2" VerticalContentAlignment="Center"
+                                           Content="{Binding GrblStatus.LastMessage}"
+                                           ToolTip="{Binding GrblStatus.LastMessage}" />
+                                    <Label Grid.Column="1" Padding="0" VerticalContentAlignment="Center"
+                                           Content="{Binding Elapsed}"
+                                           ContentStringFormat="{}{0:hh}:{0:mm}:{0:ss}" ToolTip="Time elapsed" />
                                 </Grid>
-                                <TabControl Grid.Row="3" Grid.Column="0">
+                                <TabControl Grid.Row="4" Grid.Column="0">
                                     <TabItem Width="100" Header="File progress">
                                         <ListView ItemsSource="{Binding FileCommandsCollection}" VirtualizingStackPanel.VirtualizationMode="Recycling">
                                             <ListView.ItemsPanel>
@@ -577,7 +633,6 @@
                                                  VerticalScrollBarVisibility="Auto" />
                                     </TabItem>
                                 </TabControl>
-
                             </Grid>
                         </TabItem>
                         <TabItem Width="120">
@@ -774,12 +829,171 @@
                                     </ListView.ItemTemplate>
                                 </ListView>
                             </Expander>
+                            <Expander Header="" Tag="Pin states">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="materialDesign:PackIcon">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding}" Value="false">
+                                                    <Setter Property="Foreground" Value="Black" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding}" Value="true">
+                                                    <Setter Property="Foreground" Value="Green" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <materialDesign:PackIcon Width="33" Height="33"
+                                                             DataContext="{Binding GrblStatus.InputPinState.XLimitPin}"
+                                                             Kind="AlphaXBox" ToolTip="X limit pin" />
+                                    <materialDesign:PackIcon Width="33" Height="33"
+                                                             DataContext="{Binding GrblStatus.InputPinState.YLimitPin}"
+                                                             Kind="AlphaYBox" ToolTip="Y limit pin" />
+                                    <materialDesign:PackIcon Width="33" Height="33"
+                                                             DataContext="{Binding GrblStatus.InputPinState.ZLimitPin}"
+                                                             Kind="AlphaZBox" ToolTip="Z limit pin" />
+                                    <materialDesign:PackIcon Width="33" Height="33"
+                                                             DataContext="{Binding GrblStatus.InputPinState.ProbePin}"
+                                                             Kind="AlphaPBox" ToolTip="Probe pin" />
+                                    <materialDesign:PackIcon Width="33" Height="33"
+                                                             DataContext="{Binding GrblStatus.InputPinState.DoorPin}"
+                                                             Kind="AlphaDBox" ToolTip="Door pin" />
+                                    <materialDesign:PackIcon Width="33" Height="33"
+                                                             DataContext="{Binding GrblStatus.InputPinState.HoldPin}"
+                                                             Kind="AlphaHBox" ToolTip="Hold pin" />
+                                    <materialDesign:PackIcon Width="33" Height="33"
+                                                             DataContext="{Binding GrblStatus.InputPinState.SoftResetPin}"
+                                                             Kind="AlphaRBox" ToolTip="Soft reset pin" />
+                                    <materialDesign:PackIcon Width="33" Height="33"
+                                                             DataContext="{Binding GrblStatus.InputPinState.CycleStartPin}"
+                                                             Kind="AlphaSBox" ToolTip="Cycle start pin" />
+                                </StackPanel>
+                            </Expander>
+                            <Expander Header="" Tag="Overrides">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <GroupBox Header="Accessory">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="0" cal:Message.Attach="RealtimeIntCommand(158)" Content="Spindle stop">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding GrblStatus}" Value="false">
+                                                                <Setter Property="Foreground" Value="Black" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding}" Value="true">
+                                                                <Setter Property="Foreground" Value="Green" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button Grid.Column="1" cal:Message.Attach="RealtimeIntCommand(160)" Content="Flood" />
+                                            <Button Grid.Column="2" cal:Message.Attach="RealtimeIntCommand(161)" Content="Mist" />
+                                        </Grid>
+                                    </GroupBox>
+
+                                    <GroupBox Grid.Row="1">
+                                        <GroupBox.Header>
+                                            <TextBlock Text="{Binding GrblStatus.OverrideValues.Feed, StringFormat='Feed {0}%', FallbackValue='Feed 0%'}" />
+                                        </GroupBox.Header>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Row="1" Grid.Column="0" cal:Message.Attach="RealtimeIntCommand(148)">
+                                                -1
+                                            </Button>
+                                            <Button Grid.Row="0" Grid.Column="0" cal:Message.Attach="RealtimeIntCommand(147)">
+                                                +1
+                                            </Button>
+                                            <Button Grid.Row="1" Grid.Column="1" cal:Message.Attach="RealtimeIntCommand(146)">
+                                                -10
+                                            </Button>
+                                            <Button Grid.Row="0" Grid.Column="1" cal:Message.Attach="RealtimeIntCommand(145)">
+                                                +10
+                                            </Button>
+                                            <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" cal:Message.Attach="RealtimeIntCommand(144)">
+                                                <materialDesign:PackIcon Width="36" Height="36" Kind="Restart" />
+                                            </Button>
+                                        </Grid>
+                                    </GroupBox>
+                                    <GroupBox Grid.Row="2">
+                                        <GroupBox.Header>
+                                            <TextBlock Text="{Binding GrblStatus.OverrideValues.Rapid, StringFormat='Rapid {0}%', FallbackValue='Rapid 0%'}" />
+                                        </GroupBox.Header>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Row="0" Grid.Column="0" cal:Message.Attach="RealtimeIntCommand(151)">
+                                                25%
+                                            </Button>
+                                            <Button Grid.Row="0" Grid.Column="1" cal:Message.Attach="RealtimeIntCommand(150)">
+                                                50%
+                                            </Button>
+                                            <Button Grid.Row="0" Grid.Column="2" cal:Message.Attach="RealtimeIntCommand(149)">
+                                                100%
+                                            </Button>
+                                        </Grid>
+                                    </GroupBox>
+                                    <GroupBox Grid.Row="3">
+                                        <GroupBox.Header>
+                                            <TextBlock Text="{Binding GrblStatus.OverrideValues.Spindle, StringFormat='Spindle {0}%', FallbackValue='Spindle 0%'}" />
+                                        </GroupBox.Header>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Row="1" Grid.Column="0" cal:Message.Attach="RealtimeIntCommand(157)">
+                                                -1
+                                            </Button>
+                                            <Button Grid.Row="0" Grid.Column="0" cal:Message.Attach="RealtimeIntCommand(156)">
+                                                +1
+                                            </Button>
+                                            <Button Grid.Row="1" Grid.Column="1" cal:Message.Attach="RealtimeIntCommand(155)">
+                                                -10
+                                            </Button>
+                                            <Button Grid.Row="0" Grid.Column="1" cal:Message.Attach="RealtimeIntCommand(154)">
+                                                +10
+                                            </Button>
+                                            <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" cal:Message.Attach="RealtimeIntCommand(153)">
+                                                <materialDesign:PackIcon Width="36" Height="36" Kind="Restart" />
+                                            </Button>
+                                        </Grid>
+                                    </GroupBox>
+                                </Grid>
+                            </Expander>
                         </StackPanel>
                     </ScrollViewer>
 
                 </Grid>
             </TabItem>
-            <TabItem Width="100" Header="Grbl config">
+            <TabItem Width="100" Header="Configuration">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="400" />

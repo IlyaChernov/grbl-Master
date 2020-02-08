@@ -3,14 +3,20 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Linq;
+    using System.Reactive.Linq;
 
     using grbl.Master.Model.Enum;
 
     public class CommandSource
     {
+        private readonly Stopwatch _stopWatch = new Stopwatch();
+
         private bool _needsPurge;
         private ConcurrentQueue<string> CommandQueue { get; } = new ConcurrentQueue<string>();
+
+        public TimeSpan Elapsed => _stopWatch.Elapsed;
 
         public int CommandCount => CommandQueue.Count;
 
@@ -21,10 +27,6 @@
         public CommandSourceType Type { get; set; }
 
         public ObservableCollection<Command> CommandList { get; } = new ObservableCollection<Command>();
-
-       // public event EventHandler CommandListUpdated;
-
-       // public event EventHandler<Command> CommandFinished;
 
         public CommandSource(CommandSourceType type, CommandSourceRunMode mode)
         {
@@ -37,7 +39,10 @@
             if (State == CommandSourceState.Stopped && _needsPurge)
             {
                 Purge();
+                _stopWatch.Reset();
             }
+
+            _stopWatch.Start();
 
             State = CommandSourceState.Running;
         }
@@ -48,6 +53,7 @@
             if (State == CommandSourceState.Running)
             {
                 State = CommandSourceState.Paused;
+                _stopWatch.Stop();
             }
         }
 
@@ -55,6 +61,7 @@
         {
             _needsPurge = true;
             State = CommandSourceState.Stopped;
+            _stopWatch.Stop();
         }
 
         public bool TryPeekCommand(out Command command)
