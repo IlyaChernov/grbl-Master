@@ -220,9 +220,18 @@
                                                     <TextBlock Margin="-2,0,-4,0" Padding="0" Text="Distance" />
                                                 </GroupBox.Header>
                                                 <ListBox x:Name="JoggingDistances" Margin="-3" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                                                    <ListBox.Resources>
+                                                        <Style TargetType="ListBoxItem">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter Property="FontWeight" Value="ExtraBold" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </ListBox.Resources>
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Label Margin="0,-1,0,-2" Padding="0"
+                                                            <Label Height="21" Margin="0,-1,0,-2" Padding="0"
                                                                    Content="{Binding}" />
                                                         </DataTemplate>
                                                     </ListBox.ItemTemplate>
@@ -240,6 +249,15 @@
                                                     <TextBlock Margin="-2,0,-4,0" Padding="0" Text="Feed rate" />
                                                 </GroupBox.Header>
                                                 <ListBox x:Name="FeedRates" Margin="-3" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                                                    <ListBox.Resources>
+                                                        <Style TargetType="ListBoxItem">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter Property="FontWeight" Value="ExtraBold" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </ListBox.Resources>
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate>
                                                             <Label Height="21" Margin="0,-1,0,-2" Padding="0"
