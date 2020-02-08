@@ -415,6 +415,7 @@
                                             <Setter Property="TextAlignment" Value="Right" />
                                             <Setter Property="Margin" Value="1" />
                                             <Setter Property="Padding" Value="0,-1,0,0" />
+                                            <Setter Property="VerticalContentAlignment" Value="Center" />
                                         </Style>
                                         <DataTemplate x:Key="OffsetsData" DataType="model:Position">
                                             <Grid>
@@ -424,12 +425,15 @@
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBox Grid.Column="0" cal:Message.Attach="[Event LostFocus] = [Action SetOffset('X', $source, $this)];[Key Enter] = [Action SetOffset('X', $source, $this)]"
+                                                         Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Path=Background}"
                                                          Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Path=Tag}"
                                                          Text="{Binding X}" />
                                                 <TextBox Grid.Column="1" cal:Message.Attach="[Event LostFocus] = [Action SetOffset('Y', $source, $this)];[Key Enter] = [Action SetOffset('Y', $source, $this)]"
+                                                         Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Path=Background}"
                                                          Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Path=Tag}"
                                                          Text="{Binding Y}" />
                                                 <TextBox Grid.Column="2" cal:Message.Attach="[Event LostFocus] = [Action SetOffset('Z', $source, $this)];[Key Enter] = [Action SetOffset('Z', $source, $this)]"
+                                                         Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Path=Background}"
                                                          Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Path=Tag}"
                                                          Text="{Binding Z}" />
                                             </Grid>
@@ -474,7 +478,17 @@
                                     <ContentControl Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G54Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P1" />
+                                                    Tag="G10 L2 P1">
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding GrblStatus.CoordinateSystem}" Value="G54">
+                                                        <Setter Property="Background" Value="LightSkyBlue" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                     <Button Grid.Row="2" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P1 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
@@ -485,7 +499,17 @@
                                     <ContentControl Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G55Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P2" />
+                                                    Tag="G10 L2 P2" >
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding GrblStatus.CoordinateSystem}" Value="G55">
+                                                        <Setter Property="Background" Value="LightSkyBlue" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                     <Button Grid.Row="3" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P2 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
@@ -496,7 +520,17 @@
                                     <ContentControl Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G56Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P3" />
+                                                    Tag="G10 L2 P3" >
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding GrblStatus.CoordinateSystem}" Value="G56">
+                                                        <Setter Property="Background" Value="LightSkyBlue" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                     <Button Grid.Row="4" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P3 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
@@ -507,7 +541,17 @@
                                     <ContentControl Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G57Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P4" />
+                                                    Tag="G10 L2 P4" >
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding GrblStatus.CoordinateSystem}" Value="G57">
+                                                        <Setter Property="Background" Value="LightSkyBlue" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                     <Button Grid.Row="5" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P4 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
@@ -518,7 +562,17 @@
                                     <ContentControl Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G58Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P5" />
+                                                    Tag="G10 L2 P5" >
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding GrblStatus.CoordinateSystem}" Value="G58">
+                                                        <Setter Property="Background" Value="LightSkyBlue" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                     <Button Grid.Row="6" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P5 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
@@ -529,7 +583,17 @@
                                     <ContentControl Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G59Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P6" />
+                                                    Tag="G10 L2 P6" >
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding GrblStatus.CoordinateSystem}" Value="G59">
+                                                        <Setter Property="Background" Value="LightSkyBlue" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                     <Button Grid.Row="7" Grid.Column="4" cal:Message.Attach="GCommand('G10 L2 P6 X0 Y0 Z0')" ToolTip="Set zero position">
                                         0
                                     </Button>
