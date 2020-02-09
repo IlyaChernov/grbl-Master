@@ -499,7 +499,7 @@
                                     <ContentControl Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G55Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P2" >
+                                                    Tag="G10 L2 P2">
                                         <ContentControl.Style>
                                             <Style TargetType="ContentControl">
                                                 <Style.Triggers>
@@ -520,7 +520,7 @@
                                     <ContentControl Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G56Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P3" >
+                                                    Tag="G10 L2 P3">
                                         <ContentControl.Style>
                                             <Style TargetType="ContentControl">
                                                 <Style.Triggers>
@@ -541,7 +541,7 @@
                                     <ContentControl Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G57Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P4" >
+                                                    Tag="G10 L2 P4">
                                         <ContentControl.Style>
                                             <Style TargetType="ContentControl">
                                                 <Style.Triggers>
@@ -562,7 +562,7 @@
                                     <ContentControl Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G58Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P5" >
+                                                    Tag="G10 L2 P5">
                                         <ContentControl.Style>
                                             <Style TargetType="ContentControl">
                                                 <Style.Triggers>
@@ -583,7 +583,7 @@
                                     <ContentControl Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3"
                                                     Content="{Binding GrblStatus.G59Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
-                                                    Tag="G10 L2 P6" >
+                                                    Tag="G10 L2 P6">
                                         <ContentControl.Style>
                                             <Style TargetType="ContentControl">
                                                 <Style.Triggers>
@@ -1273,23 +1273,6 @@
                                                         </StackPanel>
                                                     </DataTemplate>
                                                 </ComboBox.ItemTemplate>
-
-                                                <!--<ComboBoxItem>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock>0</TextBlock>
-                                                <TextBlock>00000000</TextBlock>
-                                                <TextBlock>N</TextBlock>
-                                                <TextBlock>N</TextBlock>
-                                                <TextBlock>N</TextBlock>
-                                            </StackPanel>
-                                        </ComboBoxItem>
-                                        <ComboBoxItem>1</ComboBoxItem>
-                                        <ComboBoxItem>2</ComboBoxItem>
-                                        <ComboBoxItem>3</ComboBoxItem>
-                                        <ComboBoxItem>4</ComboBoxItem>
-                                        <ComboBoxItem>5</ComboBoxItem>
-                                        <ComboBoxItem>6</ComboBoxItem>
-                                        <ComboBoxItem>7</ComboBoxItem>-->
                                             </ComboBox>
                                         </DataTemplate>
                                         <DataTemplate x:Key="Mask3Template" DataType="model:GrblSetting">
@@ -1340,54 +1323,34 @@
                                                         </Style>
                                                     </ContentPresenter.Resources>
                                                 </ContentPresenter>
-
-                                                <Label Grid.Column="2" Content="{Binding Description}" />
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                    <StackPanel.Style>
+                                                        <Style TargetType="StackPanel">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsModified}" Value="true">
+                                                                    <Setter Property="Background" Value="Gold" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </StackPanel.Style>
+                                                    <materialDesign:PackIcon Width="26" Height="26" Foreground="Black" Kind="AlertDecagram" ToolTip="Modified">
+                                                        <materialDesign:PackIcon.Style>
+                                                            <Style TargetType="materialDesign:PackIcon">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsModified}" Value="false">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </materialDesign:PackIcon.Style>
+                                                    </materialDesign:PackIcon>
+                                                    <Label Content="{Binding Description}" />
+                                                </StackPanel>
                                             </Grid>
                                         </DataTemplate>
                                     </ItemsControl.Resources>
-                                    <!--<ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="model:GrblSetting">
-                                    <Grid ToolTip="{Binding Description}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="70" />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="{Binding Index}" />
-                                        <TextBox Grid.Column="1" Margin="2"
-                                                 Text="{Binding Value}" />
-                                        <Label Grid.Column="2" Content="{Binding Description}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>-->
                                 </ItemsControl>
                             </ScrollViewer>
-
-                            <!--<ListView ItemsSource="{Binding GrblSettings}" VirtualizingStackPanel.VirtualizationMode="Recycling">
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListViewItem}">
-                                <Setter Property="ToolTip">
-                                    <Setter.Value>
-                                        <UniformGrid Columns="1">
-                                            <TextBlock Text="{Binding Path=Description}" />
-                                        </UniformGrid>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Index}" Header="Index" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Value}" Header="Value" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Description" />
-                            </GridView>
-                        </ListView.View>
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel />
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                    </ListView>-->
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Column="1" Header="Application Settings" />

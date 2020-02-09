@@ -557,6 +557,7 @@
             foreach (var grblSetting in _grblStatus.GrblStatusModel.Settings.SettingsList)
                 if (grblSetting.Value != grblSetting.OriginalValue)
                     SystemCommand($"${grblSetting.Index} = {grblSetting.Value}");
+            SystemCommand("$$");
         }
     }
 }

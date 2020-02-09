@@ -178,6 +178,7 @@
             else
             {
                 _stopSubject.OnNext(Unit.Default);
+                this._processing = false;
                 SystemCommands.PauseProcessing();
                 ManualCommands.PauseProcessing();
 
