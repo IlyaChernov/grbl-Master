@@ -404,7 +404,10 @@
         {
             _joggingCount = 0;
             _jogStopSubject.OnNext(Unit.Default);
-            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(500)).TakeUntil(_jogStopSubject).Subscribe(
+
+            var requestspeed = (SelectedJoggingDistance / (SelectedFeedRate / 60000))* 0.9;
+
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(requestspeed)).TakeUntil(_jogStopSubject).Subscribe(
                 l =>
                     {
                         _joggingCount++;
