@@ -11,6 +11,7 @@
             <converters:IntegerToBinaryString x:Key="IntegerToBinaryString" />
             <converters:IntegerMaskToAxisState x:Key="IntegerMaskToAxisState" />
             <converters:IntegerMask3ToDescription x:Key="IntegerMask3ToDescription" />
+            <converters:ListDoubleToString x:Key="ListDoubleToString" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

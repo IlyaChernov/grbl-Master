@@ -5,6 +5,7 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reactive;
@@ -17,8 +18,10 @@
     using grbl.Master.BL.Interface;
     using grbl.Master.Model;
     using grbl.Master.Model.Enum;
+    using grbl.Master.Model.Properties;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
+    using grbl.Master.UI.Converters;
     using grbl.Master.Utilities;
 
     using Microsoft.Win32;
@@ -81,6 +84,8 @@
                 };
 
             StartNotifications();
+
+            LoadAppSettings();
         }
 
 
@@ -89,7 +94,7 @@
 
         public FileState FileState { get; set; }
 
-        public List<double> JoggingDistances =>
+        private List<double> _joggingDistances =
             new List<double>
                 {
                     0.01,
@@ -100,7 +105,18 @@
                     100
                 }; //todo: move to settings
 
-        public List<double> FeedRates =>
+        public List<double> JoggingDistances
+        {
+            get => _joggingDistances;
+            set
+            {
+                _joggingDistances = value;
+                SaveAppSettings();
+                NotifyOfPropertyChange(nameof(JoggingDistances));
+            }
+        }
+
+        private List<double> _feedRates =
             new List<double>
                 {
                     5,
@@ -110,6 +126,68 @@
                     500,
                     1000
                 }; //todo: move to settings
+
+        public List<double> FeedRates
+        {
+            get => _feedRates;
+            set
+            {
+                _feedRates = value;
+                SaveAppSettings();
+                NotifyOfPropertyChange(nameof(FeedRates));
+            }
+        }
+
+        private void LoadAppSettings()
+        {
+            if (Settings.Default.JoggingDistances.Length > 0)
+            {
+                try
+                {
+                    _joggingDistances = Settings.Default.JoggingDistances.Split(
+                        new[] { Environment.NewLine },
+                        StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToList();
+                    NotifyOfPropertyChange(nameof(JoggingDistances));
+                }
+                catch
+                {
+                    SaveAppSettings();
+                }
+            }
+
+            if (Settings.Default.JoggingSpeeds.Length > 0)
+            {
+                try
+                {
+                    _feedRates = Settings.Default.JoggingSpeeds.Split(
+                        new[] { Environment.NewLine },
+                        StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToList();
+                    NotifyOfPropertyChange(nameof(FeedRates));
+                }
+                catch
+                {
+                    SaveAppSettings();
+                }
+            }
+        }
+
+        private void SaveAppSettings()
+        {
+            var converter = new ListDoubleToString();
+            Settings.Default.JoggingDistances = converter.Convert(
+                JoggingDistances,
+                typeof(string),
+                null,
+                CultureInfo.CurrentCulture) as string;
+
+            Settings.Default.JoggingSpeeds = converter.Convert(
+                                                 FeedRates,
+                                                    typeof(string),
+                                                    null,
+                                                    CultureInfo.CurrentCulture) as string;
+            Settings.Default.Save();
+            Settings.Default.Reload();
+        }
 
         public ObservableCollection<Macros> Macroses => _macroService.Macroses;
 
@@ -405,7 +483,7 @@
             _joggingCount = 0;
             _jogStopSubject.OnNext(Unit.Default);
 
-            var requestspeed = (SelectedJoggingDistance / (SelectedFeedRate / 60000))* 0.9;
+            var requestspeed = (SelectedJoggingDistance / (SelectedFeedRate / 60000)) * 0.9;
 
             Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(requestspeed)).TakeUntil(_jogStopSubject).Subscribe(
                 l =>

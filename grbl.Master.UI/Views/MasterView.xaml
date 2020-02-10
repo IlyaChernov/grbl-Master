@@ -1353,7 +1353,25 @@
                             </ScrollViewer>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Grid.Column="1" Header="Application Settings" />
+                    <GroupBox Grid.Column="1" Header="Application Settings">
+                        <WrapPanel Orientation="Horizontal">
+                            <WrapPanel.Resources>
+                                <Style TargetType="xctk:DoubleUpDown">
+                                    <Setter Property="Margin" Value="2" />
+                                </Style>
+                            </WrapPanel.Resources>
+                            <GroupBox Width="120" Margin="2" Header="Jogging distances">
+                                <TextBox Height="100" AcceptsReturn="True" MaxLines="6"
+                                         Text="{Binding JoggingDistances, Converter={StaticResource ListDoubleToString}, UpdateSourceTrigger=LostFocus}"
+                                         TextWrapping="Wrap" />
+                            </GroupBox>
+                            <GroupBox Width="120" Margin="2" Header="Jogging speeds">
+                                <TextBox AcceptsReturn="True" MaxLines="6"
+                                         Text="{Binding FeedRates, Converter={StaticResource ListDoubleToString}, UpdateSourceTrigger=LostFocus}"
+                                         TextWrapping="Wrap" />
+                            </GroupBox>
+                        </WrapPanel>
+                    </GroupBox>
                 </Grid>
             </TabItem>
             <TabItem Width="100" Header="Communication">

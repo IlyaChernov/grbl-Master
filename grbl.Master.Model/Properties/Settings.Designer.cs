@@ -58,5 +58,29 @@ namespace grbl.Master.Model.Properties {
                 this["MacrosesXML"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string JoggingDistances {
+            get {
+                return ((string)(this["JoggingDistances"]));
+            }
+            set {
+                this["JoggingDistances"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string JoggingSpeeds {
+            get {
+                return ((string)(this["JoggingSpeeds"]));
+            }
+            set {
+                this["JoggingSpeeds"] = value;
+            }
+        }
     }
 }
