@@ -103,7 +103,7 @@
                     5,
                     10,
                     100
-                }; //todo: move to settings
+                };
 
         public List<double> JoggingDistances
         {
@@ -125,7 +125,7 @@
                     100,
                     500,
                     1000
-                }; //todo: move to settings
+                }; 
 
         public List<double> FeedRates
         {
