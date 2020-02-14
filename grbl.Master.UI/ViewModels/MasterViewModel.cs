@@ -11,6 +11,7 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
+    using System.Threading;
     using System.Windows.Controls;
 
     using Caliburn.Micro;
@@ -485,7 +486,13 @@
 
             var requestspeed = (SelectedJoggingDistance / (SelectedFeedRate / 60000)) * 0.9;
 
-            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(requestspeed)).TakeUntil(_jogStopSubject).Subscribe(
+            _commandSender.SendAsync(
+                "$J=" + string.Format(
+                    code,
+                    SelectedJoggingDistance.ToGrblString(),
+                    SelectedFeedRate.ToGrblString()));
+
+            Observable.Timer(TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(requestspeed)).TakeUntil(_jogStopSubject).Subscribe(
                 l =>
                     {
                         _joggingCount++;
@@ -500,7 +507,8 @@
         public void CancelJogging()
         {
             _jogStopSubject.OnNext(Unit.Default);
-            if (_joggingCount > 1) RealtimeIntCommand(0x0085);
+            if (_joggingCount >= 1)
+                RealtimeIntCommand(0x0085);
         }
 
         public void FileOpen()
@@ -638,7 +646,7 @@
             foreach (var grblSetting in _grblStatus.GrblStatusModel.Settings.SettingsList)
                 if (grblSetting.Value != grblSetting.OriginalValue)
                     SystemCommand($"${grblSetting.Index} = {grblSetting.Value}");
-            SystemCommand("$$");
+            Observable.Start(() => Thread.Sleep(200)).Subscribe(unit => { SystemCommand("$$"); });
         }
     }
 }
