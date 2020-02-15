@@ -1,105 +1,42 @@
 ﻿namespace grbl.Master.Model
 {
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-
     using grbl.Master.Model.Enum;
-
-    using JetBrains.Annotations;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Command that will be stored in memory after sending. Can be updated with results.
     /// </summary>
-    public class Command : INotifyPropertyChanged
+    public class Command : NotifyPropertyChanged
     {
-        private string _data;
-
-        private RequestType? _type;
-
         public List<ResponseType> ExpectedResponses { get; set; }
-
-        private string _result;
-
-        private CommandResultType? _resultType;
-
-        private string _commandResultCause;
 
         public string CommandOnResult { get; set; }
 
         /// <summary>
         /// Data sent
         /// </summary>
-        public string Data
-        {
-            get => _data;
-            set
-            {
-                _data = value;
-                OnPropertyChanged();
-            }
-        }
+        public string Data { get; set; }
 
         /// <summary>
         /// Type of command
         /// </summary>
-        public RequestType? Type
-        {
-            get => _type;
-            set
-            {
-                _type = value;
-                OnPropertyChanged();
-            }
-        }
+        public RequestType? Type { get; set; }
 
         /// <summary>
         /// Answer data
         /// </summary>
-        public string Result
-        {
-            get => _result;
-            set
-            {
-                _result = value;
-                OnPropertyChanged();
-            }
-        }
+        public string Result { get; set; }
 
         /// <summary>
         /// Answer type
         /// </summary>
-        public CommandResultType? ResultType
-        {
-            get => _resultType;
-            set
-            {
-                _resultType = value;
-                OnPropertyChanged();
-            }
-        }
+        public CommandResultType? ResultType { get; set; }
 
         /// <summary>
         /// Cause of result
         /// </summary>
-        public string CommandResultCause
-        {
-            get => _commandResultCause;
-            set
-            {
-                _commandResultCause = value;
-                OnPropertyChanged();
-            }
-        }
+        public string CommandResultCause { get; set; }
 
         public CommandSourceType Source { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

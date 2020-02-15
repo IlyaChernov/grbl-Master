@@ -1,109 +1,21 @@
 ﻿namespace grbl.Master.Model
 {
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-
-    using JetBrains.Annotations;
-
-    public class InputPinState : INotifyPropertyChanged
+    public class InputPinState : NotifyPropertyChanged
     {
-        private bool _xLimitPin;
-        private bool _yLimitPin;
-        private bool _zLimitPin;
-        private bool _probePin;
-        private bool _doorPin;
-        private bool _holdPin;
-        private bool _softResetPin;
-        private bool _cycleStartPin;
+        public bool XLimitPin { get; set; }
 
+        public bool YLimitPin { get; set; }
 
+        public bool ZLimitPin { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public bool ProbePin { get; set; }
 
-        public bool XLimitPin
-        {
-            get => _xLimitPin;
-            set
-            {
-                _xLimitPin = value;
-                OnPropertyChanged();
-            }
-        }
+        public bool DoorPin { get; set; }
 
-        public bool YLimitPin
-        {
-            get => _yLimitPin;
-            set
-            {
-                _yLimitPin = value;
-                OnPropertyChanged();
-            }
-        }
+        public bool HoldPin { get; set; }
 
-        public bool ZLimitPin
-        {
-            get => _zLimitPin;
-            set
-            {
-                _zLimitPin = value;
-                OnPropertyChanged();
-            }
-        }
+        public bool SoftResetPin { get; set; }
 
-        public bool ProbePin
-        {
-            get => _probePin;
-            set
-            {
-                _probePin = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool DoorPin
-        {
-            get => _doorPin;
-            set
-            {
-                _doorPin = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool HoldPin
-        {
-            get => _holdPin;
-            set
-            {
-                _holdPin = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool SoftResetPin
-        {
-            get => _softResetPin;
-            set
-            {
-                _softResetPin = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool CycleStartPin
-        {
-            get => _cycleStartPin;
-            set
-            {
-                _cycleStartPin = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public bool CycleStartPin { get; set; }
     }
 }

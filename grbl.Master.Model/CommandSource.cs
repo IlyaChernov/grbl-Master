@@ -1,14 +1,12 @@
 ﻿namespace grbl.Master.Model
 {
+    using grbl.Master.Model.Enum;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
-    using System.Reactive.Linq;
-
-    using grbl.Master.Model.Enum;
-
+    
     public class CommandSource
     {
         private readonly Stopwatch _stopWatch = new Stopwatch();

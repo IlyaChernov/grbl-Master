@@ -1,7 +1,6 @@
 ﻿namespace grbl.Master.Model
 {
     using System;
-    using System.Xml.Serialization;
 
     [Serializable]
     public class Macros

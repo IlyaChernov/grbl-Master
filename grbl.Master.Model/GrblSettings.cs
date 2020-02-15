@@ -1,19 +1,13 @@
 ﻿namespace grbl.Master.Model
 {
+    using grbl.Master.Model.Enum;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Threading;
 
-    using grbl.Master.Model.Enum;
-
-    using JetBrains.Annotations;
-
-    public class GrblSettings : INotifyPropertyChanged
+    public class GrblSettings : NotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly SynchronizationContext _uiContext;
 
@@ -73,7 +67,7 @@
                         var index = SettingsList.IndexOf(SettingsList.FirstOrDefault(y => y.Index == setting.Index));
 
                         setting.Type = FindType(setting.Index);
-                        
+
                         if (index >= 0)
                         {
                             SettingsList.RemoveAt(index);
@@ -83,7 +77,7 @@
                         {
                             SettingsList.Add(setting);
                         }
-                        
+
                         OnPropertyChanged(nameof(SettingsList));
                     },
                 null);
@@ -97,12 +91,6 @@
             }
 
             return GrblSettingType.Integer;
-        }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

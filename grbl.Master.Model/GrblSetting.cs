@@ -1,43 +1,21 @@
 ﻿namespace grbl.Master.Model
 {
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-
     using grbl.Master.Model.Enum;
 
-    using JetBrains.Annotations;
+    using PropertyChanged;
 
-    public class GrblSetting : INotifyPropertyChanged
+    public class GrblSetting : NotifyPropertyChanged
     {
         public int Index { get; set; }
 
-        private string _value;
-
-        public string Value
-        {
-            get => _value;
-            set
-            {
-                _value = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(IsModified));
-            }
-        }
-
+        public string Value { get; set; }
         public string OriginalValue { get; set; }
 
+        [DependsOn(nameof(Value), nameof(OriginalValue))]
         public bool IsModified => Value != OriginalValue;
 
         public string Description => Resources.Mssages.ResourceManager.GetString($"Setting:{Index}:Description");
 
         public GrblSettingType Type { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

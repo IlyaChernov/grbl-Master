@@ -1,54 +1,21 @@
 ﻿namespace grbl.Master.Model
 {
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-
-    using JetBrains.Annotations;
-
-    public class Position : INotifyPropertyChanged
+    public class Position : NotifyPropertyChanged
     {
-        private decimal _x;
-        private decimal _y;
-        private decimal _z;
+        public decimal X { get; set; }
 
-        public decimal X
-        {
-            get => _x;
-            set
-            {
-                _x = value;
-                OnPropertyChanged();
-            }
-        }
+        public decimal Y { get; set; }
 
-        public decimal Y
-        {
-            get => _y;
-            set
-            {
-                _y = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public decimal Z
-        {
-            get => _z;
-            set
-            {
-                _z = value;
-                OnPropertyChanged();
-            }
-        }
+        public decimal Z { get; set; }
 
         public static Position operator +(Position first, Position second)
         {
-            return new Position { _x = first._x + second._x, _y = first._y + second._y, _z = first._z + second._z };
+            return new Position { X = first.X + second.X, Y = first.Y + second.Y, Z = first.Z + second.Z };
         }
 
         public static Position operator -(Position first, Position second)
         {
-            return new Position { _x = first._x - second._x, _y = first._y - second._y, _z = first._z - second._z };
+            return new Position { X = first.X - second.X, Y = first.Y - second.Y, Z = first.Z - second.Z };
         }
 
         public void Update(Position newValue)
@@ -56,14 +23,6 @@
             X = newValue.X;
             Y = newValue.Y;
             Z = newValue.Z;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
