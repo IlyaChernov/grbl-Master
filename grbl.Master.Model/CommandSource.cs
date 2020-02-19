@@ -1,21 +1,24 @@
 ﻿namespace grbl.Master.Model
 {
     using grbl.Master.Model.Enum;
+    using PropertyChanged;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
-    
-    public class CommandSource
+
+    public class CommandSource : NotifyPropertyChanged
     {
         private readonly Stopwatch _stopWatch = new Stopwatch();
 
         private bool _needsPurge;
+
         private ConcurrentQueue<string> CommandQueue { get; } = new ConcurrentQueue<string>();
 
         public TimeSpan Elapsed => _stopWatch.Elapsed;
 
+        [DependsOn(nameof(CommandQueue))]
         public int CommandCount => CommandQueue.Count;
 
         public CommandSourceState State { get; internal set; } = CommandSourceState.Stopped;
@@ -37,7 +40,6 @@
             if (State == CommandSourceState.Stopped && _needsPurge)
             {
                 Purge();
-                _stopWatch.Reset();
             }
 
             _stopWatch.Start();
@@ -103,6 +105,8 @@
                 CommandQueue.TryDequeue(out var dummy);
             }
             CommandList.Clear();
+
+            _stopWatch.Reset();
         }
 
         public void Add(string command)

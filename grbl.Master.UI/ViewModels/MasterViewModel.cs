@@ -1,5 +1,15 @@
 ﻿namespace grbl.Master.UI.ViewModels
 {
+    using Caliburn.Micro;
+    using grbl.Master.BL.Interface;
+    using grbl.Master.Model;
+    using grbl.Master.Model.Enum;
+    using grbl.Master.Model.Properties;
+    using grbl.Master.Service.Enum;
+    using grbl.Master.Service.Interface;
+    using grbl.Master.UI.Converters;
+    using grbl.Master.Utilities;
+    using Microsoft.Win32;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -14,18 +24,7 @@
     using System.Threading;
     using System.Windows.Controls;
 
-    using Caliburn.Micro;
-
-    using grbl.Master.BL.Interface;
-    using grbl.Master.Model;
-    using grbl.Master.Model.Enum;
-    using grbl.Master.Model.Properties;
-    using grbl.Master.Service.Enum;
-    using grbl.Master.Service.Interface;
-    using grbl.Master.UI.Converters;
-    using grbl.Master.Utilities;
-
-    using Microsoft.Win32;
+    using Xceed.Wpf.Toolkit;
 
     public class MasterViewModel : Screen
     {
@@ -126,7 +125,7 @@
                     100,
                     500,
                     1000
-                }; 
+                };
 
         public List<double> FeedRates
         {
@@ -306,6 +305,8 @@
 
         public bool CanSetToolLengthOffset => CanGCommand;
 
+        public bool CanSetWorkPos => CanGCommand && _grblStatus.GrblStatusModel.MachineState == MachineState.Idle;
+
         public bool CanSetOffset => CanGCommand;
 
         public bool CanFileOpen => _commandSender.FileCommands.State == CommandSourceState.Stopped;
@@ -399,12 +400,21 @@
             NotifyOfPropertyChange(() => CanReloadFile);
             NotifyOfPropertyChange(() => CanSaveSettings);
             NotifyOfPropertyChange(() => CanRunMacro);
+            NotifyOfPropertyChange(nameof(CanSetWorkPos));
         }
 
         public void SetToolLengthOffset(string val)
         {
             GCommand($"G43.1 Z{val.ToGrblString()}", "$#");
         }
+
+        public void SetWorkPos(string param, Control sender)
+        {
+            var expectedValue = ((CalculatorUpDown)sender).Value;
+
+            GCommand($"G90 G10 L20 P0 {param}{expectedValue.ToString().ToGrblString()}");
+        }
+
 
         public void SetOffset(string param, Control sender, string val)
         {

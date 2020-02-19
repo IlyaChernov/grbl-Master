@@ -1,6 +1,7 @@
 ﻿namespace grbl.Master.BL.Implementation
 {
     using grbl.Master.BL.Interface;
+    using grbl.Master.Model.Enum;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using System;
@@ -21,13 +22,18 @@
             if (e == ConnectionState.Offline)
             {
                 _grblStatus.StopRequesting();
+                _grblStatus.GrblStatusModel.MachineState = MachineState.Offline;
+            }
+            else
+            {
+                _grblStatus.GrblStatusModel.MachineState = MachineState.Online;
             }
         }
 
         private void GrblPromptPromptReceived(object sender, string e)
         {
             _grblStatus.InitialRequest();
-            _grblStatus.StartRequesting(TimeSpan.FromMilliseconds(500), TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2) );
+            _grblStatus.StartRequesting(TimeSpan.FromMilliseconds(500), TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2));
         }
     }
 }

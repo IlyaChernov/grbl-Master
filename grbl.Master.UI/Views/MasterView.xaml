@@ -45,12 +45,20 @@
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
                             <Grid.Resources>
+                                <Style TargetType="xctk:CalculatorUpDown">
+                                    <Setter Property="FontSize" Value="50" />
+                                    <Setter Property="TextAlignment" Value="Right" />
+                                    <Setter Property="VerticalContentAlignment" Value="Top" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                    <!--<Setter Property="IsReadOnly" Value="True" />-->
+                                    <Setter Property="Padding" Value="-10,-15,0,0" />
+                                </Style>
                                 <Style TargetType="TextBox">
                                     <Setter Property="FontSize" Value="50" />
                                     <Setter Property="TextAlignment" Value="Right" />
                                     <Setter Property="VerticalContentAlignment" Value="Top" />
                                     <Setter Property="FontWeight" Value="Bold" />
-                                    <Setter Property="IsReadOnly" Value="True" />
+                                    <!--<Setter Property="IsReadOnly" Value="True" />-->
                                     <Setter Property="Padding" Value="-10,-15,0,0" />
                                 </Style>
                                 <Style TargetType="TextBlock">
@@ -60,7 +68,7 @@
                                     <Setter Property="FontWeight" Value="Bold" />
                                     <Setter Property="TextAlignment" Value="Right" />
                                     <Setter Property="Foreground" Value="DarkGray" />
-                                    <Setter Property="Margin" Value="0,0,5,0" />
+                                    <Setter Property="Margin" Value="0,0,25,0" />
                                 </Style>
                                 <Style TargetType="Label">
                                     <Setter Property="FontSize" Value="50" />
@@ -95,24 +103,20 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="30" />
                             </Grid.ColumnDefinitions>
-
-                            <TextBox Grid.Row="0" Grid.Column="1"
-                                     Text="{Binding GrblStatus.WorkPosition.X}"
-                                     ToolTip="Current X work position" />
+                            <xctk:CalculatorUpDown Grid.Row="0" Grid.Column="1" cal:Message.Attach="[Key Enter] = [Action SetWorkPos('X', $source)]" ShowButtonSpinner="False" ToolTip="Current X work position"
+                                                   Value="{Binding GrblStatus.WorkPosition.X, UpdateSourceTrigger=LostFocus}" />
                             <TextBlock Grid.Row="0" Grid.Column="1"
                                        Text="{Binding GrblStatus.MachinePosition.X}"
                                        ToolTip="Current X machine position" />
 
-                            <TextBox Grid.Row="1" Grid.Column="1"
-                                     Text="{Binding GrblStatus.WorkPosition.Y}"
-                                     ToolTip="Current Y work position" />
+                            <xctk:CalculatorUpDown Grid.Row="1" Grid.Column="1" cal:Message.Attach="[Key Enter] = [Action SetWorkPos('Y', $source)]" ShowButtonSpinner="False" ToolTip="Current Y work position"
+                                                   Value="{Binding GrblStatus.WorkPosition.Y, UpdateSourceTrigger=LostFocus}" />
                             <TextBlock Grid.Row="1" Grid.Column="1"
                                        Text="{Binding GrblStatus.MachinePosition.Y}"
                                        ToolTip="Current Y machine position" />
 
-                            <TextBox Grid.Row="2" Grid.Column="1"
-                                     Text="{Binding GrblStatus.WorkPosition.Z}"
-                                     ToolTip="Current Z work position" />
+                            <xctk:CalculatorUpDown Grid.Row="2" Grid.Column="1" cal:Message.Attach="[Key Enter] = [Action SetWorkPos('Z', $source)]" ShowButtonSpinner="False" ToolTip="Current Z work position"
+                                                   Value="{Binding GrblStatus.WorkPosition.Z, UpdateSourceTrigger=LostFocus}" />
                             <TextBlock Grid.Row="2" Grid.Column="1"
                                        Text="{Binding GrblStatus.MachinePosition.Z}"
                                        ToolTip="Current Z machine position" />
@@ -214,7 +218,10 @@
                                                 <RowDefinition Height="26" />
                                             </Grid.RowDefinitions>
 
-                                            <TextBox x:Name="SelectedJoggingDistance" Grid.Row="1" />
+                                            <!--<TextBox x:Name="SelectedJoggingDistance" Grid.Row="1" />-->
+
+                                            <xctk:CalculatorUpDown Grid.Row="1" ShowButtonSpinner="False"
+                                                                   Value="{Binding SelectedJoggingDistance}" />
                                             <GroupBox Grid.Row="0">
                                                 <GroupBox.Header>
                                                     <TextBlock Margin="-2,0,-4,0" Padding="0" Text="Distance" />
