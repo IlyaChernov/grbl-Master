@@ -405,7 +405,12 @@
 
         public void SetToolLengthOffset(string val)
         {
-            GCommand($"G43.1 Z{val.ToGrblString()}", "$#");
+            if (decimal.TryParse(
+                val.Replace(",", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator).Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator),
+                out var value) && this._grblStatus.GrblStatusModel.ToolLengthOffset != value)
+            {
+                GCommand($"G43.1 Z{val.ToGrblString()}", "$#");
+            }
         }
 
         public void SetWorkPos(string param, Control sender)
