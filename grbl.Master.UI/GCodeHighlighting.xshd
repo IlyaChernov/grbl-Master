@@ -1,0 +1,63 @@
+﻿<SyntaxDefinition name="GCode" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="Gray"/>
+  <Color name="G1" foreground="Orange"/>
+  <!--([XxYyZzFfSsRrIiJjKk])((-?\d+)([,.]\d+)?|([,.]\d+))-->
+  <RuleSet>
+
+    <Rule foreground="Red">
+      ([Xx])((-?\d+)([,.]\d+)?|([,.]\d+))
+    </Rule>
+    <Rule foreground="Green">
+      ([Yy])((-?\d+)([,.]\d+)?|([,.]\d+))
+    </Rule>
+    <Rule foreground="Blue">
+      ([Zz])((-?\d+)([,.]\d+)?|([,.]\d+))
+    </Rule>
+
+    <!--<Rule foreground="Orange" fontWeight="bold">
+      ([Gg])(0?(1|2|90|91))
+    </Rule>-->
+
+    <Rule foreground="LightSalmon" fontWeight="bold">
+      ([Gg])[0-9]+([\,\.][0-9]+)?
+    </Rule>
+
+    <Rule foreground="LightSeaGreen" fontWeight="bold">
+      ([Mm])[0-9]+([\,\.][0-9]+)?
+    </Rule>
+
+    <Rule foreground="DeepPink" >
+      ([Ff])[0-9]+([\,\.][0-9]+)?
+    </Rule>
+
+    <Rule foreground="Magenta">
+      ([Sg])-?[0-9]+([\,\.][0-9]+)?
+    </Rule>
+
+    <Rule foreground="RoyalBlue">
+      ([Pp])-?[0-9]+([\,\.][0-9]+)?
+    </Rule>
+
+    <Rule foreground="Peru">
+      ([Ii])-?[0-9]+([\,\.][0-9]+)?
+    </Rule>
+
+    <Rule foreground="Olive">
+      ([Jj])-?[0-9]+([\,\.][0-9]+)?
+    </Rule>
+
+    <Rule foreground="Brown">
+      ([Kk])-?[0-9]+([\,\.][0-9]+)?
+    </Rule>
+
+    <!--<Rule foreground="Green" fontWeight="bold">
+      ([Gg])(0{1,2})
+    </Rule>-->
+
+    <Rule color="Comment">
+      \(.*\)
+    </Rule>
+
+  </RuleSet>
+
+</SyntaxDefinition>

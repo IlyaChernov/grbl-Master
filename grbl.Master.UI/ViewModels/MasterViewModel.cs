@@ -9,6 +9,9 @@
     using grbl.Master.Service.Interface;
     using grbl.Master.UI.Converters;
     using grbl.Master.Utilities;
+    using ICSharpCode.AvalonEdit.Document;
+    using ICSharpCode.AvalonEdit.Highlighting;
+    using ICSharpCode.AvalonEdit.Highlighting.Xshd;
     using Microsoft.Win32;
     using System;
     using System.Collections.Generic;
@@ -21,9 +24,10 @@
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
+    using System.Reflection;
     using System.Threading;
     using System.Windows.Controls;
-
+    using System.Xml;
     using Xceed.Wpf.Toolkit;
 
     public class MasterViewModel : Screen
@@ -88,7 +92,23 @@
             LoadAppSettings();
         }
 
+        private IHighlightingDefinition _GCodeHighlighting;
 
+        public IHighlightingDefinition GCodeHighlighting
+        {
+            get
+            {
+                return _GCodeHighlighting ??= GetHighlightingDefinition();
+            }
+        }
+
+        private IHighlightingDefinition GetHighlightingDefinition()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using Stream s = assembly.GetManifestResourceStream("grbl.Master.UI.GCodeHighlighting.xshd");
+            using XmlTextReader reader = new XmlTextReader(s);
+            return HighlightingLoader.Load(reader, HighlightingManager.Instance);
+        }
 
         public string FilePath { get; set; }
 
@@ -240,7 +260,9 @@
 
         public ObservableCollection<Command> FileCommandsCollection => _commandSender.FileCommands.CommandList;
 
-        public string FileLines { get; set; } = "";
+        //public string FileLines { get; set; } = "";
+
+        public TextDocument FileData { get; set; } = new TextDocument();
 
         public COMConnectionViewModel ComConnectionViewModel { get; }
 
@@ -311,11 +333,11 @@
 
         public bool CanFileOpen => _commandSender.FileCommands.State == CommandSourceState.Stopped;
 
-        public bool CanStartFileExecution => BasicCanSendCommand && FileLines.Any();
+        public bool CanStartFileExecution => BasicCanSendCommand && FileData.Text.Any(); // FileLines.Any();
 
         public bool CanStartStepFileExecution =>
             BasicCanSendCommand && _commandSender.FileCommands.State != CommandSourceState.Running
-                                     && FileLines.Any();
+                                     && FileData.Text.Any(); //FileLines.Any();
 
         public bool CanPauseFileExecution =>
             BasicCanSendCommand && _commandSender.FileCommands.State == CommandSourceState.Running
@@ -407,7 +429,7 @@
         {
             if (decimal.TryParse(
                 val.Replace(",", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator).Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator),
-                out var value) && this._grblStatus.GrblStatusModel.ToolLengthOffset != value)
+                out var value) && _grblStatus.GrblStatusModel.ToolLengthOffset != value)
             {
                 GCommand($"G43.1 Z{val.ToGrblString()}", "$#");
             }
@@ -560,7 +582,8 @@
             if (_commandSender.FileCommands.State == CommandSourceState.Stopped)
             {
                 _commandSender.FileCommands.Purge();
-                _commandSender.FileCommands.Add(FileLines);
+                //_commandSender.FileCommands.Add(FileLines);
+                _commandSender.FileCommands.Add(FileData.Text);
                 NotifyOfPropertyChange(() => FileLinesCount);
             }
 
@@ -585,10 +608,13 @@
         {
             if (File.Exists(FilePath))
             {
-                FileLines = File.ReadAllText(FilePath);
+                //FileLines = File.ReadAllText(FilePath);
+                FileData = new TextDocument(File.ReadAllText(FilePath));
                 FileState = FileState.Unchanged;
 
-                NotifyOfPropertyChange(() => FileLines);
+
+
+                NotifyOfPropertyChange(() => FileData);
                 NotifyOfPropertyChange(nameof(FileState));
                 NotifyCanCommands();
             }
