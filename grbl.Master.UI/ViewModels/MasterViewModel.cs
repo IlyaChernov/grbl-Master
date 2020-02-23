@@ -329,6 +329,8 @@
 
         public bool CanSetWorkPos => CanGCommand && _grblStatus.GrblStatusModel.MachineState == MachineState.Idle;
 
+        public bool CanAccessoryState => _grblStatus.GrblStatusModel.MachineState == MachineState.Hold;
+
         public bool CanSetOffset => CanGCommand;
 
         public bool CanFileOpen => _commandSender.FileCommands.State == CommandSourceState.Stopped;
@@ -423,6 +425,7 @@
             NotifyOfPropertyChange(() => CanSaveSettings);
             NotifyOfPropertyChange(() => CanRunMacro);
             NotifyOfPropertyChange(nameof(CanSetWorkPos));
+            NotifyOfPropertyChange(nameof(CanAccessoryState));
         }
 
         public void SetToolLengthOffset(string val)

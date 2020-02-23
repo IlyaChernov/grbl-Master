@@ -1043,7 +1043,7 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
-                                    <GroupBox Header="Accessory">
+                                    <GroupBox Header="Accessory" IsEnabled="{Binding CanAccessoryState}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition />
@@ -1053,19 +1053,41 @@
                                             <Button Grid.Column="0" cal:Message.Attach="RealtimeIntCommand(158)" Content="Spindle stop">
                                                 <Button.Style>
                                                     <Style TargetType="Button">
+                                                        <Setter Property="Background" Value="Transparent" />
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding GrblStatus}" Value="false">
-                                                                <Setter Property="Foreground" Value="Black" />
+                                                            <DataTrigger Binding="{Binding GrblStatus.AccessoryState.Spindle}" Value="M5">
+                                                                <Setter Property="Background" Value="OrangeRed" />
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding}" Value="true">
-                                                                <Setter Property="Foreground" Value="Green" />
+
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button Grid.Column="1" cal:Message.Attach="RealtimeIntCommand(160)" Content="Flood">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Background" Value="Transparent" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding GrblStatus.AccessoryState.Flood}" Value="True">
+                                                                <Setter Property="Background" Value="OrangeRed" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Button.Style>
                                             </Button>
-                                            <Button Grid.Column="1" cal:Message.Attach="RealtimeIntCommand(160)" Content="Flood" />
-                                            <Button Grid.Column="2" cal:Message.Attach="RealtimeIntCommand(161)" Content="Mist" />
+                                            <Button Grid.Column="2" cal:Message.Attach="RealtimeIntCommand(161)" Content="Mist">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Background" Value="Transparent" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding GrblStatus.AccessoryState.Mist}" Value="True">
+                                                                <Setter Property="Background" Value="OrangeRed" />
+                                                            </DataTrigger>
+
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
                                         </Grid>
                                     </GroupBox>
 
