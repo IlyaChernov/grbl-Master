@@ -8,7 +8,7 @@
 
     public class MacroService : IMacroService
     {
-        public ObservableCollection<Macros> Macroses { get; internal set; }// = new ObservableCollection<Macros> { new Macros { Name = "Test1", Command = "M0" }, new Macros { Name = "Test2", Command = "M0" } };
+        public ObservableCollection<Macros> Macroses { get; internal set; }
 
         public void SaveMacroses()
         {
@@ -31,7 +31,10 @@
 
         public void LoadMacroses()
         {
-            Macroses = Model.Properties.Settings.Default.MacrosesXML.XmlDeserialize<ObservableCollection<Macros>>();
+            if (!string.IsNullOrEmpty(Model.Properties.Settings.Default.MacrosesXML))
+            {
+                Macroses = Model.Properties.Settings.Default.MacrosesXML.XmlDeserialize<ObservableCollection<Macros>>();
+            }
         }
     }
 }
