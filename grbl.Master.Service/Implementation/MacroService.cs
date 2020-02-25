@@ -8,7 +8,7 @@
 
     public class MacroService : IMacroService
     {
-        public ObservableCollection<Macros> Macroses { get; internal set; }
+        public ObservableCollection<Macros> Macroses { get; internal set; } = new ObservableCollection<Macros>();
 
         public void SaveMacroses()
         {
