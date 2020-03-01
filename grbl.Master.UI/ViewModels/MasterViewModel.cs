@@ -71,6 +71,7 @@
             _commandSender = commandSender;
             _macroService = macroService;
 
+            _macroService.Upgrade();
             _macroService.LoadMacroses();
 
             _grblStatus.GrblStatusModel.MachineStateChanged += GrblStatusModelMachineStateChanged;

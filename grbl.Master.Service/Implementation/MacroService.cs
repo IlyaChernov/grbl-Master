@@ -10,6 +10,12 @@
     {
         public ObservableCollection<Macros> Macroses { get; internal set; } = new ObservableCollection<Macros>();
 
+        public void Upgrade()
+        {
+            Model.Properties.Settings.Default.Upgrade();
+            Model.Properties.Settings.Default.Reload();
+        }
+
         public void SaveMacroses()
         {
             var index = 0;

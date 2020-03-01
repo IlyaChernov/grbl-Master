@@ -1,6 +1,5 @@
 ﻿namespace grbl.Master.Service.Interface
 {
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
     using grbl.Master.Model;
@@ -9,6 +8,7 @@
     {
         ObservableCollection<Macros> Macroses { get; }
 
+        void Upgrade();
         void SaveMacroses();
 
         void DeleteMacros(Macros mcrs);
