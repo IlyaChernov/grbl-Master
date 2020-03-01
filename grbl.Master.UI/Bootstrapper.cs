@@ -8,6 +8,8 @@ using System.Windows.Input;
 
 namespace grbl.Master.UI
 {
+    using Bluegrams.Application;
+
     using grbl.Master.BL.Implementation;
     using grbl.Master.BL.Interface;
     using grbl.Master.Service.Implementation;
@@ -43,12 +45,13 @@ namespace grbl.Master.UI
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            PortableSettingsProvider.ApplyProvider(Model.Properties.Settings.Default);
             DisplayRootViewFor<MasterViewModel>();
         }
 
         protected override void Configure()
         {
-            base.Configure();            
+            base.Configure();
 
             _container.RegisterSingleton(typeof(IGrblDispatcher), null, typeof(GrblDispatcher));
 
