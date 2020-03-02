@@ -3,29 +3,31 @@ using System.Collections.Generic;
 
 namespace grbl.Master.UI.ViewModels
 {
-    using System.Windows;
-
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
+    using System.Windows;
 
     public class COMConnectionViewModel : Screen
     {
         private readonly IComService _comService;
+
+        private readonly IApplicationSettingsService _applicationSettingsService;
         private BindableCollection<string> _comPorts = new BindableCollection<string>();
         private BindableCollection<string> _receivedData = new BindableCollection<string>();
         private List<int> _baudRates = new List<int> { 9600, 115200 };
 
-        public COMConnectionViewModel(IComService comService)
+        public COMConnectionViewModel(IComService comService, IApplicationSettingsService applicationSettingsService)
         {
             _comService = comService;
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
+            _applicationSettingsService = applicationSettingsService;
             ReloadComPorts();
         }
 
-        private void  ComServiceConnectionStateChanged(object sender, ConnectionState e)
+        private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
         {
             NotifyOfPropertyChange(() => ConnectButtonCaption);
-            NotifyOfPropertyChange(()=> CanChangePortBaud);
+            NotifyOfPropertyChange(() => CanChangePortBaud);
         }
 
         public BindableCollection<string> ComPorts
@@ -62,28 +64,24 @@ namespace grbl.Master.UI.ViewModels
 
         public int SelectedBaudRate
         {
-            get => Model.Properties.Settings.Default.SelectedBaudRate;
+            get => _applicationSettingsService.Settings.SelectedBaudRate;
             set
             {
-                Model.Properties.Settings.Default.SelectedBaudRate = value;
-                Model.Properties.Settings.Default.Save();
-                Model.Properties.Settings.Default.Reload();
+                _applicationSettingsService.Settings.SelectedBaudRate = value;
+                _applicationSettingsService.Save();
 
-                NotifyOfPropertyChange(() => SelectedBaudRate);
                 NotifyOfPropertyChange(() => CanConnect);
             }
         }
 
         public string SelectedComPort
         {
-            get => Model.Properties.Settings.Default.SelectedComPort;
+            get => _applicationSettingsService.Settings.SelectedComPort;
             set
             {
-                Model.Properties.Settings.Default.SelectedComPort = value;
-                Model.Properties.Settings.Default.Save();
-                Model.Properties.Settings.Default.Reload();
+                _applicationSettingsService.Settings.SelectedComPort = value;
+                _applicationSettingsService.Save();
 
-                NotifyOfPropertyChange(() => SelectedComPort);
                 NotifyOfPropertyChange(() => CanConnect);
             }
         }

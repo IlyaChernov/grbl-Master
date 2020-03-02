@@ -4,10 +4,8 @@
     using grbl.Master.BL.Interface;
     using grbl.Master.Model;
     using grbl.Master.Model.Enum;
-    using grbl.Master.Model.Properties;
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
-    using grbl.Master.UI.Converters;
     using grbl.Master.Utilities;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Highlighting;
@@ -45,7 +43,7 @@
 
         private readonly Subject<Unit> _jogStopSubject = new Subject<Unit>();
 
-        private readonly IMacroService _macroService;
+        private readonly IApplicationSettingsService _applicationSettingsService;
 
         private int _joggingCount;
 
@@ -62,17 +60,17 @@
             IGrblStatus grblStatus,
             ICommandSender commandSender,
             IGrblDispatcher grblDispatcher,
-            IMacroService macroService)
+            IApplicationSettingsService applicationSettingsService)
         {
             _grblDispatcher = grblDispatcher;
-            ComConnectionViewModel = new COMConnectionViewModel(comService);
+            _applicationSettingsService = applicationSettingsService;
+            _applicationSettingsService.Upgrade();
+            _applicationSettingsService.Load();
+
+            ComConnectionViewModel = new COMConnectionViewModel(comService, applicationSettingsService);
             _comService = comService;
             _grblStatus = grblStatus;
             _commandSender = commandSender;
-            _macroService = macroService;
-
-            _macroService.Upgrade();
-            _macroService.LoadMacroses();
 
             _grblStatus.GrblStatusModel.MachineStateChanged += GrblStatusModelMachineStateChanged;
             _grblStatus.GrblStatusModel.PropertyChanged += GrblStatusModelPropertyChanged;
@@ -89,8 +87,6 @@
                 };
 
             StartNotifications();
-
-            LoadAppSettings();
         }
 
         private IHighlightingDefinition _GCodeHighlighting;
@@ -115,102 +111,27 @@
 
         public FileState FileState { get; set; }
 
-        private List<double> _joggingDistances =
-            new List<double>
-                {
-                    0.01,
-                    0.1,
-                    1,
-                    5,
-                    10,
-                    100
-                };
-
-        public List<double> JoggingDistances
+        public ObservableCollection<double> JoggingDistances
         {
-            get => _joggingDistances;
+            get => _applicationSettingsService.Settings.JoggingDistances;
             set
             {
-                _joggingDistances = value;
-                SaveAppSettings();
-                NotifyOfPropertyChange(nameof(JoggingDistances));
+                _applicationSettingsService.Settings.JoggingDistances = value;
+                _applicationSettingsService.Save();
             }
         }
 
-        private List<double> _feedRates =
-            new List<double>
-                {
-                    5,
-                    10,
-                    50,
-                    100,
-                    500,
-                    1000
-                };
-
-        public List<double> FeedRates
+        public ObservableCollection<double> FeedRates
         {
-            get => _feedRates;
+            get => _applicationSettingsService.Settings.FeedRates;
             set
             {
-                _feedRates = value;
-                SaveAppSettings();
-                NotifyOfPropertyChange(nameof(FeedRates));
+                _applicationSettingsService.Settings.FeedRates = value;
+                _applicationSettingsService.Save();
             }
         }
 
-        private void LoadAppSettings()
-        {
-            if (Settings.Default.JoggingDistances.Length > 0)
-            {
-                try
-                {
-                    _joggingDistances = Settings.Default.JoggingDistances.Split(
-                        new[] { Environment.NewLine },
-                        StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToList();
-                    NotifyOfPropertyChange(nameof(JoggingDistances));
-                }
-                catch
-                {
-                    SaveAppSettings();
-                }
-            }
-
-            if (Settings.Default.JoggingSpeeds.Length > 0)
-            {
-                try
-                {
-                    _feedRates = Settings.Default.JoggingSpeeds.Split(
-                        new[] { Environment.NewLine },
-                        StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToList();
-                    NotifyOfPropertyChange(nameof(FeedRates));
-                }
-                catch
-                {
-                    SaveAppSettings();
-                }
-            }
-        }
-
-        private void SaveAppSettings()
-        {
-            var converter = new ListDoubleToString();
-            Settings.Default.JoggingDistances = converter.Convert(
-                JoggingDistances,
-                typeof(string),
-                null,
-                CultureInfo.CurrentCulture) as string;
-
-            Settings.Default.JoggingSpeeds = converter.Convert(
-                                                 FeedRates,
-                                                    typeof(string),
-                                                    null,
-                                                    CultureInfo.CurrentCulture) as string;
-            Settings.Default.Save();
-            Settings.Default.Reload();
-        }
-
-        public ObservableCollection<Macros> Macroses => _macroService.Macroses;
+        public ObservableCollection<Macros> Macroses => _applicationSettingsService.Settings.Macroses;
 
         public TimeSpan Elapsed => _commandSender.FileCommands.Elapsed;
 
@@ -267,17 +188,7 @@
 
         public COMConnectionViewModel ComConnectionViewModel { get; }
 
-        public List<string> Mask8Items { get; } = new List<string>
-                                                      {
-                                                          "0",
-                                                          "1",
-                                                          "2",
-                                                          "3",
-                                                          "4",
-                                                          "5",
-                                                          "6",
-                                                          "7"
-                                                      };
+        public List<string> Mask8Items { get; } = new List<string> { "0", "1", "2", "3", "4", "5", "6", "7" };
 
         public List<string> Mask3Items { get; } = new List<string> { "0", "1", "2" };
 
@@ -393,6 +304,8 @@
 
         private void StartNotifications()
         {
+            NotifyOfPropertyChange(nameof(ApplicationSettings));
+
             Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(1)). /*TakeUntil(_stopSubject).*/
                 Subscribe(l => { NotifyOfPropertyChange(nameof(Elapsed)); });
         }
@@ -638,7 +551,8 @@
 
         public void DeleteMacro(Macros macro)
         {
-            _macroService.DeleteMacros(macro);
+            _applicationSettingsService.Settings.Macroses.Remove(macro);
+            _applicationSettingsService.Save();
         }
 
         public void EditMacro(Macros macro)
@@ -648,10 +562,10 @@
 
         public void SaveMacro(Macros macro)
         {
-            if (_macroService.Macroses.Any(x => x.Index == macro.Index) && macro.Index >= 0)
-                _macroService.Macroses.RemoveAt(macro.Index);
-            _macroService.Macroses.Insert(Math.Max(0, macro.Index), macro);
-            _macroService.SaveMacroses();
+            if (_applicationSettingsService.Settings.Macroses.Any(x => x.Index == macro.Index) && macro.Index >= 0)
+                _applicationSettingsService.Settings.Macroses.RemoveAt(macro.Index);
+            _applicationSettingsService.Settings.Macroses.Insert(Math.Max(0, macro.Index), macro);
+            _applicationSettingsService.Save();
             CancelMacro();
         }
 
@@ -667,22 +581,22 @@
 
         public void UpMacro(Macros macro)
         {
-            if (_macroService.Macroses.Any(x => x.Index == macro.Index) && macro.Index > 0)
+            if (_applicationSettingsService.Settings.Macroses.Any(x => x.Index == macro.Index) && macro.Index > 0)
             {
-                _macroService.Macroses.RemoveAt(macro.Index);
-                _macroService.Macroses.Insert(Math.Max(0, macro.Index - 1), macro);
-                _macroService.SaveMacroses();
+                _applicationSettingsService.Settings.Macroses.RemoveAt(macro.Index);
+                _applicationSettingsService.Settings.Macroses.Insert(Math.Max(0, macro.Index - 1), macro);
+                _applicationSettingsService.Save();
             }
         }
 
         public void DownMacro(Macros macro)
         {
-            if (_macroService.Macroses.Any(x => x.Index == macro.Index)
-                && macro.Index < _macroService.Macroses.Max(x => x.Index))
+            if (_applicationSettingsService.Settings.Macroses.Any(x => x.Index == macro.Index)
+                && macro.Index < _applicationSettingsService.Settings.Macroses.Max(x => x.Index))
             {
-                _macroService.Macroses.RemoveAt(macro.Index);
-                _macroService.Macroses.Insert(Math.Max(0, macro.Index + 1), macro);
-                _macroService.SaveMacroses();
+                _applicationSettingsService.Settings.Macroses.RemoveAt(macro.Index);
+                _applicationSettingsService.Settings.Macroses.Insert(Math.Max(0, macro.Index + 1), macro);
+                _applicationSettingsService.Save();
             }
         }
 

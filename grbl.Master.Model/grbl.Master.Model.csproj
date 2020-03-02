@@ -80,6 +80,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationSettings.cs" />
     <Compile Include="Attribute\ChangeCommandAttribute.cs" />
     <Compile Include="Attribute\CharListAttribute.cs" />
     <Compile Include="Attribute\ExpectedResponseAttribute.cs" />

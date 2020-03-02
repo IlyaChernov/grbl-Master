@@ -15,22 +15,15 @@
                                                                      {
                                                                          {
                                                                              GrblSettingType.Integer,
-                                                                             new[]
-                                                                                 {
-                                                                                     0, 1, 26, 30, 31
-                                                                                 }
+                                                                             new[]{0, 1, 26, 30, 31}
                                                                          },
                                                                          {
                                                                              GrblSettingType.Boolean,
-                                                                             new[]
-                                                                                 {
-                                                                                     4, 5, 6, 13, 20, 21, 22, 32
-                                                                                 }
+                                                                             new[]{4, 5, 6, 13, 20, 21, 22, 32}
                                                                          },
                                                                          {
                                                                              GrblSettingType.Decimal,
-                                                                             new[]
-                                                                                 {
+                                                                             new[]{
                                                                                      11, 12, 24, 25, 27, 100, 101, 102,
                                                                                      110, 111, 112, 120, 121, 122, 130,
                                                                                      131, 132
@@ -38,17 +31,11 @@
                                                                          },
                                                                          {
                                                                              GrblSettingType.Mask3,
-                                                                             new[]
-                                                                                 {
-                                                                                     10
-                                                                                 }
+                                                                             new[]{10}
                                                                          },
                                                                          {
                                                                              GrblSettingType.Mask8,
-                                                                             new[]
-                                                                                 {
-                                                                                     2, 3, 23
-                                                                                 }
+                                                                             new[]{2, 3, 23}
                                                                          }
                                                                      };
 
