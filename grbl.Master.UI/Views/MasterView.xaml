@@ -671,13 +671,13 @@
                                         <Button.Style>
                                             <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding FileState}" Value="Unchanged">
+                                                    <DataTrigger Binding="{Binding GCodeFile.FileState}" Value="Unchanged">
                                                         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding FileState}" Value="Deleted">
+                                                    <DataTrigger Binding="{Binding GCodeFile.FileState}" Value="Deleted">
                                                         <Setter Property="Background" Value="Red" />
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding FileState}" Value="Updated">
+                                                    <DataTrigger Binding="{Binding GCodeFile.FileState}" Value="Updated">
                                                         <Setter Property="Background" Value="Orange" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -690,13 +690,13 @@
                                     <StackPanel.Resources>
                                         <Style TargetType="materialDesign:PackIcon">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding FileState}" Value="Unchanged">
+                                                <DataTrigger Binding="{Binding GCodeFile.FileState}" Value="Unchanged">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding FileState}" Value="Deleted">
+                                                <DataTrigger Binding="{Binding GCodeFile.FileState}" Value="Deleted">
                                                     <Setter Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding FileState}" Value="Updated">
+                                                <DataTrigger Binding="{Binding GCodeFile.FileState}" Value="Updated">
                                                     <Setter Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -705,13 +705,13 @@
                                     <StackPanel.Style>
                                         <Style TargetType="StackPanel">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding FileState}" Value="Unchanged">
+                                                <DataTrigger Binding="{Binding GCodeFile.FileState}" Value="Unchanged">
                                                     <Setter Property="Background" Value="Transparent" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding FileState}" Value="Deleted">
+                                                <DataTrigger Binding="{Binding GCodeFile.FileState}" Value="Deleted">
                                                     <Setter Property="Background" Value="Red" />
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding FileState}" Value="Updated">
+                                                <DataTrigger Binding="{Binding GCodeFile.FileState}" Value="Updated">
                                                     <Setter Property="Background" Value="Orange" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -719,8 +719,8 @@
                                     </StackPanel.Style>
                                     <materialDesign:PackIcon Width="20" Height="20" Kind="FileWarning" />
                                     <Label Padding="2" VerticalContentAlignment="Center"
-                                           Content="{Binding FilePath}"
-                                           ToolTip="{Binding FilePath}" />
+                                           Content="{Binding GCodeFile.FilePath}"
+                                           ToolTip="{Binding GCodeFile.FilePath}" />
                                 </StackPanel>
                                 <ProgressBar Grid.Row="2" Margin="1" Background="White"
                                              Maximum="{Binding FileLinesCount, Mode=OneWay}"
@@ -784,11 +784,7 @@
                                         </ListView>
                                     </TabItem>
                                     <TabItem Width="100" Header="File data">
-                                        <!--<TextBox AcceptsReturn="True" HorizontalScrollBarVisibility="Auto"
-                                                 Text="{Binding FileLines}"
-                                                 VerticalScrollBarVisibility="Auto" />-->
-
-                                        <avalonEdit:TextEditor Document="{Binding FileData}"
+                                        <avalonEdit:TextEditor Document="{Binding GCodeFile.FileData}"
                                                                HorizontalScrollBarVisibility="Auto" LineNumbersForeground="Black" ShowLineNumbers="True"
                                                                SyntaxHighlighting="{Binding GCodeHighlighting, Mode=OneTime}"
                                                                VerticalScrollBarVisibility="Auto" />

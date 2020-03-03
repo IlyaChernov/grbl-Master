@@ -34,6 +34,9 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=6.0.1.278, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.6.0.1\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="Meziantou.Framework.WPF, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Meziantou.Framework.WPF.1.1.0\lib\net461\Meziantou.Framework.WPF.dll</HintPath>
     </Reference>
@@ -73,11 +76,13 @@
   <ItemGroup>
     <Compile Include="Enum\EnumHelper.cs" />
     <Compile Include="Enum\ConnectionState.cs" />
+    <Compile Include="Implementation\GCodeFileService.cs" />
     <Compile Include="Implementation\GrblCommandPreProcessor.cs" />
     <Compile Include="Implementation\CommandSender.cs" />
     <Compile Include="Implementation\COMService.cs" />
     <Compile Include="Implementation\GrblResponseTypeFinder.cs" />
     <Compile Include="Implementation\ApplicationSettingsService.cs" />
+    <Compile Include="Interface\IGCodeFileService.cs" />
     <Compile Include="Interface\ICommandSender.cs" />
     <Compile Include="Interface\ICOMService.cs" />
     <Compile Include="Interface\IGrblCommandPreProcessor.cs" />

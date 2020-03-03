@@ -8,9 +8,6 @@
 
         void Upgrade();
         void Save();
-
-        //void DeleteMacros(Macros mcrs);
-
         void Load();
     }
 }

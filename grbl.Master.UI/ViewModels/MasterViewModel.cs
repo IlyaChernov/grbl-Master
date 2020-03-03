@@ -7,7 +7,6 @@
     using grbl.Master.Service.Enum;
     using grbl.Master.Service.Interface;
     using grbl.Master.Utilities;
-    using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Highlighting;
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
     using Microsoft.Win32;
@@ -34,8 +33,6 @@
 
         private readonly IComService _comService;
 
-        private readonly FileSystemWatcher _fileSystemWatcher = new FileSystemWatcher();
-
         [SuppressMessage("ReSharper", "NotAccessedField.Local")]
         private readonly IGrblDispatcher _grblDispatcher;
 
@@ -44,6 +41,8 @@
         private readonly Subject<Unit> _jogStopSubject = new Subject<Unit>();
 
         private readonly IApplicationSettingsService _applicationSettingsService;
+
+        private readonly IGCodeFileService _gCodeFileService;
 
         private int _joggingCount;
 
@@ -60,7 +59,8 @@
             IGrblStatus grblStatus,
             ICommandSender commandSender,
             IGrblDispatcher grblDispatcher,
-            IApplicationSettingsService applicationSettingsService)
+            IApplicationSettingsService applicationSettingsService,
+            IGCodeFileService gCodeFileService)
         {
             _grblDispatcher = grblDispatcher;
             _applicationSettingsService = applicationSettingsService;
@@ -71,15 +71,12 @@
             _comService = comService;
             _grblStatus = grblStatus;
             _commandSender = commandSender;
+            _gCodeFileService = gCodeFileService;
 
             _grblStatus.GrblStatusModel.MachineStateChanged += GrblStatusModelMachineStateChanged;
             _grblStatus.GrblStatusModel.PropertyChanged += GrblStatusModelPropertyChanged;
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
-            _fileSystemWatcher.Deleted += FileSystemWatcherDeleted;
-            _fileSystemWatcher.Created += FileSystemWatcherCreated;
-            _fileSystemWatcher.Renamed += FileSystemWatcherRenamed;
-            _fileSystemWatcher.Changed += FileSystemWatcherChanged;
 
             _commandSender.FileCommands.CommandList.CollectionChanged += (sender, args) =>
                 {
@@ -106,10 +103,6 @@
             using XmlTextReader reader = new XmlTextReader(s);
             return HighlightingLoader.Load(reader, HighlightingManager.Instance);
         }
-
-        public string FilePath { get; set; }
-
-        public FileState FileState { get; set; }
 
         public ObservableCollection<double> JoggingDistances
         {
@@ -182,9 +175,7 @@
 
         public ObservableCollection<Command> FileCommandsCollection => _commandSender.FileCommands.CommandList;
 
-        //public string FileLines { get; set; } = "";
-
-        public TextDocument FileData { get; set; } = new TextDocument();
+        public GCodeFile GCodeFile => _gCodeFileService.File;
 
         public COMConnectionViewModel ComConnectionViewModel { get; }
 
@@ -247,11 +238,11 @@
 
         public bool CanFileOpen => _commandSender.FileCommands.State == CommandSourceState.Stopped;
 
-        public bool CanStartFileExecution => BasicCanSendCommand && FileData.Text.Any(); // FileLines.Any();
+        public bool CanStartFileExecution => BasicCanSendCommand && _gCodeFileService.File.FileData.Text.Any();
 
         public bool CanStartStepFileExecution =>
             BasicCanSendCommand && _commandSender.FileCommands.State != CommandSourceState.Running
-                                     && FileData.Text.Any(); //FileLines.Any();
+                                     && _gCodeFileService.File.FileData.Text.Any();
 
         public bool CanPauseFileExecution =>
             BasicCanSendCommand && _commandSender.FileCommands.State == CommandSourceState.Running
@@ -260,47 +251,11 @@
         public bool CanStopFileExecution => _commandSender.FileCommands.State != CommandSourceState.Stopped;
 
         public bool CanReloadFile =>
-            _commandSender.FileCommands.State == CommandSourceState.Stopped && File.Exists(FilePath);
+            _commandSender.FileCommands.State == CommandSourceState.Stopped && File.Exists(_gCodeFileService.File.FilePath);
 
         public bool CanSaveSettings => BasicCanSendCommand;
 
         public bool CanRunMacro => BasicCanSendCommand;
-
-        private void FileSystemWatcherRenamed(object sender, RenamedEventArgs e)
-        {
-            if (e.OldName == Path.GetFileName(FilePath))
-            {
-                FileState = FileState.Deleted;
-                NotifyOfPropertyChange(nameof(FileState));
-            }
-        }
-
-        private void FileSystemWatcherCreated(object sender, FileSystemEventArgs e)
-        {
-            if (e.Name == Path.GetFileName(FilePath))
-            {
-                FileState = FileState.Updated;
-                NotifyOfPropertyChange(nameof(FileState));
-            }
-        }
-
-        private void FileSystemWatcherDeleted(object sender, FileSystemEventArgs e)
-        {
-            if (e.Name == Path.GetFileName(FilePath))
-            {
-                FileState = FileState.Deleted;
-                NotifyOfPropertyChange(nameof(FileState));
-            }
-        }
-
-        private void FileSystemWatcherChanged(object sender, FileSystemEventArgs e)
-        {
-            if (e.Name == Path.GetFileName(FilePath))
-            {
-                FileState = FileState.Updated;
-                NotifyOfPropertyChange(nameof(FileState));
-            }
-        }
 
         private void StartNotifications()
         {
@@ -474,12 +429,8 @@
             };
             if (openFileDialog.ShowDialog() == true && File.Exists(openFileDialog.FileName))
             {
-                FilePath = openFileDialog.FileName;
-                _fileSystemWatcher.Path = Path.GetDirectoryName(FilePath);
-                FileState = FileState.Unchanged;
-                _fileSystemWatcher.EnableRaisingEvents = true;
-                NotifyOfPropertyChange(nameof(FilePath));
-                ReloadFile();
+                _gCodeFileService.Load(openFileDialog.FileName);
+                NotifyOfPropertyChange(nameof(GCodeFile));
                 NotifyCanCommands();
             }
         }
@@ -499,8 +450,7 @@
             if (_commandSender.FileCommands.State == CommandSourceState.Stopped)
             {
                 _commandSender.FileCommands.Purge();
-                //_commandSender.FileCommands.Add(FileLines);
-                _commandSender.FileCommands.Add(FileData.Text);
+                _commandSender.FileCommands.Add(_gCodeFileService.File.FileData.Text);
                 NotifyOfPropertyChange(() => FileLinesCount);
             }
 
@@ -523,18 +473,9 @@
 
         public void ReloadFile()
         {
-            if (File.Exists(FilePath))
-            {
-                //FileLines = File.ReadAllText(FilePath);
-                FileData = new TextDocument(File.ReadAllText(FilePath));
-                FileState = FileState.Unchanged;
-
-
-
-                NotifyOfPropertyChange(() => FileData);
-                NotifyOfPropertyChange(nameof(FileState));
-                NotifyCanCommands();
-            }
+            _gCodeFileService.Load(this._gCodeFileService.File.FilePath);
+            NotifyOfPropertyChange(nameof(GCodeFile));
+            NotifyCanCommands();
         }
 
         public void ResetGrbl()
