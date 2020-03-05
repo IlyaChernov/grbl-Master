@@ -1113,7 +1113,7 @@
                                             <Button Grid.Row="0" Grid.Column="1" cal:Message.Attach="RealtimeIntCommand(145)">
                                                 +10
                                             </Button>
-                                            <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" cal:Message.Attach="RealtimeIntCommand(144)">
+                                            <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" cal:Message.Attach="RealtimeIntCommand(144)" ToolTip="Reset">
                                                 <materialDesign:PackIcon Width="36" Height="36" Kind="Restart" />
                                             </Button>
                                         </Grid>
@@ -1165,7 +1165,7 @@
                                             <Button Grid.Row="0" Grid.Column="1" cal:Message.Attach="RealtimeIntCommand(154)">
                                                 +10
                                             </Button>
-                                            <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" cal:Message.Attach="RealtimeIntCommand(153)">
+                                            <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" cal:Message.Attach="RealtimeIntCommand(153)" ToolTip="Reset">
                                                 <materialDesign:PackIcon Width="36" Height="36" Kind="Restart" />
                                             </Button>
                                         </Grid>
