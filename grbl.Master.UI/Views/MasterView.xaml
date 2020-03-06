@@ -854,7 +854,7 @@
                                 </DataTemplate>
                             </TabItem.Resources>
                             <DockPanel>
-                                <Grid Height="300" DockPanel.Dock="Bottom"
+                                <Grid Height="400" DockPanel.Dock="Bottom"
                                       Visibility="{Binding IsMacrosSelected, Converter={StaticResource BoolToVis}, FallbackValue=Visible}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
@@ -866,15 +866,14 @@
                                         <RowDefinition Height="26" />
                                         <RowDefinition Height="26" />
                                         <RowDefinition />
-                                        <RowDefinition Height="30" />
                                     </Grid.RowDefinitions>
                                     <Label Grid.ColumnSpan="3">Name:</Label>
                                     <TextBox Grid.Row="1" Grid.Column="0"
                                              Text="{Binding MacrosSelected.Name}" />
                                     <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
-                                        Command:
+                                        Macros body:
                                     </Label>
-                                    <avalonEdit:TextEditor Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Auto" LineNumbersForeground="Black" ShowLineNumbers="True"
+                                    <avalonEdit:TextEditor Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Auto" LineNumbersForeground="Black" ShowLineNumbers="True"
                                                            SyntaxHighlighting="{Binding GCodeHighlighting, Mode=OneTime}"
                                                            VerticalScrollBarVisibility="Auto">
                                         <i:Interaction.Behaviors>
