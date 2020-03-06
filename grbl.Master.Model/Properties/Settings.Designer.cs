@@ -82,5 +82,29 @@ namespace grbl.Master.Model.Properties {
                 this["JoggingSpeeds"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public double JoggingDistance {
+            get {
+                return ((double)(this["JoggingDistance"]));
+            }
+            set {
+                this["JoggingDistance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public double JoggingSpeed {
+            get {
+                return ((double)(this["JoggingSpeed"]));
+            }
+            set {
+                this["JoggingSpeed"] = value;
+            }
+        }
     }
 }

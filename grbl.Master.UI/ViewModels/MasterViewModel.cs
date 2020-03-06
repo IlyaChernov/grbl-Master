@@ -50,9 +50,9 @@
 
         private string _manualCommand;
 
-        private double _selectedFeedRate = 1000;
+        //private double _selectedFeedRate = 1000;
 
-        private double _selectedJoggingDistance = 10;
+        //private double _selectedJoggingDistance = 10;
 
         public MasterViewModel(
             IComService comService,
@@ -143,20 +143,22 @@
 
         public double SelectedJoggingDistance
         {
-            get => _selectedJoggingDistance;
+            get => _applicationSettingsService.Settings.JoggingDistance;
             set
             {
-                _selectedJoggingDistance = value;
+                _applicationSettingsService.Settings.JoggingDistance = value;
+                _applicationSettingsService.Save();
                 NotifyOfPropertyChange(() => SelectedJoggingDistance);
             }
         }
 
         public double SelectedFeedRate
         {
-            get => _selectedFeedRate;
+            get => _applicationSettingsService.Settings.FeedRate;
             set
             {
-                _selectedFeedRate = value;
+                _applicationSettingsService.Settings.FeedRate = value;
+                _applicationSettingsService.Save();
                 NotifyOfPropertyChange(() => SelectedFeedRate);
             }
         }

@@ -37,6 +37,10 @@
 
             Model.Properties.Settings.Default.SelectedComPort = Settings.SelectedComPort;
 
+            Model.Properties.Settings.Default.JoggingDistance = Settings.JoggingDistance;
+
+            Model.Properties.Settings.Default.JoggingSpeed = Settings.FeedRate;
+
             Model.Properties.Settings.Default.Save();
             Model.Properties.Settings.Default.Reload();
         }
@@ -105,6 +109,10 @@
             Settings.SelectedBaudRate = Model.Properties.Settings.Default.SelectedBaudRate;
 
             Settings.SelectedComPort = Model.Properties.Settings.Default.SelectedComPort;
+
+            Settings.JoggingDistance = Model.Properties.Settings.Default.JoggingDistance;
+
+            Settings.FeedRate = Model.Properties.Settings.Default.JoggingSpeed;
         }
     }
 }
