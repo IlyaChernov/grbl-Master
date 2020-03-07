@@ -475,7 +475,7 @@
 
         public void ReloadFile()
         {
-            _gCodeFileService.Load(this._gCodeFileService.File.FilePath);
+            _gCodeFileService.Load(_gCodeFileService.File.FilePath);
             NotifyOfPropertyChange(nameof(GCodeFile));
             NotifyCanCommands();
         }
@@ -488,7 +488,7 @@
 
         public void RunMacro(Macros macro)
         {
-            var lines = macro.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = macro.Command.Split(new[] { Environment.NewLine, "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
             _commandSender.ManualCommands.Add(lines);
         }
 
@@ -519,7 +519,7 @@
 
         public void AddMacro()
         {
-            MacrosSelected = new Macros();
+            MacrosSelected = new Macros{Command = ""};
         }
 
         public void UpMacro(Macros macro)
