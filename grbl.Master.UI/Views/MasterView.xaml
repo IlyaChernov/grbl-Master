@@ -818,7 +818,7 @@
                                         </StackPanel.Style>
                                         <Button cal:Message.Attach="RunMacro($dataContext)"
                                                 Content="{Binding Path=Name}"
-                                                ToolTip="{Binding Path=Name}">
+                                                ToolTip="{Binding Path=Name}" FontSize="20px" FontWeight="DemiBold" >
                                             <Button.Resources>
                                                 <Style TargetType="Border">
                                                     <Setter Property="CornerRadius" Value="5" />
