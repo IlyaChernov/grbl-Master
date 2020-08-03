@@ -818,7 +818,8 @@
                                         </StackPanel.Style>
                                         <Button cal:Message.Attach="RunMacro($dataContext)"
                                                 Content="{Binding Path=Name}"
-                                                ToolTip="{Binding Path=Name}" FontSize="20px" FontWeight="DemiBold" >
+                                                FontSize="20px" FontWeight="DemiBold"
+                                                ToolTip="{Binding Path=Name}">
                                             <Button.Resources>
                                                 <Style TargetType="Border">
                                                     <Setter Property="CornerRadius" Value="5" />
@@ -954,6 +955,7 @@
                             </Expander>
                             <Expander Header="{Binding GrblStatus.FeedRateMode}" Tag="FeedRate mode">
                                 <StackPanel>
+                                    <TextBlock Text="{Binding GrblStatus.FeedAndSpeed.FeedRate, StringFormat='Feed: {0}'}" TextAlignment="Center" />
                                     <ItemsControl ItemsSource="{converters:EnumToItemsSource {x:Type enum:FeedRateMode}}" />
                                 </StackPanel>
                             </Expander>
@@ -964,6 +966,7 @@
                             </Expander>
                             <Expander Header="{Binding GrblStatus.SpindleState}" Tag="Spindle state">
                                 <StackPanel>
+                                    <TextBlock Text="{Binding GrblStatus.FeedAndSpeed.SpindleSpeed, StringFormat='Spindle speed: {0}'}" TextAlignment="Center" />
                                     <ItemsControl ItemsSource="{converters:EnumToItemsSource {x:Type enum:SpindleState}}" />
                                 </StackPanel>
                             </Expander>
