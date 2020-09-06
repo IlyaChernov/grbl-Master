@@ -1,15 +1,16 @@
-﻿namespace grbl.Master.BL.Implementation
+﻿namespace grbl.Master.BL
 {
-    using grbl.Master.BL.Interface;
-    using grbl.Master.Service.Interface;
     using System;
     using System.Text.RegularExpressions;
+
+    using grbl.Master.Common.Interfaces.BL;
+    using grbl.Master.Common.Interfaces.Service;
 
     public class GrblPrompt : IGrblPrompt
     {
         private const string PromptTag = "^Grbl.{6}\\[.*\\]$";
 
-        readonly Regex _promptReg = new Regex(PromptTag);
+        private readonly Regex _promptReg = new Regex(PromptTag);
 
         public GrblPrompt(IComService comService)
         {

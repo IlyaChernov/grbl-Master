@@ -1,10 +1,5 @@
-﻿namespace grbl.Master.BL.Implementation
+﻿namespace grbl.Master.BL
 {
-    using grbl.Master.BL.Interface;
-    using grbl.Master.Model;
-    using grbl.Master.Model.Enum;
-    using grbl.Master.Service.Enum;
-    using grbl.Master.Service.Interface;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -14,13 +9,22 @@
     using System.Text.RegularExpressions;
     using System.Threading;
 
+    using grbl.Master.Common.Enum;
+    using grbl.Master.Common.Interfaces.BL;
+    using grbl.Master.Common.Interfaces.Service;
+    using grbl.Master.Model;
+    using grbl.Master.Model.Enum;
+    using grbl.Master.Model.Interface;
+
     public class GrblStatus : IGrblStatus
     {
         private readonly ICommandSender _commandSender;
 
+        //private readonly IGrblStatusModel _grblStatusModel;
+
         private readonly string _decimalSeparator = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
-        readonly Subject<Unit> _stopSubject = new Subject<Unit>();
+        private readonly Subject<Unit> _stopSubject = new Subject<Unit>();
 
         private struct ResponseProcessingDefinition
         {
@@ -45,9 +49,10 @@
             return Model.Resources.Mssages.ResourceManager.GetString(key);
         }
 
-        public GrblStatus(IComService comService, ICommandSender commandSender)
+        public GrblStatus(IComService comService, ICommandSender commandSender, IGrblStatusModel grblStatusModel)
         {
             _commandSender = commandSender;
+            GrblStatusModel = grblStatusModel;
             comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _commandSender.ResponseReceived += CommandSenderResponseReceived;
 
@@ -84,10 +89,10 @@
                                                                                                                        var setting = new GrblSetting
                                                                                                                                          {
                                                                                                                            Index = index,
-                                                                                                                           Value = parts[1], 
+                                                                                                                           Value = parts[1],
                                                                                                                            OriginalValue = parts[1]
                                                                                                                                          };
-                                                                                                                    
+
                                                                                                                        GrblStatusModel.Settings.AddOrUpdate(setting);
                                                                                                                    }
                                                                                                                }
@@ -97,7 +102,7 @@
                                   { ResponseType.FeedbackMessage, new ResponseProcessingDefinition
                                                                       {
                                                                           SplitAction =s =>s.Split(new[]{'[', ']'},StringSplitOptions.RemoveEmptyEntries),
-                                                                          ProcessActions = new List<ResponseProcessor>{new ResponseProcessor()
+                                                                          ProcessActions = new List<ResponseProcessor>{new ResponseProcessor
                                                                                                                            {
                                                                               TagExpression = "MSG:.*",
                                                                               Action = s =>
@@ -109,7 +114,7 @@
                                   { ResponseType.HelpMessage, new ResponseProcessingDefinition
                                                                       {
                                                                           SplitAction =s =>s.Split(new[]{'[', ']'},StringSplitOptions.RemoveEmptyEntries),
-                                                                          ProcessActions = new List<ResponseProcessor>{new ResponseProcessor()
+                                                                          ProcessActions = new List<ResponseProcessor>{new ResponseProcessor
                                                                                                                            {
                                                                                                                                TagExpression = "HLP:.*",
                                                                                                                                Action = s =>
@@ -120,7 +125,7 @@
                                                                       }},
                                   { ResponseType.Error, new ResponseProcessingDefinition
                                                                   {
-                                                                      ProcessActions = new List<ResponseProcessor>{new ResponseProcessor()
+                                                                      ProcessActions = new List<ResponseProcessor>{new ResponseProcessor
                                                                                                                        {
                                                                                                                            TagExpression = "error:.*",
                                                                                                                            Action = s =>
@@ -258,7 +263,7 @@
                                                                                                     if (accessoryParts.Length == 2)
                                                                                                     {
                                                                                                         if(accessoryParts[1].Contains('S'))
-                                                                                                        { 
+                                                                                                        {
                                                                                                          GrblStatusModel.AccessoryState.Spindle = SpindleState.M3;
                                                                                                         }
                                                                                                         else if(accessoryParts[1].Contains('C'))
@@ -294,12 +299,12 @@
                                                                                             part =>
                                                                                                 {
                                                                                                     var lineParts = part.Split(new[] { ':', '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
-                                                                                                    if (ParsePosition(part, out var position))
+                                                                                                    if (ParsePosition(part.Remove(part.Length-2), out var position))
                                                                                                     {
                                                                                                         GrblStatusModel.ProbePosition.Update(position);
                                                                                                     }
 
-                                                                                                    if (lineParts.Length == 5 && int.TryParse(lineParts.Last().Trim(), out var probingResult))
+                                                                                                    if (lineParts.Length == 3 && int.TryParse(lineParts.Last().Trim(), out var probingResult))
                                                                                                     {
                                                                                                         GrblStatusModel.ProbeState = probingResult!= 0;
                                                                                                     }
@@ -428,8 +433,8 @@
                                                                     new ResponseProcessor{TagExpression = "^G40$", Action =
                                                                                              s =>
                                                                                                  {
-                                                                                                     Enum.TryParse<CutterRaduisCompensation>(s.Replace('.', '_'), true, out var result);
-                                                                                                     GrblStatusModel.CutterRaduisCompensation = result;
+                                                                                                     Enum.TryParse<CutterRadiusCompensation>(s.Replace('.', '_'), true, out var result);
+                                                                                                     GrblStatusModel.CutterRadiusCompensation = result;
                                                                                                  }},
                                                                     new ResponseProcessor{TagExpression = "^G4(3\\.1|9)$", Action =
                                                                                              s =>
@@ -496,7 +501,7 @@
             }
         }
 
-        public GrblStatusModel GrblStatusModel { get; set; } = new GrblStatusModel();
+        public IGrblStatusModel GrblStatusModel { get; } //=> _grblStatusModel; // { get; set; } = new GrblStatusModel();
 
         private bool _isRunning;
 

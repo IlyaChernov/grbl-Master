@@ -1,11 +1,11 @@
-﻿namespace grbl.Master.Service.Implementation
+﻿namespace grbl.Master.Service
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    using grbl.Master.Common.Interfaces.Service;
     using grbl.Master.Model.Enum;
-    using grbl.Master.Service.Interface;
 
     public class GrblResponseTypeFinder : IGrblResponseTypeFinder
     {

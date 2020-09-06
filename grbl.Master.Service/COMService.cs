@@ -1,7 +1,5 @@
-﻿namespace grbl.Master.Service.Implementation
+﻿namespace grbl.Master.Service
 {
-    using grbl.Master.Service.Enum;
-    using grbl.Master.Service.Interface;
     using System;
     using System.Collections.Generic;
     using System.IO.Ports;
@@ -11,11 +9,13 @@
     using System.Reactive.Subjects;
     using System.Text;
 
+    using grbl.Master.Common.Enum;
+    using grbl.Master.Common.Interfaces.Service;
     using grbl.Master.Utilities;
 
     public class COMService : IComService
     {
-        readonly SerialPort _sp = new SerialPort();
+        private readonly SerialPort _sp = new SerialPort();
 
         public event EventHandler<string> LineReceived;
 
@@ -23,7 +23,7 @@
 
         private string _buffer = "";
 
-        readonly Subject<Unit> _stopSubject = new Subject<Unit>();
+        private readonly Subject<Unit> _stopSubject = new Subject<Unit>();
 
         public virtual void OnLineReceived(string e)
         {
@@ -80,34 +80,38 @@
 
         private void SpDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            var cnt = _sp.BytesToRead;
-            byte[] buffer = new byte[cnt];
-            if (!IsConnected)
+            if (_sp.IsOpen)
             {
-                throw new InvalidOperationException("Serial port is closed.");
-            }
-            _sp.Read(buffer, 0, cnt);
-
-            var serialData = Encoding.UTF8.GetString(buffer);
-
-            var lines = (_buffer + serialData).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-
-            if (lines.Any())
-            {
-                if (lines.Last() == string.Empty)
+                var cnt = _sp.BytesToRead;
+                var buffer = new byte[cnt];
+                if (!IsConnected)
                 {
-                    _buffer = string.Empty;
-                    foreach (var line in lines)
-                    {
-                        OnLineReceived(line);
-                    }
+                    throw new InvalidOperationException("Serial port is closed.");
                 }
-                else
+
+                _sp.Read(buffer, 0, cnt);
+
+                var serialData = Encoding.UTF8.GetString(buffer);
+
+                var lines = (_buffer + serialData).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
+                if (lines.Any())
                 {
-                    _buffer = lines.Last();
-                    foreach (var line in lines.Take(lines.Length - 1))
+                    if (lines.Last() == string.Empty)
                     {
-                        OnLineReceived(line);
+                        _buffer = string.Empty;
+                        foreach (var line in lines)
+                        {
+                            OnLineReceived(line);
+                        }
+                    }
+                    else
+                    {
+                        _buffer = lines.Last();
+                        foreach (var line in lines.Take(lines.Length - 1))
+                        {
+                            OnLineReceived(line);
+                        }
                     }
                 }
             }
@@ -142,7 +146,6 @@
 
         public List<string> GetPortNames()
         {
-
             return SerialPort.GetPortNames().ToList();
         }
 
@@ -159,7 +162,14 @@
         {
             if (IsConnected)
             {
-                _sp.WriteLine(data.RemoveSpace());
+                try
+                {
+                    _sp.WriteLine(data.RemoveSpace());
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex);
+                }
             }
         }
     }

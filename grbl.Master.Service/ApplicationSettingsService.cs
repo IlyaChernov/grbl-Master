@@ -1,13 +1,14 @@
-﻿namespace grbl.Master.Service.Implementation
+﻿namespace grbl.Master.Service
 {
-    using grbl.Master.Model;
-    using grbl.Master.Service.Interface;
-    using grbl.Master.Utilities;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Text;
+
+    using grbl.Master.Common.Interfaces.Service;
+    using grbl.Master.Model;
+    using grbl.Master.Utilities;
 
     public class ApplicationSettingsService : IApplicationSettingsService
     {
@@ -49,7 +50,7 @@
         {
             if (value is { } elements)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 foreach (var element in elements)
                 {
                     sb.AppendLine(element.ToString());

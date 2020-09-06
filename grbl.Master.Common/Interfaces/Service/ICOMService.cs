@@ -1,9 +1,9 @@
-﻿namespace grbl.Master.Service.Interface
+﻿namespace grbl.Master.Common.Interfaces.Service
 {
     using System;
     using System.Collections.Generic;
 
-    using grbl.Master.Service.Enum;
+    using grbl.Master.Common.Enum;
 
     public interface IComService
     {

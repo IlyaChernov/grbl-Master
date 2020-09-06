@@ -97,6 +97,7 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="30" />
+                                <RowDefinition Height="5" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="30" />
@@ -179,6 +180,8 @@
                                     </Style>
                                 </TextBox.Style>
                             </TextBox>
+                            <ProgressBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Maximum="100"
+                                         Value="{Binding CommandQueueLength, Mode=OneWay}" />
                         </Grid>
 
                         <TabControl Grid.Row="1" Margin="1">
@@ -457,6 +460,8 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                         <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="30" />
@@ -623,7 +628,36 @@
                                                     Content="{Binding GrblStatus.G30Position}"
                                                     ContentTemplate="{StaticResource OffsetsData}"
                                                     IsEnabled="False" />
-                                    <Button Grid.Row="9" Grid.Column="4" Visibility="Collapsed">
+
+                                    <Button Grid.Row="10" Grid.Column="0" cal:Message.Attach="GCommand('G30.1')" ToolTip="Set current machine position">
+                                        G92
+                                    </Button>
+                                    <ContentControl Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="3"
+                                                    Content="{Binding GrblStatus.G92Position}"
+                                                    ContentTemplate="{StaticResource OffsetsData}"
+                                                    IsEnabled="False" />
+
+                                    <Button Grid.Row="11" Grid.Column="0" ToolTip="Last probe machine position">
+                                        PRB
+                                    </Button>
+                                    <ContentControl Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="3"
+                                                    Content="{Binding GrblStatus.ProbePosition}"
+                                                    ContentTemplate="{StaticResource OffsetsData}"
+                                                    IsEnabled="False">
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding GrblStatus.ProbeState}" Value="True">
+                                                        <Setter Property="Background" Value="LightGreen" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding GrblStatus.ProbeState}" Value="False">
+                                                        <Setter Property="Background" Value="OrangeRed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
+                                    <Button Grid.Row="10" Grid.Column="4" Visibility="Collapsed">
                                         0
                                     </Button>
                                 </Grid>
@@ -820,6 +854,9 @@
                                                 Content="{Binding Path=Name}"
                                                 FontSize="20px" FontWeight="DemiBold"
                                                 ToolTip="{Binding Path=Name}">
+                                            <Button.Background>
+                                                <SolidColorBrush Color="{Binding Color}" />
+                                            </Button.Background>
                                             <Button.Resources>
                                                 <Style TargetType="Border">
                                                     <Setter Property="CornerRadius" Value="5" />
@@ -866,15 +903,22 @@
                                         <RowDefinition Height="26" />
                                         <RowDefinition Height="26" />
                                         <RowDefinition Height="26" />
+                                        <RowDefinition Height="26" />
+                                        <RowDefinition Height="26" />
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <Label Grid.ColumnSpan="3">Name:</Label>
                                     <TextBox Grid.Row="1" Grid.Column="0"
                                              Text="{Binding MacrosSelected.Name}" />
                                     <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+                                        Macros color:
+                                    </Label>
+                                    <xctk:ColorPicker Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+                                                      SelectedColor="{Binding MacrosSelected.Color}" />
+                                    <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
                                         Macros body:
                                     </Label>
-                                    <avalonEdit:TextEditor Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Auto" LineNumbersForeground="Black" ShowLineNumbers="True"
+                                    <avalonEdit:TextEditor Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Auto" LineNumbersForeground="Black" ShowLineNumbers="True"
                                                            SyntaxHighlighting="{Binding GCodeHighlighting, Mode=OneTime}"
                                                            VerticalScrollBarVisibility="Auto">
                                         <i:Interaction.Behaviors>
@@ -1420,13 +1464,31 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
+                        <ColumnDefinition Width="26" />
                         <ColumnDefinition />
+                        <ColumnDefinition Width="26" />
                         <ColumnDefinition />
+                        <ColumnDefinition Width="26" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="26" />
                     </Grid.ColumnDefinitions>
                     <Label Grid.Row="0" Grid.Column="0" Content="System commands log" />
-                    <Label Grid.Row="0" Grid.Column="1" Content="Manual commands log" />
-                    <Label Grid.Row="0" Grid.Column="2" Content="Full communication log" />
-                    <ListView Grid.Row="1" Grid.Column="0"
+                    <Button Grid.Row="0" Grid.Column="1" cal:Message.Attach="RefreshSystemLog()" ToolTip="Refresh">
+                        <materialDesign:PackIcon Width="20" Height="20" Foreground="Red" Kind="Refresh" />
+                    </Button>
+                    <Label Grid.Row="0" Grid.Column="2" Content="Manual commands log" />
+                    <Button Grid.Row="0" Grid.Column="3" cal:Message.Attach="RefreshManualLog()" ToolTip="Refresh">
+                        <materialDesign:PackIcon Width="20" Height="20" Foreground="Red" Kind="Refresh" />
+                    </Button>
+                    <Label Grid.Row="0" Grid.Column="4" Content="Macro commands log" />
+                    <Button Grid.Row="0" Grid.Column="5" cal:Message.Attach="RefreshMacroLog()" ToolTip="Refresh">
+                        <materialDesign:PackIcon Width="20" Height="20" Foreground="Red" Kind="Refresh" />
+                    </Button>
+                    <Label Grid.Row="0" Grid.Column="6" Content="Full communication log" />
+                    <Button Grid.Row="0" Grid.Column="7" cal:Message.Attach="RefreshFullLog()" ToolTip="Refresh">
+                        <materialDesign:PackIcon Width="20" Height="20" Foreground="Red" Kind="Refresh" />
+                    </Button>
+                    <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                               ItemsSource="{Binding SystemCommandsCollection}"
                               VirtualizingStackPanel.VirtualizationMode="Recycling">
                         <ListView.ItemsPanel>
@@ -1450,7 +1512,7 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <ListView Grid.Row="1" Grid.Column="1"
+                    <ListView Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
                               ItemsSource="{Binding ManualCommandsCollection}"
                               VirtualizingStackPanel.VirtualizationMode="Recycling">
                         <ListView.ItemsPanel>
@@ -1474,7 +1536,31 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <ListView Grid.Row="1" Grid.Column="2"
+                    <ListView Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2"
+                              ItemsSource="{Binding MacroCommandsCollection}"
+                              VirtualizingStackPanel.VirtualizationMode="Recycling">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ToolTip="{Binding Result}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Path=ResultType}" />
+                                    <TextBlock Grid.Column="1" Padding="1,0,5,0"
+                                               Text="{Binding Path=Data}" />
+                                    <TextBlock Grid.Column="2" Text="{Binding Path=Result}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="2"
                               ItemsSource="{Binding CommunicationLog}"
                               VirtualizingStackPanel.VirtualizationMode="Recycling">
                         <ListView.ItemsPanel>

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace grbl.Master.UI.ViewModels
 {
-    using grbl.Master.Service.Enum;
-    using grbl.Master.Service.Interface;
+
     using System.Windows;
+
+    using grbl.Master.Common.Enum;
+    using grbl.Master.Common.Interfaces.Service;
 
     public class COMConnectionViewModel : Screen
     {
@@ -95,7 +97,7 @@ namespace grbl.Master.UI.ViewModels
 
         public bool CanChangePortBaud => !_comService.IsConnected;
 
-        public bool CanConnect => (!string.IsNullOrWhiteSpace(SelectedComPort) && SelectedBaudRate > 0) || _comService.IsConnected;
+        public bool CanConnect => !string.IsNullOrWhiteSpace(this.SelectedComPort) && this.SelectedBaudRate > 0 || _comService.IsConnected;
 
         public void Connect()
         {

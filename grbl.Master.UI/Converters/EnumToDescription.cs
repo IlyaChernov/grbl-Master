@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Data;
 
@@ -11,20 +12,13 @@
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value == null) return DependencyProperty.UnsetValue;
-
-            return GetDescription((Enum)value);
+            return value == null ? DependencyProperty.UnsetValue : GetDescription((Enum)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value == null) return null;
-            foreach (Enum one in Enum.GetValues(targetType))
-            {
-                if (value.ToString() == GetDescription(one))
-                    return one;
-            }
-            return null;
+            return Enum.GetValues(targetType).Cast<Enum>().FirstOrDefault(one => value.ToString() == GetDescription(one));
         }
 
         public static string GetDescription(Enum en)
@@ -32,12 +26,7 @@
 
             var attr = en.GetAttributeOfType<DescriptionAttribute>();
 
-            if (attr != null)
-            {
-                return attr.Description;
-            }
-
-            return en.ToString();
+            return attr != null ? attr.Description : en.ToString();
         }
     }
 }

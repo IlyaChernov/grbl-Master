@@ -1,4 +1,4 @@
-﻿namespace grbl.Master.Service.Enum
+﻿namespace grbl.Master.Common.Enum
 {
     public enum ConnectionState
     {

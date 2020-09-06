@@ -1,4 +1,4 @@
-﻿namespace grbl.Master.Service.Interface
+﻿namespace grbl.Master.Common.Interfaces.Service
 {
     using System;
     using System.Collections.ObjectModel;
@@ -7,9 +7,14 @@
 
     public interface ICommandSender
     {
+        event EventHandler<int> CommandQueueLengthChanged;
+
         CommandSource SystemCommands { get; }
-         CommandSource ManualCommands { get; }
+        CommandSource ManualCommands { get; }
+        CommandSource MacroCommands { get; }
         CommandSource FileCommands { get; }
+
+        int CommandQueueLength { get; }
 
         ObservableCollection<string> CommunicationLog
         {
@@ -24,7 +29,7 @@
 
         void Send(string command, string onResult = null);
 
-        Command Prepare(string command);
+        //Command Prepare(string command);
 
         void PurgeQueues();
     }

@@ -4,6 +4,7 @@
     {
         Infinite,
         StopInTheEnd,
+        LineByOk,
         LineByLine
     }
 }

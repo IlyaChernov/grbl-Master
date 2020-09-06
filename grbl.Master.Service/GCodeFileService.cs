@@ -1,10 +1,12 @@
-﻿namespace grbl.Master.Service.Implementation
+﻿namespace grbl.Master.Service
 {
+    using System.IO;
+
+    using grbl.Master.Common.Interfaces.Service;
     using grbl.Master.Model;
     using grbl.Master.Model.Enum;
-    using grbl.Master.Service.Interface;
+
     using ICSharpCode.AvalonEdit.Document;
-    using System.IO;
 
     public class GCodeFileService : IGCodeFileService
     {

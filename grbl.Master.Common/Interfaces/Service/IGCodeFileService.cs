@@ -1,4 +1,4 @@
-﻿namespace grbl.Master.Service.Interface
+﻿namespace grbl.Master.Common.Interfaces.Service
 {
     using grbl.Master.Model;
 

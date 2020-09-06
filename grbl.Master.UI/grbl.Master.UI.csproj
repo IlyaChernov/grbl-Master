@@ -221,6 +221,10 @@
       <Project>{A8D81938-5739-42C5-AD7E-EB78C63295B9}</Project>
       <Name>grbl.Master.BL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\grbl.Master.Common\grbl.Master.Common.csproj">
+      <Project>{292BC2BE-A547-4567-8592-9CE4D9290E54}</Project>
+      <Name>grbl.Master.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\grbl.Master.Model\grbl.Master.Model.csproj">
       <Project>{B21C205E-5CE2-436E-AFA4-F2A3DAC60D21}</Project>
       <Name>grbl.Master.Model</Name>

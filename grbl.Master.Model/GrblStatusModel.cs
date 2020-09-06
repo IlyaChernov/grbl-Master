@@ -5,7 +5,9 @@
     using System;
     using System.Linq;
 
-    public class GrblStatusModel : NotifyPropertyChanged
+    using grbl.Master.Model.Interface;
+
+    public class GrblStatusModel : NotifyPropertyChanged, IGrblStatusModel
     {
         public event EventHandler<MachineState> MachineStateChanged;
 
@@ -60,7 +62,7 @@
 
         public UnitsMode UnitsMode { get; set; }
 
-        public CutterRaduisCompensation CutterRaduisCompensation { get; set; }
+        public CutterRadiusCompensation CutterRadiusCompensation { get; set; }
 
         public ToolLengthMode ToolLengthMode { get; set; }
 
@@ -70,7 +72,7 @@
 
         public CoolantState CoolantState { get; set; }
 
-        public virtual void OnMachineStateChanged()
+        private void OnMachineStateChanged()
         {
             MachineStateChanged?.Invoke(this, MachineState);
         }

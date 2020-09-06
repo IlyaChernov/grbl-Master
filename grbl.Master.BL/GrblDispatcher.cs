@@ -1,10 +1,11 @@
-﻿namespace grbl.Master.BL.Implementation
+﻿namespace grbl.Master.BL
 {
-    using grbl.Master.BL.Interface;
-    using grbl.Master.Model.Enum;
-    using grbl.Master.Service.Enum;
-    using grbl.Master.Service.Interface;
     using System;
+
+    using grbl.Master.Common.Enum;
+    using grbl.Master.Common.Interfaces.BL;
+    using grbl.Master.Common.Interfaces.Service;
+    using grbl.Master.Model.Enum;
 
     public class GrblDispatcher : IGrblDispatcher
     {

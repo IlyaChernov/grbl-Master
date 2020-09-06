@@ -1,4 +1,4 @@
-﻿namespace grbl.Master.BL.Interface
+﻿namespace grbl.Master.Common.Interfaces.BL
 {
     using System;
 

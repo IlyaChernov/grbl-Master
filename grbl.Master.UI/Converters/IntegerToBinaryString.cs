@@ -6,7 +6,7 @@
 
     public class IntegerToBinaryString : IValueConverter
     {
-        static readonly Regex Binary = new Regex("^[01]{1,32}$", RegexOptions.Compiled);
+        private static readonly Regex Binary = new Regex("^[01]{1,32}$", RegexOptions.Compiled);
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

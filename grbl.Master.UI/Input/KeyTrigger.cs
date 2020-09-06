@@ -40,14 +40,14 @@ namespace grbl.Master.UI.Input
 
         private void OnAssociatedObjectKeyDown(object sender, KeyEventArgs e)
         {
-            var key = (e.Key == Key.System) ? e.SystemKey : e.Key;
-            if ((key == Key) && (Keyboard.Modifiers == GetActualModifiers(e.Key, Modifiers)))
+            var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            if (key == this.Key && Keyboard.Modifiers == GetActualModifiers(e.Key, this.Modifiers))
             {
                 InvokeActions(e);
             }
         }
 
-        static ModifierKeys GetActualModifiers(Key key, ModifierKeys modifiers)
+        private static ModifierKeys GetActualModifiers(Key key, ModifierKeys modifiers)
         {
             switch (key)
             {

@@ -72,12 +72,7 @@
 
         private GrblSettingType FindType(int index)
         {
-            if (_typeTable.Any(x => x.Value.Any(y => y == index)))
-            {
-                return _typeTable.FirstOrDefault(x => x.Value.Any(y => y == index)).Key;
-            }
-
-            return GrblSettingType.Integer;
+            return this._typeTable.Any(x => x.Value.Any(y => y == index)) ? this._typeTable.FirstOrDefault(x => x.Value.Any(y => y == index)).Key : GrblSettingType.Integer;
         }
     }
 }

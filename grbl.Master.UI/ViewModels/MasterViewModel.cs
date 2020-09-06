@@ -1,11 +1,8 @@
 ﻿namespace grbl.Master.UI.ViewModels
 {
     using Caliburn.Micro;
-    using grbl.Master.BL.Interface;
     using grbl.Master.Model;
     using grbl.Master.Model.Enum;
-    using grbl.Master.Service.Enum;
-    using grbl.Master.Service.Interface;
     using grbl.Master.Utilities;
     using ICSharpCode.AvalonEdit.Highlighting;
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -25,6 +22,12 @@
     using System.Threading;
     using System.Windows.Controls;
     using System.Xml;
+
+    using grbl.Master.Common.Enum;
+    using grbl.Master.Common.Interfaces.BL;
+    using grbl.Master.Common.Interfaces.Service;
+    using grbl.Master.Model.Interface;
+
     using Xceed.Wpf.Toolkit;
 
     public class MasterViewModel : Screen
@@ -50,10 +53,6 @@
 
         private string _manualCommand;
 
-        //private double _selectedFeedRate = 1000;
-
-        //private double _selectedJoggingDistance = 10;
-
         public MasterViewModel(
             IComService comService,
             IGrblStatus grblStatus,
@@ -77,6 +76,7 @@
             _grblStatus.GrblStatusModel.PropertyChanged += GrblStatusModelPropertyChanged;
             _comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _commandSender.CommunicationLogUpdated += CommandSenderCommunicationLogUpdated;
+            _commandSender.CommandQueueLengthChanged += CommandSenderCommandQueueLengthChanged;
 
             _commandSender.FileCommands.CommandList.CollectionChanged += (sender, args) =>
                 {
@@ -86,21 +86,26 @@
             StartNotifications();
         }
 
-        private IHighlightingDefinition _GCodeHighlighting;
+        private void CommandSenderCommandQueueLengthChanged(object sender, int e)
+        {
+            NotifyOfPropertyChange(() => CommandQueueLength);
+        }
+
+        private IHighlightingDefinition _gCodeHighlighting;
 
         public IHighlightingDefinition GCodeHighlighting
         {
             get
             {
-                return _GCodeHighlighting ??= GetHighlightingDefinition();
+                return this._gCodeHighlighting ??= GetHighlightingDefinition();
             }
         }
 
         private IHighlightingDefinition GetHighlightingDefinition()
         {
             var assembly = Assembly.GetExecutingAssembly();
-            using Stream s = assembly.GetManifestResourceStream("grbl.Master.UI.GCodeHighlighting.xshd");
-            using XmlTextReader reader = new XmlTextReader(s);
+            using var s = assembly.GetManifestResourceStream("grbl.Master.UI.GCodeHighlighting.xshd");
+            using var reader = new XmlTextReader(s);
             return HighlightingLoader.Load(reader, HighlightingManager.Instance);
         }
 
@@ -167,11 +172,15 @@
 
         public int FileLinesProcessed => FileCommandsCollection.Count;
 
-        public GrblStatusModel GrblStatus => _grblStatus.GrblStatusModel;
+        public IGrblStatusModel GrblStatus => _grblStatus.GrblStatusModel;
+
+        public int CommandQueueLength => _commandSender.CommandQueueLength;
 
         public ObservableCollection<string> CommunicationLog => _commandSender.CommunicationLog;
 
         public ObservableCollection<Command> ManualCommandsCollection => _commandSender.ManualCommands.CommandList;
+
+        public ObservableCollection<Command> MacroCommandsCollection => _commandSender.MacroCommands.CommandList;
 
         public ObservableCollection<Command> SystemCommandsCollection => _commandSender.SystemCommands.CommandList;
 
@@ -342,6 +351,26 @@
             _commandSender.SendAsync(ManualCommand);
         }
 
+        public void RefreshSystemLog()
+        {
+            _commandSender.SystemCommands.CommandList.Clear();
+        }
+
+        public void RefreshManualLog()
+        {
+            _commandSender.ManualCommands.CommandList.Clear();
+        }
+
+        public void RefreshMacroLog()
+        {
+            _commandSender.MacroCommands.CommandList.Clear();
+        }
+
+        public void RefreshFullLog()
+        {
+            _commandSender.CommunicationLog.Clear();;
+        }
+
         public void SendEnterCommand()
         {
             SendManualCommand();
@@ -395,7 +424,7 @@
             _joggingCount = 0;
             _jogStopSubject.OnNext(Unit.Default);
 
-            var requestspeed = (SelectedJoggingDistance / (SelectedFeedRate / 60000)) * 0.9;
+            var requestSpeed = this.SelectedJoggingDistance / (this.SelectedFeedRate / 60000) * 0.9;
 
             _commandSender.SendAsync(
                 "$J=" + string.Format(
@@ -403,7 +432,7 @@
                     SelectedJoggingDistance.ToGrblString(),
                     SelectedFeedRate.ToGrblString()));
 
-            Observable.Timer(TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(requestspeed)).TakeUntil(_jogStopSubject).Subscribe(
+            Observable.Timer(TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(requestSpeed)).TakeUntil(_jogStopSubject).Subscribe(
                 l =>
                     {
                         _joggingCount++;
@@ -489,7 +518,8 @@
         public void RunMacro(Macros macro)
         {
             var lines = macro.Command.Split(new[] { Environment.NewLine, "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
-            _commandSender.ManualCommands.Add(lines);
+            _commandSender.MacroCommands.Add(lines);
+            _commandSender.MacroCommands.StartProcessing();
         }
 
         public void DeleteMacro(Macros macro)

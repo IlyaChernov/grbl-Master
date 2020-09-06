@@ -1,7 +1,5 @@
-﻿namespace grbl.Master.Service.Implementation
+﻿namespace grbl.Master.Service
 {
-    using grbl.Master.Service.Enum;
-    using grbl.Master.Service.Interface;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
@@ -11,13 +9,14 @@
     using System.Reactive.Subjects;
     using System.Threading;
 
+    using grbl.Master.Common.Enum;
+    using grbl.Master.Common.Interfaces.Service;
     using grbl.Master.Model;
     using grbl.Master.Model.Enum;
     using grbl.Master.Utilities;
 
     public class CommandSender : ICommandSender
     {
-
         private readonly IComService _comService;
 
         private readonly IGrblResponseTypeFinder _responseTypeFinder;
@@ -30,7 +29,7 @@
 
         private readonly SynchronizationContext _uiContext;
 
-        readonly Subject<Unit> _stopSubject = new Subject<Unit>();
+        private readonly Subject<Unit> _stopSubject = new Subject<Unit>();
 
         private readonly ConcurrentQueue<Command> _waitingCommandQueue = new ConcurrentQueue<Command>();
 
@@ -52,21 +51,16 @@
             Observable.Timer(TimeSpan.Zero, TimeSpan.Zero).TakeUntil(_stopSubject).Subscribe(
                 l =>
                     {
-                        if ((SystemCommands.TryPeekCommand(out var cmd) || ManualCommands.TryPeekCommand(out cmd) || FileCommands.TryPeekCommand(out cmd)) && cmd != null && cmd.Data.RemoveSpace().Length + _waitingCommandQueue.Sum(x => x.Data.RemoveSpace().Length) <= _bufferSizeLimit)
+                        if ((SystemCommands.TryPeekCommand(out var cmd) || ManualCommands.TryPeekCommand(out cmd) || FileCommands.TryPeekCommand(out cmd) || this.FileCommands.State != CommandSourceState.Running && this._waitingCommandQueue.Count == 0 && this.MacroCommands.TryPeekCommand(out cmd)) && cmd != null && cmd.Data.RemoveSpace().Length + CommandQueueLength <= _bufferSizeLimit)
                         {
-                            var continueProcess = false;
-                            switch (cmd.Source)
-                            {
-                                case CommandSourceType.System:
-                                    continueProcess = SystemCommands.TryGetCommand(out cmd);
-                                    break;
-                                case CommandSourceType.Manual:
-                                    continueProcess = ManualCommands.TryGetCommand(out cmd);
-                                    break;
-                                case CommandSourceType.File:
-                                    continueProcess = FileCommands.TryGetCommand(out cmd);
-                                    break;
-                            }
+                            var continueProcess = cmd.Source switch
+                                {
+                                    CommandSourceType.System => this.SystemCommands.TryGetCommand(out cmd),
+                                    CommandSourceType.Macros => this.MacroCommands.TryGetCommand(out cmd),
+                                    CommandSourceType.Manual => this.ManualCommands.TryGetCommand(out cmd),
+                                    CommandSourceType.File => this.FileCommands.TryGetCommand(out cmd),
+                                    _ => false
+                                };
 
                             if (!continueProcess) return;
 
@@ -77,11 +71,17 @@
                     });
         }
 
+        public event EventHandler<int> CommandQueueLengthChanged;
+
         public CommandSource SystemCommands { get; } = new CommandSource(CommandSourceType.System, CommandSourceRunMode.Infinite);
+
+        public CommandSource MacroCommands { get; } = new CommandSource(CommandSourceType.Macros, CommandSourceRunMode.LineByOk);
 
         public CommandSource ManualCommands { get; } = new CommandSource(CommandSourceType.Manual, CommandSourceRunMode.Infinite);
 
         public CommandSource FileCommands { get; } = new CommandSource(CommandSourceType.File, CommandSourceRunMode.StopInTheEnd);
+
+        public int CommandQueueLength => _waitingCommandQueue.Sum(x => x.Data.RemoveSpace().Length);
 
         public ObservableCollection<string> CommunicationLog { get; } = new ObservableCollection<string>();
 
@@ -140,14 +140,14 @@
             }
         }
 
-        public Command Prepare(string command)
-        {
-            var cmd = new Command { Data = command };
+        //public Command Prepare(string command)
+        //{
+        //    var cmd = new Command { Data = command };
 
-            _commandPreProcessor.Process(ref cmd);
+        //    _commandPreProcessor.Process(ref cmd);
 
-            return cmd;
-        }
+        //    return cmd;
+        //}
 
         public void SendAsync(string command, string onResult = null)
         {
@@ -159,6 +159,7 @@
             while (_waitingCommandQueue.Count > 0)
             {
                 _waitingCommandQueue.TryDequeue(out var dummy);
+                CommandQueueLengthChanged?.Invoke(this, CommandQueueLength);
             }
 
             SystemCommands.Purge();
@@ -174,13 +175,15 @@
                     ProcessQueue();
                 SystemCommands.StartProcessing();
                 ManualCommands.StartProcessing();
+                MacroCommands.StartProcessing();
             }
             else
             {
                 _stopSubject.OnNext(Unit.Default);
-                this._processing = false;
+                _processing = false;
                 SystemCommands.PauseProcessing();
                 ManualCommands.PauseProcessing();
+                MacroCommands.PauseProcessing();
 
             }
         }
@@ -225,6 +228,7 @@
 
                 if ((type == ResponseType.Ok || type == ResponseType.Error || type == ResponseType.Alarm) && _waitingCommandQueue.Any() && _waitingCommandQueue.TryDequeue(out var cmd))
                 {
+                    CommandQueueLengthChanged?.Invoke(this, CommandQueueLength);
                     if (type == ResponseType.Ok)
                     {
                         cmd.ResultType = CommandResultType.Ok;
@@ -239,7 +243,7 @@
                             FileCommands.PauseProcessing();
                         }
                     }
-                    else if(type == ResponseType.Alarm)
+                    else if (type == ResponseType.Alarm)
                     {
                         cmd.ResultType = CommandResultType.Alarm;
                         cmd.CommandResultCause = e.Split(':')[1];
@@ -279,6 +283,9 @@
                                 case CommandSourceType.File:
                                     FileCommands.CommandList.Add(cmd);
                                     break;
+                                case CommandSourceType.Macros:
+                                    MacroCommands.CommandList.Add(cmd);
+                                    break;
                                 default:
                                     throw new ArgumentOutOfRangeException();
                             }
@@ -288,11 +295,11 @@
                         },
                     null);
                 }
-                else if (_waitingCommandQueue.Any() && _waitingCommandQueue.TryPeek(out var comd))
+                else if (_waitingCommandQueue.Any() && _waitingCommandQueue.TryPeek(out var peekCmd))
                 {
-                    if (comd.ExpectedResponses.Any(x => x == type))
+                    if (peekCmd.ExpectedResponses.Any(x => x == type))
                     {
-                        comd.Result += (string.IsNullOrEmpty(comd.Result) ? "" : Environment.NewLine) + e;
+                        peekCmd.Result += (string.IsNullOrEmpty(peekCmd.Result) ? "" : Environment.NewLine) + e;
                     }
                 }
             }
@@ -309,6 +316,7 @@
                 {
                     _waitingCommandQueue.Enqueue(cmd);
                 }
+                CommandQueueLengthChanged?.Invoke(this, CommandQueueLength);
 
                 _comService.Send(cmd.Data);
             }

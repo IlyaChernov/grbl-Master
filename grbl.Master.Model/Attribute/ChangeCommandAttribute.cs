@@ -5,11 +5,11 @@
     [AttributeUsage(AttributeTargets.All)]
     public class ChangeCommandAttribute : Attribute
     {
-        public string Comand { get; internal set; }
+        public string Command { get; internal set; }
 
         public ChangeCommandAttribute(string command)
         {
-            Comand = command;
+            this.Command = command;
         }
     }
 }

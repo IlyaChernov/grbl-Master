@@ -7,7 +7,7 @@ namespace grbl.Master.Model.Enum
     using grbl.Master.Model.Converters;
 
     [TypeConverter(typeof(EnumToDescription))]
-    public enum CutterRaduisCompensation
+    public enum CutterRadiusCompensation
     {
         [Description("Disabled")]
         G40

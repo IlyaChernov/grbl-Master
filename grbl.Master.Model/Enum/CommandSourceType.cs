@@ -4,6 +4,7 @@
     {
         System,
         Manual,
+        Macros,
         File
     }
 }

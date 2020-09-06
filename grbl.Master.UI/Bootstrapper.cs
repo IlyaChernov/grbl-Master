@@ -10,10 +10,12 @@ namespace grbl.Master.UI
 {
     using Bluegrams.Application;
 
-    using grbl.Master.BL.Implementation;
-    using grbl.Master.BL.Interface;
-    using grbl.Master.Service.Implementation;
-    using grbl.Master.Service.Interface;
+    using grbl.Master.BL;
+    using grbl.Master.Common.Interfaces.BL;
+    using grbl.Master.Common.Interfaces.Service;
+    using grbl.Master.Model;
+    using grbl.Master.Model.Interface;
+    using grbl.Master.Service;
 
     public class Bootstrapper : BootstrapperBase
     {
@@ -60,9 +62,10 @@ namespace grbl.Master.UI
             _container.RegisterSingleton(typeof(IGrblCommandPreProcessor), null, typeof(GrblCommandPreProcessor));
             _container.RegisterSingleton(typeof(ICommandSender), null, typeof(CommandSender));
             _container.RegisterSingleton(typeof(IApplicationSettingsService), null, typeof(ApplicationSettingsService));
-            this._container.RegisterSingleton(typeof(IGCodeFileService), null, typeof(GCodeFileService));
+            _container.RegisterSingleton(typeof(IGCodeFileService), null, typeof(GCodeFileService));
 
             _container.RegisterSingleton(typeof(IGrblPrompt), null, typeof(GrblPrompt));
+            _container.RegisterSingleton(typeof(IGrblStatusModel), null, typeof(GrblStatusModel));
             _container.RegisterSingleton(typeof(IGrblStatus), null, typeof(GrblStatus));
 
 
@@ -92,7 +95,7 @@ namespace grbl.Master.UI
                         return new KeyTrigger { Key = key };
 
                     case "Gesture":
-                        var mkg = (MultiKeyGesture)(new MultiKeyGestureConverter()).ConvertFrom(splits[1]);
+                        var mkg = (MultiKeyGesture)new MultiKeyGestureConverter().ConvertFrom(splits[1]);
 
                         if (mkg != null)
                         {

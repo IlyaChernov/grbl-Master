@@ -12,7 +12,7 @@
         {
             if (value is ObservableCollection<double> elements)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 foreach (var element in elements)
                 {
                     sb.AppendLine(element.ToString());
