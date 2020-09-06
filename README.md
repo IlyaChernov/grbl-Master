@@ -34,3 +34,4 @@ Developed using .NET WPF MVVM as a base and nice libraries and controls, like:
 * [ToggleSwitch](https://github.com/ejensen/toggle-switch-control)
 * [MaterialDesign](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit)
 * [Reactive extensions](https://github.com/dotnet/reactive)
+* [Jint](https://github.com/sebastienros/jint)
