@@ -41,7 +41,7 @@ namespace grbl.Master.UI.Input
         private void OnAssociatedObjectKeyDown(object sender, KeyEventArgs e)
         {
             var key = e.Key == Key.System ? e.SystemKey : e.Key;
-            if (key == this.Key && Keyboard.Modifiers == GetActualModifiers(e.Key, this.Modifiers))
+            if (key == Key && Keyboard.Modifiers == GetActualModifiers(e.Key, Modifiers))
             {
                 InvokeActions(e);
             }

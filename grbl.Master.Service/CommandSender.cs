@@ -48,19 +48,19 @@
         private void ProcessQueue()
         {
             _processing = true;
-            Observable.Timer(TimeSpan.Zero, TimeSpan.Zero).TakeUntil(_stopSubject).Subscribe(
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(10)).TakeUntil(_stopSubject).Subscribe(
                 l =>
                     {
-                        if ((SystemCommands.TryPeekCommand(out var cmd) || ManualCommands.TryPeekCommand(out cmd) || FileCommands.TryPeekCommand(out cmd) || this.FileCommands.State != CommandSourceState.Running && this._waitingCommandQueue.Count == 0 && this.MacroCommands.TryPeekCommand(out cmd)) && cmd != null && cmd.Data.RemoveSpace().Length + CommandQueueLength <= _bufferSizeLimit)
+                        if ((SystemCommands.TryPeekCommand(out var cmd) || ManualCommands.TryPeekCommand(out cmd) || FileCommands.TryPeekCommand(out cmd) || FileCommands.State != CommandSourceState.Running && _waitingCommandQueue.Count == 0 && MacroCommands.TryPeekCommand(out cmd)) && cmd != null && cmd.Data.RemoveSpace().Length + CommandQueueLength <= _bufferSizeLimit)
                         {
                             var continueProcess = cmd.Source switch
-                                {
-                                    CommandSourceType.System => this.SystemCommands.TryGetCommand(out cmd),
-                                    CommandSourceType.Macros => this.MacroCommands.TryGetCommand(out cmd),
-                                    CommandSourceType.Manual => this.ManualCommands.TryGetCommand(out cmd),
-                                    CommandSourceType.File => this.FileCommands.TryGetCommand(out cmd),
-                                    _ => false
-                                };
+                            {
+                                CommandSourceType.System => SystemCommands.TryGetCommand(out cmd),
+                                CommandSourceType.Macros => MacroCommands.TryGetCommand(out cmd),
+                                CommandSourceType.Manual => ManualCommands.TryGetCommand(out cmd),
+                                CommandSourceType.File => FileCommands.TryGetCommand(out cmd),
+                                _ => false
+                            };
 
                             if (!continueProcess) return;
 
@@ -140,15 +140,6 @@
             }
         }
 
-        //public Command Prepare(string command)
-        //{
-        //    var cmd = new Command { Data = command };
-
-        //    _commandPreProcessor.Process(ref cmd);
-
-        //    return cmd;
-        //}
-
         public void SendAsync(string command, string onResult = null)
         {
             Observable.Start(() => { Send(command, onResult); }).Subscribe();
@@ -165,6 +156,7 @@
             SystemCommands.Purge();
             ManualCommands.Purge();
             FileCommands.Purge();
+            MacroCommands.Purge();
         }
 
         private void ComServiceConnectionStateChanged(object sender, ConnectionState e)
@@ -242,6 +234,10 @@
                         {
                             FileCommands.PauseProcessing();
                         }
+                        else if (cmd.Source == CommandSourceType.Macros)
+                        {
+                            MacroCommands.Purge();
+                        }
                     }
                     else if (type == ResponseType.Alarm)
                     {
@@ -251,6 +247,10 @@
                         if (cmd.Source == CommandSourceType.File)
                         {
                             FileCommands.PauseProcessing();
+                        }
+                        else if (cmd.Source == CommandSourceType.Macros)
+                        {
+                            MacroCommands.Purge();
                         }
                     }
 

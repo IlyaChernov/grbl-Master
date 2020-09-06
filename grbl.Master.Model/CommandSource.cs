@@ -66,10 +66,13 @@
 
         public bool TryPeekCommand(out Command command)
         {
-            if (State == CommandSourceState.Running && CommandQueue.TryPeek(out var cmdText))
+            if (!CommandQueue.IsEmpty)
             {
-                command = new Command { Data = cmdText, Source = Type };
-                return true;
+                if (State == CommandSourceState.Running && CommandQueue.TryPeek(out var cmdText))
+                {
+                    command = new Command { Data = cmdText, Source = Type };
+                    return true;
+                }
             }
 
             command = null;

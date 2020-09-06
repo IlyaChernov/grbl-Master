@@ -97,7 +97,7 @@ namespace grbl.Master.UI.ViewModels
 
         public bool CanChangePortBaud => !_comService.IsConnected;
 
-        public bool CanConnect => !string.IsNullOrWhiteSpace(this.SelectedComPort) && this.SelectedBaudRate > 0 || _comService.IsConnected;
+        public bool CanConnect => !string.IsNullOrWhiteSpace(SelectedComPort) && SelectedBaudRate > 0 || _comService.IsConnected;
 
         public void Connect()
         {

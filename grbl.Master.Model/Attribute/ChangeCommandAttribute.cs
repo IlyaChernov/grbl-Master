@@ -9,7 +9,7 @@
 
         public ChangeCommandAttribute(string command)
         {
-            this.Command = command;
+            Command = command;
         }
     }
 }

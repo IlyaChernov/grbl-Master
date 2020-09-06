@@ -97,7 +97,7 @@
         {
             get
             {
-                return this._gCodeHighlighting ??= GetHighlightingDefinition();
+                return _gCodeHighlighting ??= GetHighlightingDefinition();
             }
         }
 
@@ -424,7 +424,7 @@
             _joggingCount = 0;
             _jogStopSubject.OnNext(Unit.Default);
 
-            var requestSpeed = this.SelectedJoggingDistance / (this.SelectedFeedRate / 60000) * 0.9;
+            var requestSpeed = SelectedJoggingDistance / (SelectedFeedRate / 60000) * 0.9;
 
             _commandSender.SendAsync(
                 "$J=" + string.Format(

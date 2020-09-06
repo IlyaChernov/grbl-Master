@@ -1,5 +1,6 @@
 ﻿namespace grbl.Master.Service
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -121,7 +122,7 @@
         {
             try
             {
-                return (_evaluator.Execute(line).GetCompletionValue().ToObject() ?? string.Empty).ToString()
+                return (_evaluator.Execute(line.Replace(',', '.')).GetCompletionValue().ToObject() ?? string.Empty).ToString()
                     .Replace(',', '.');
             }
             catch

@@ -892,8 +892,26 @@
                                 </DataTemplate>
                             </TabItem.Resources>
                             <DockPanel>
-                                <Grid Height="400" DockPanel.Dock="Bottom"
-                                      Visibility="{Binding IsMacrosSelected, Converter={StaticResource BoolToVis}, FallbackValue=Visible}">
+                                <ScrollViewer x:Name="MyScrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Top">
+                                    <ScrollViewer.Resources>
+                                        <Style TargetType="ScrollViewer">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsMacrosSelected}" Value="True">
+                                                    <Setter Property="Height" Value="200" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ScrollViewer.Resources>
+                                    <ItemsControl ItemTemplate="{StaticResource MacrosTemplate}" ItemsSource="{Binding Macroses}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                                <Grid DockPanel.Dock="Bottom"
+                                      Visibility="{Binding IsMacrosSelected, Converter={StaticResource BoolToVis}, FallbackValue=Visible}" >
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
                                         <ColumnDefinition Width="30" />
@@ -935,15 +953,7 @@
                                         <materialDesign:PackIcon Width="20" Height="20" Foreground="Red" Kind="CloseCircleOutline" />
                                     </Button>
                                 </Grid>
-                                <ScrollViewer x:Name="MyScrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                                    <ItemsControl ItemTemplate="{StaticResource MacrosTemplate}" ItemsSource="{Binding Macroses}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                    </ItemsControl>
-                                </ScrollViewer>
+                               
                             </DockPanel>
                         </TabItem>
                     </TabControl>
