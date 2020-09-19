@@ -42,6 +42,8 @@
 
             Model.Properties.Settings.Default.JoggingSpeed = Settings.FeedRate;
 
+            Model.Properties.Settings.Default.SliderLinearity = Settings.SliderLinearity;
+
             Model.Properties.Settings.Default.Save();
             Model.Properties.Settings.Default.Reload();
         }
@@ -114,6 +116,8 @@
             Settings.JoggingDistance = Model.Properties.Settings.Default.JoggingDistance;
 
             Settings.FeedRate = Model.Properties.Settings.Default.JoggingSpeed;
+
+            Settings.SliderLinearity = Model.Properties.Settings.Default.SliderLinearity;
         }
     }
 }

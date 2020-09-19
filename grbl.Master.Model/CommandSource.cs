@@ -7,12 +7,15 @@
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading;
 
     public class CommandSource : NotifyPropertyChanged
     {
         private readonly Stopwatch _stopWatch = new Stopwatch();
 
         private bool _needsPurge;
+
+        private readonly SynchronizationContext _uiContext;
 
         private ConcurrentQueue<string> CommandQueue { get; } = new ConcurrentQueue<string>();
 
@@ -31,6 +34,7 @@
 
         public CommandSource(CommandSourceType type, CommandSourceRunMode mode)
         {
+            _uiContext = SynchronizationContext.Current;
             Type = type;
             Mode = mode;
         }
@@ -107,7 +111,12 @@
             {
                 CommandQueue.TryDequeue(out var dummy);
             }
-            CommandList.Clear();
+
+            _uiContext.Send(
+                state =>
+                    {
+                        CommandList.Clear();
+                    }, null);
 
             _stopWatch.Reset();
         }

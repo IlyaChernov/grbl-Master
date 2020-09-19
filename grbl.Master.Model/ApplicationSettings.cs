@@ -8,6 +8,7 @@
         public double JoggingDistance { get; set; }
 
         public ObservableCollection<double> FeedRates { get; set; } = new ObservableCollection<double> { 5, 10, 50, 100, 500, 1000 };
+        public double SliderLinearity { get; set; }
 
         public double FeedRate { get; set; }
 

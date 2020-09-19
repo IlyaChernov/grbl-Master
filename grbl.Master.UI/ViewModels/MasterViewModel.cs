@@ -21,12 +21,14 @@
     using System.Reflection;
     using System.Threading;
     using System.Windows.Controls;
+    using System.Windows.Media;
     using System.Xml;
 
     using grbl.Master.Common.Enum;
     using grbl.Master.Common.Interfaces.BL;
     using grbl.Master.Common.Interfaces.Service;
     using grbl.Master.Model.Interface;
+    using grbl.Master.UI.Converters;
 
     using Xceed.Wpf.Toolkit;
 
@@ -52,6 +54,8 @@
         private Macros _macrosSelected;
 
         private string _manualCommand;
+
+        private NonLinearDouble _nonLinearDoubleConverter = new NonLinearDouble();
 
         public MasterViewModel(
             IComService comService,
@@ -119,6 +123,10 @@
             }
         }
 
+        public double JoggingDistancesFirst => JoggingDistances.Any() ? JoggingDistances.First() : 0;
+
+        public double JoggingDistancesLast => JoggingDistances.Any() ? JoggingDistances.Last() : 0;
+
         public ObservableCollection<double> FeedRates
         {
             get => _applicationSettingsService.Settings.FeedRates;
@@ -128,6 +136,25 @@
                 _applicationSettingsService.Save();
             }
         }
+
+        public double FeedRatesFirst => FeedRates.Any() ? FeedRates.First() : 0;
+
+        public double FeedRatesLast => FeedRates.Any() ? FeedRates.Last() : 0;
+
+        public double SliderLinearity
+        {
+            get => _applicationSettingsService.Settings.SliderLinearity < 1 ? 1 : _applicationSettingsService.Settings.SliderLinearity;
+
+            set
+            {
+                _applicationSettingsService.Settings.SliderLinearity = value;
+                this.NotifyOfPropertyChange(() => SliderLinearity);
+                NotifyOfPropertyChange(() => FeedRates);
+                NotifyOfPropertyChange(() => JoggingDistances);
+                _applicationSettingsService.Save();
+            }
+        }
+
 
         public ObservableCollection<Macros> Macroses => _applicationSettingsService.Settings.Macroses;
 
@@ -167,6 +194,40 @@
                 NotifyOfPropertyChange(() => SelectedFeedRate);
             }
         }
+
+        /*public DoubleCollection FeedRateTicks
+        {
+            get
+            {
+                var result = new DoubleCollection();
+                
+                FeedRates.ToList().ForEach(
+                    item =>
+                        {
+                            result.Add((double)_nonLinearDoubleConverter.Convert(item, null, 3d, CultureInfo.CurrentCulture));
+                        });
+
+                return result;
+            }
+        }
+
+        public DoubleCollection JoggingDistanceTicks
+        {
+            get
+            {
+                var result = new DoubleCollection();
+
+                JoggingDistances.ToList().ForEach(
+                    item =>
+                        {
+                            result.Add((double)_nonLinearDoubleConverter.Convert(item, null, 4d, CultureInfo.CurrentCulture));
+                        });
+
+                return result;
+            }
+        }*/
+
+
 
         public int FileLinesCount => _commandSender.FileCommands.CommandCount;
 
@@ -368,7 +429,7 @@
 
         public void RefreshFullLog()
         {
-            _commandSender.CommunicationLog.Clear();;
+            _commandSender.CommunicationLog.Clear(); ;
         }
 
         public void SendEnterCommand()
@@ -549,7 +610,7 @@
 
         public void AddMacro()
         {
-            MacrosSelected = new Macros{Command = ""};
+            MacrosSelected = new Macros { Command = "" };
         }
 
         public void UpMacro(Macros macro)

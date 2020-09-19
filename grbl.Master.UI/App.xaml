@@ -8,6 +8,7 @@
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <converters:StringIntegerToBool x:Key="StrIntToBool" />
+            <converters:NonLinearDouble x:Key="NonLinearDouble" />
             <converters:IntegerToBinaryString x:Key="IntegerToBinaryString" />
             <converters:IntegerMaskToAxisState x:Key="IntegerMaskToAxisState" />
             <converters:IntegerMask3ToDescription x:Key="IntegerMask3ToDescription" />
