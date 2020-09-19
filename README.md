@@ -7,7 +7,7 @@ UI is based on grbl-panel https://github.com/gerritv/Grbl-Panel
 
 Improvements are:
 * Right implementation of jogging. When you release the jogging button after long press, Grbl will stop movement softly.
-* Nice selectors for jogging speed and feed, with normal input fields, so you can use anything you want. Like 11.23mm on 521mm/min.
+* Nice non linear sliders for jogging speed and feed, with normal input fields, so you can use anything you want. Like 11.23mm on 521mm/min.
 
 ![image](https://raw.githubusercontent.com/IlyaChernov/grbl-Master/master/images/Jogging.png)
 
