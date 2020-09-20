@@ -20,7 +20,7 @@
     {
         private readonly ICommandSender _commandSender;
 
-        //private readonly IGrblStatusModel _grblStatusModel;
+        private readonly IApplicationSettingsService _applicationSettingsService;
 
         private readonly string _decimalSeparator = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
@@ -49,9 +49,10 @@
             return Model.Resources.Mssages.ResourceManager.GetString(key);
         }
 
-        public GrblStatus(IComService comService, ICommandSender commandSender, IGrblStatusModel grblStatusModel)
+        public GrblStatus(IComService comService, ICommandSender commandSender, IGrblStatusModel grblStatusModel, IApplicationSettingsService applicationSettingsService)
         {
             _commandSender = commandSender;
+            _applicationSettingsService = applicationSettingsService;
             GrblStatusModel = grblStatusModel;
             comService.ConnectionStateChanged += ComServiceConnectionStateChanged;
             _commandSender.ResponseReceived += CommandSenderResponseReceived;
@@ -239,6 +240,7 @@
                                                                                                         GrblStatusModel.InputPinState.HoldPin = pinParts[1].Contains('H');
                                                                                                         GrblStatusModel.InputPinState.SoftResetPin = pinParts[1].Contains('R');
                                                                                                         GrblStatusModel.InputPinState.CycleStartPin = pinParts[1].Contains('S');
+                                                                                                        GrblStatusModel.InputPinState.UpdateDateTime = DateTime.Now;
                                                                                                     }
                                                                                                 } },
                                                                    new ResponseProcessor{ TagExpression =  "^Ov:\\d+(,\\d+){2}$", Action =
@@ -499,9 +501,14 @@
                     processor.ProcessActions.SingleOrDefault(x => x.Regex.IsMatch(part)).Action?.Invoke(part);
                 }
             }
+
+            if (DateTime.Now - GrblStatusModel.InputPinState.UpdateDateTime > TimeSpan.FromSeconds(_applicationSettingsService.Settings.PinStateResetTimeout))
+            {
+                GrblStatusModel.InputPinState.Reset();
+            }
         }
 
-        public IGrblStatusModel GrblStatusModel { get; } //=> _grblStatusModel; // { get; set; } = new GrblStatusModel();
+        public IGrblStatusModel GrblStatusModel { get; }
 
         private bool _isRunning;
 
@@ -519,7 +526,6 @@
         public void InitialRequest()
         {
             _commandSender.Send("$$");
-            // _commandSender.Send("$#");
         }
 
         public void StopRequesting()

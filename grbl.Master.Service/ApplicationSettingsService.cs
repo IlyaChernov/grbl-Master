@@ -44,6 +44,8 @@
 
             Model.Properties.Settings.Default.SliderLinearity = Settings.SliderLinearity;
 
+            Model.Properties.Settings.Default.PinStateResetTimeout = Settings.PinStateResetTimeout;
+
             Model.Properties.Settings.Default.Save();
             Model.Properties.Settings.Default.Reload();
         }
@@ -118,6 +120,8 @@
             Settings.FeedRate = Model.Properties.Settings.Default.JoggingSpeed;
 
             Settings.SliderLinearity = Model.Properties.Settings.Default.SliderLinearity;
+
+            Settings.PinStateResetTimeout = Model.Properties.Settings.Default.PinStateResetTimeout;
         }
     }
 }

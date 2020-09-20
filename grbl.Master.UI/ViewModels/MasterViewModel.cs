@@ -155,6 +155,18 @@
             }
         }
 
+        public int PinStateResetTimeout
+        {
+            get => _applicationSettingsService.Settings.PinStateResetTimeout;
+
+            set
+            {
+                _applicationSettingsService.Settings.PinStateResetTimeout = value;
+                NotifyOfPropertyChange(() => PinStateResetTimeout);
+                _applicationSettingsService.Save();
+            }
+        }
+
 
         public ObservableCollection<Macros> Macroses => _applicationSettingsService.Settings.Macroses;
 

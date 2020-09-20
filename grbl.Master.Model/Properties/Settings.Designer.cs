@@ -118,5 +118,17 @@ namespace grbl.Master.Model.Properties {
                 this["SliderLinearity"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int PinStateResetTimeout {
+            get {
+                return ((int)(this["PinStateResetTimeout"]));
+            }
+            set {
+                this["PinStateResetTimeout"] = value;
+            }
+        }
     }
 }

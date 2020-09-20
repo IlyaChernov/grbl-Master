@@ -1454,10 +1454,10 @@
                                          Text="{Binding FeedRates, Converter={StaticResource ListDoubleToString}, UpdateSourceTrigger=LostFocus}"
                                          TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
                             </GroupBox>
-                            <GroupBox Width="200" Margin="2" Padding="2">
+                            <GroupBox Width="240" Margin="2" Padding="2" Header="User Interface">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="160" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
@@ -1470,6 +1470,9 @@
                                     <Label Content="Linearity power:" />
                                     <xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Minimum="1"
                                                         Value="{Binding SliderLinearity}" />
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Pin state reset timeout (sec):" />
+                                    <xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" Minimum="1"
+                                                        Value="{Binding PinStateResetTimeout}" />
                                 </Grid>
                             </GroupBox>
                         </WrapPanel>

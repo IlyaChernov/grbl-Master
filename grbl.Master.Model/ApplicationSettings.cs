@@ -10,6 +10,8 @@
         public ObservableCollection<double> FeedRates { get; set; } = new ObservableCollection<double> { 5, 10, 50, 100, 500, 1000 };
         public double SliderLinearity { get; set; }
 
+        public int PinStateResetTimeout { get; set; }
+
         public double FeedRate { get; set; }
 
         public ObservableCollection<Macros> Macroses { get; set; } = new ObservableCollection<Macros>();
