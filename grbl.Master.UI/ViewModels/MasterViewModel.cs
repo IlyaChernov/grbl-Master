@@ -528,9 +528,9 @@
         {
             var openFileDialog = new OpenFileDialog
             {
-                Filter =
-                                             "G-Code files (*.nc;*.g;*.gcode)|*.nc;*.g;*.gcode|All text files (*.*)|*.*"
+                Filter = "G-Code files (*.nc;*.g;*.gcode)|*.nc;*.g;*.gcode|All text files (*.*)|*.*"
             };
+
             if (openFileDialog.ShowDialog() == true && File.Exists(openFileDialog.FileName))
             {
                 _gCodeFileService.Load(openFileDialog.FileName);
@@ -584,6 +584,7 @@
 
         public void ResetGrbl()
         {
+            this._commandSender.FileCommands.StopProcessing();
             RealtimeIntCommand(24);
             _commandSender.PurgeQueues();
         }

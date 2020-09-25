@@ -123,7 +123,10 @@
                     {
                         lock (_lockObject)
                         {
-                            SystemCommands.Add(command);
+                            if (SystemCommands.CommandList.Count(x => x.Data == cmd.Data) < 3)
+                            {
+                                SystemCommands.Add(command);
+                            }
                         }
 
                         break;
