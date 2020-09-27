@@ -11,6 +11,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
@@ -497,7 +498,7 @@
             _joggingCount = 0;
             _jogStopSubject.OnNext(Unit.Default);
 
-            var requestSpeed = SelectedJoggingDistance / (SelectedFeedRate / 60000) * 0.9;
+            var requestSpeed = (long)(SelectedJoggingDistance / (SelectedFeedRate / TimeSpan.TicksPerMinute) * 0.9);
 
             _commandSender.SendAsync(
                 "$J=" + string.Format(
@@ -505,9 +506,10 @@
                     SelectedJoggingDistance.ToGrblString(),
                     SelectedFeedRate.ToGrblString()));
 
-            Observable.Timer(TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(requestSpeed)).TakeUntil(_jogStopSubject).Subscribe(
+            Observable.Timer(TimeSpan.FromMilliseconds(300), TimeSpan.FromTicks(requestSpeed)).TakeUntil(_jogStopSubject).Subscribe(
                 l =>
                     {
+                        Console.WriteLine("Jog");
                         _joggingCount++;
                         _commandSender.SendAsync(
                             "$J=" + string.Format(
@@ -519,140 +521,143 @@
 
         public void CancelJogging()
         {
+            Console.WriteLine("Cancel Jog");
             _jogStopSubject.OnNext(Unit.Default);
             if (_joggingCount >= 1)
+            {
                 RealtimeIntCommand(0x0085);
+            }
         }
 
         public void FileOpen()
-        {
-            var openFileDialog = new OpenFileDialog
             {
-                Filter = "G-Code files (*.nc;*.g;*.gcode)|*.nc;*.g;*.gcode|All text files (*.*)|*.*"
-            };
+                var openFileDialog = new OpenFileDialog
+                {
+                    Filter = "G-Code files (*.nc;*.g;*.gcode)|*.nc;*.g;*.gcode|All text files (*.*)|*.*"
+                };
 
-            if (openFileDialog.ShowDialog() == true && File.Exists(openFileDialog.FileName))
+                if (openFileDialog.ShowDialog() == true && File.Exists(openFileDialog.FileName))
+                {
+                    _gCodeFileService.Load(openFileDialog.FileName);
+                    NotifyOfPropertyChange(nameof(GCodeFile));
+                    NotifyCanCommands();
+                }
+            }
+
+            public void StartStepFileExecution()
             {
-                _gCodeFileService.Load(openFileDialog.FileName);
+                StartFile(CommandSourceRunMode.LineByLine);
+            }
+
+            public void StartFileExecution()
+            {
+                StartFile(CommandSourceRunMode.StopInTheEnd);
+            }
+
+            private void StartFile(CommandSourceRunMode mode)
+            {
+                if (_commandSender.FileCommands.State == CommandSourceState.Stopped)
+                {
+                    _commandSender.FileCommands.Purge();
+                    _commandSender.FileCommands.Add(_gCodeFileService.File.FileData.Text);
+                    NotifyOfPropertyChange(() => FileLinesCount);
+                }
+
+                _commandSender.FileCommands.Mode = mode;
+                _commandSender.FileCommands.StartProcessing();
+                NotifyCanCommands();
+            }
+
+            public void PauseFileExecution()
+            {
+                _commandSender.FileCommands.PauseProcessing();
+                NotifyCanCommands();
+            }
+
+            public void StopFileExecution()
+            {
+                _commandSender.FileCommands.StopProcessing();
+                NotifyCanCommands();
+            }
+
+            public void ReloadFile()
+            {
+                _gCodeFileService.Load(_gCodeFileService.File.FilePath);
                 NotifyOfPropertyChange(nameof(GCodeFile));
                 NotifyCanCommands();
             }
-        }
 
-        public void StartStepFileExecution()
-        {
-            StartFile(CommandSourceRunMode.LineByLine);
-        }
-
-        public void StartFileExecution()
-        {
-            StartFile(CommandSourceRunMode.StopInTheEnd);
-        }
-
-        private void StartFile(CommandSourceRunMode mode)
-        {
-            if (_commandSender.FileCommands.State == CommandSourceState.Stopped)
+            public void ResetGrbl()
             {
-                _commandSender.FileCommands.Purge();
-                _commandSender.FileCommands.Add(_gCodeFileService.File.FileData.Text);
-                NotifyOfPropertyChange(() => FileLinesCount);
+                this._commandSender.FileCommands.StopProcessing();
+                RealtimeIntCommand(24);
+                _commandSender.PurgeQueues();
             }
 
-            _commandSender.FileCommands.Mode = mode;
-            _commandSender.FileCommands.StartProcessing();
-            NotifyCanCommands();
-        }
-
-        public void PauseFileExecution()
-        {
-            _commandSender.FileCommands.PauseProcessing();
-            NotifyCanCommands();
-        }
-
-        public void StopFileExecution()
-        {
-            _commandSender.FileCommands.StopProcessing();
-            NotifyCanCommands();
-        }
-
-        public void ReloadFile()
-        {
-            _gCodeFileService.Load(_gCodeFileService.File.FilePath);
-            NotifyOfPropertyChange(nameof(GCodeFile));
-            NotifyCanCommands();
-        }
-
-        public void ResetGrbl()
-        {
-            this._commandSender.FileCommands.StopProcessing();
-            RealtimeIntCommand(24);
-            _commandSender.PurgeQueues();
-        }
-
-        public void RunMacro(Macros macro)
-        {
-            var lines = macro.Command.Split(new[] { Environment.NewLine, "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
-            _commandSender.MacroCommands.Add(lines);
-            _commandSender.MacroCommands.StartProcessing();
-        }
-
-        public void DeleteMacro(Macros macro)
-        {
-            _applicationSettingsService.Settings.Macroses.Remove(macro);
-            _applicationSettingsService.Save();
-        }
-
-        public void EditMacro(Macros macro)
-        {
-            MacrosSelected = macro;
-        }
-
-        public void SaveMacro(Macros macro)
-        {
-            if (_applicationSettingsService.Settings.Macroses.Any(x => x.Index == macro.Index) && macro.Index >= 0)
-                _applicationSettingsService.Settings.Macroses.RemoveAt(macro.Index);
-            _applicationSettingsService.Settings.Macroses.Insert(Math.Max(0, macro.Index), macro);
-            _applicationSettingsService.Save();
-            CancelMacro();
-        }
-
-        public void CancelMacro()
-        {
-            MacrosSelected = null;
-        }
-
-        public void AddMacro()
-        {
-            MacrosSelected = new Macros { Command = "" };
-        }
-
-        public void UpMacro(Macros macro)
-        {
-            if (_applicationSettingsService.Settings.Macroses.Any(x => x.Index == macro.Index) && macro.Index > 0)
+            public void RunMacro(Macros macro)
             {
-                _applicationSettingsService.Settings.Macroses.RemoveAt(macro.Index);
-                _applicationSettingsService.Settings.Macroses.Insert(Math.Max(0, macro.Index - 1), macro);
+                var lines = macro.Command.Split(new[] { Environment.NewLine, "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+                _commandSender.MacroCommands.Add(lines);
+                _commandSender.MacroCommands.StartProcessing();
+            }
+
+            public void DeleteMacro(Macros macro)
+            {
+                _applicationSettingsService.Settings.Macroses.Remove(macro);
                 _applicationSettingsService.Save();
             }
-        }
 
-        public void DownMacro(Macros macro)
-        {
-            if (_applicationSettingsService.Settings.Macroses.Any(x => x.Index == macro.Index)
-                && macro.Index < _applicationSettingsService.Settings.Macroses.Max(x => x.Index))
+            public void EditMacro(Macros macro)
             {
-                _applicationSettingsService.Settings.Macroses.RemoveAt(macro.Index);
-                _applicationSettingsService.Settings.Macroses.Insert(Math.Max(0, macro.Index + 1), macro);
-                _applicationSettingsService.Save();
+                MacrosSelected = macro;
             }
-        }
 
-        public void SaveSettings()
-        {
-            foreach (var grblSetting in _grblStatus.GrblStatusModel.Settings.SettingsList)
-                if (grblSetting.Value != grblSetting.OriginalValue)
-                    SystemCommand($"${grblSetting.Index} = {grblSetting.Value}");
-            Observable.Start(() => Thread.Sleep(200)).Subscribe(unit => { SystemCommand("$$"); });
+            public void SaveMacro(Macros macro)
+            {
+                if (_applicationSettingsService.Settings.Macroses.Any(x => x.Index == macro.Index) && macro.Index >= 0)
+                    _applicationSettingsService.Settings.Macroses.RemoveAt(macro.Index);
+                _applicationSettingsService.Settings.Macroses.Insert(Math.Max(0, macro.Index), macro);
+                _applicationSettingsService.Save();
+                CancelMacro();
+            }
+
+            public void CancelMacro()
+            {
+                MacrosSelected = null;
+            }
+
+            public void AddMacro()
+            {
+                MacrosSelected = new Macros { Command = "" };
+            }
+
+            public void UpMacro(Macros macro)
+            {
+                if (_applicationSettingsService.Settings.Macroses.Any(x => x.Index == macro.Index) && macro.Index > 0)
+                {
+                    _applicationSettingsService.Settings.Macroses.RemoveAt(macro.Index);
+                    _applicationSettingsService.Settings.Macroses.Insert(Math.Max(0, macro.Index - 1), macro);
+                    _applicationSettingsService.Save();
+                }
+            }
+
+            public void DownMacro(Macros macro)
+            {
+                if (_applicationSettingsService.Settings.Macroses.Any(x => x.Index == macro.Index)
+                    && macro.Index < _applicationSettingsService.Settings.Macroses.Max(x => x.Index))
+                {
+                    _applicationSettingsService.Settings.Macroses.RemoveAt(macro.Index);
+                    _applicationSettingsService.Settings.Macroses.Insert(Math.Max(0, macro.Index + 1), macro);
+                    _applicationSettingsService.Save();
+                }
+            }
+
+            public void SaveSettings()
+            {
+                foreach (var grblSetting in _grblStatus.GrblStatusModel.Settings.SettingsList)
+                    if (grblSetting.Value != grblSetting.OriginalValue)
+                        SystemCommand($"${grblSetting.Index} = {grblSetting.Value}");
+                Observable.Start(() => Thread.Sleep(200)).Subscribe(unit => { SystemCommand("$$"); });
+            }
         }
     }
-}

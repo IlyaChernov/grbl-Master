@@ -123,7 +123,7 @@
                     {
                         lock (_lockObject)
                         {
-                            if (SystemCommands.CommandList.Count(x => x.Data == cmd.Data) < 3)
+                            if (!SystemCommands.DataInQueue(cmd.Data, 3))
                             {
                                 SystemCommands.Add(command);
                             }

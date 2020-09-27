@@ -24,6 +24,11 @@
         [DependsOn(nameof(CommandQueue))]
         public int CommandCount => CommandQueue.Count;
 
+        public bool DataInQueue(string data, int maxAmount = 1)
+        {
+            return CommandQueue.ToArray().Count(x => x == data) > maxAmount;
+        }
+
         public CommandSourceState State { get; internal set; } = CommandSourceState.Stopped;
 
         public CommandSourceRunMode Mode { get; set; }
