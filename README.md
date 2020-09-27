@@ -1,5 +1,5 @@
 # grbl-master
-Software solution to rule grbl in all aspects.
+Software solution to control grbl settings, send GCodes, manually send commands, use smart macroses.
 
 **Tested only on GRBL 1.1f**
 
