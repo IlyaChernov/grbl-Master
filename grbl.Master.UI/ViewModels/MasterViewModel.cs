@@ -509,7 +509,6 @@
             Observable.Timer(TimeSpan.FromMilliseconds(300), TimeSpan.FromTicks(requestSpeed)).TakeUntil(_jogStopSubject).Subscribe(
                 l =>
                     {
-                        Console.WriteLine("Jog");
                         _joggingCount++;
                         _commandSender.SendAsync(
                             "$J=" + string.Format(
@@ -521,7 +520,6 @@
 
         public void CancelJogging()
         {
-            Console.WriteLine("Cancel Jog");
             _jogStopSubject.OnNext(Unit.Default);
             if (_joggingCount >= 1)
             {
