@@ -1,4 +1,4 @@
-﻿<Window x:Class="grbl.Master.UI.Views.MasterView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:borders="clr-namespace:ToggleSwitch.Borders;assembly=ToggleSwitch" xmlns:cal="http://www.caliburnproject.org" xmlns:converters="clr-namespace:grbl.Master.UI.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:enum="clr-namespace:grbl.Master.Model.Enum;assembly=grbl.Master.Model" xmlns:extensions="clr-namespace:grbl.Master.UI.Extensions" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:model="clr-namespace:grbl.Master.Model;assembly=grbl.Master.Model" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:toggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch" xmlns:viewModel="clr-namespace:grbl.Master.UI.ViewModels" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" Title="grbl Master" Width="950" Height="670" MinWidth="950" MinHeight="670"
+﻿<Window x:Class="grbl.Master.UI.Views.MasterView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:borders="clr-namespace:ToggleSwitch.Borders;assembly=ToggleSwitch" xmlns:cal="http://www.caliburnproject.org" xmlns:converters="clr-namespace:grbl.Master.UI.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:enum="clr-namespace:grbl.Master.Model.Enum;assembly=grbl.Master.Model" xmlns:extensions="clr-namespace:grbl.Master.UI.Extensions" xmlns:h="http://helix-toolkit.org/wpf" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:model="clr-namespace:grbl.Master.Model;assembly=grbl.Master.Model" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:toggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch" xmlns:viewModel="clr-namespace:grbl.Master.UI.ViewModels" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" Title="grbl Master" Width="950" Height="670" MinWidth="950" MinHeight="670"
         d:DataContext="{d:DesignInstance Type=viewModel:MasterViewModel,
                                          IsDesignTimeCreatable=False}"
         Icon="/grbl.Master.UI;component/favicon.ico" mc:Ignorable="d">
@@ -469,6 +469,19 @@
                                     <Label Grid.Row="1" Grid.Column="3" Content="Z"
                                            Style="{StaticResource ColHeader}" />
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Tool length offset:" />
+                                    <Grid Grid.Row="0" Grid.Column="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="30" />
+                                            <ColumnDefinition Width="30" />
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Row="0" Grid.Column="1" cal:Message.Attach="GCommand('G49')" ToolTip="Cancel TLO">
+                                            <materialDesign:PackIcon Width="20" Height="20" Foreground="Red" Kind="CloseCircleOutline" />
+                                        </Button>
+                                        <Button Grid.Row="0" Grid.Column="2" cal:Message.Attach="AddTLO()" ToolTip="Add Current Z to TLO">
+                                            <materialDesign:PackIcon Width="20" Height="20" Foreground="Green" Kind="PlusCircleOutline" />
+                                        </Button>
+                                    </Grid>
                                     <TextBox Grid.Row="0" Grid.Column="3" cal:Message.Attach="[Event LostFocus] = [Action SetToolLengthOffset($this)];[Key Enter] = [Action SetToolLengthOffset($this)]"
                                              Text="{Binding GrblStatus.ToolLengthOffset}" />
                                     <Button Grid.Row="0" Grid.Column="4" cal:Message.Attach="GCommand('G43.1 Z0')" ToolTip="Set zero">
@@ -784,7 +797,7 @@
                                            ContentStringFormat="{}{0:hh}:{0:mm}:{0:ss}" ToolTip="Time elapsed" />
                                 </Grid>
                                 <TabControl Grid.Row="4" Grid.Column="0">
-                                    <TabItem Width="100" Header="File progress">
+                                    <TabItem Width="80" Header="File progress">
                                         <ListView ItemsSource="{Binding FileCommandsCollection}" VirtualizingStackPanel.VirtualizationMode="Recycling">
                                             <ListView.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -808,11 +821,19 @@
                                             </ListView.ItemTemplate>
                                         </ListView>
                                     </TabItem>
-                                    <TabItem Width="100" Header="File data">
+                                    <TabItem Width="80" Header="File data">
                                         <avalonEdit:TextEditor Document="{Binding GCodeFile.FileData}"
                                                                HorizontalScrollBarVisibility="Auto" LineNumbersForeground="Black" ShowLineNumbers="True"
                                                                SyntaxHighlighting="{Binding GCodeHighlighting, Mode=OneTime}"
                                                                VerticalScrollBarVisibility="Auto" />
+                                    </TabItem>
+                                    <TabItem Width="80" Header="3D View" Visibility="Hidden">
+                                        <h:HelixViewport3D CameraInertiaFactor="0.9"
+                                                           ItemsSource="{Binding GCodeFile.Path3DRepresentation}"
+                                                           ViewCubeHorizontalPosition="Center">
+                                            <h:DefaultLights />
+                                            <h:Teapot />
+                                        </h:HelixViewport3D>
                                     </TabItem>
                                 </TabControl>
                             </Grid>

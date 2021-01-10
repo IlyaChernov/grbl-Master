@@ -83,6 +83,8 @@
 
         public int CommandQueueLength => _waitingCommandQueue.Sum(x => x.Data.RemoveSpace().Length);
 
+        public ConcurrentQueue<Command> WaitingCommandQueue => _waitingCommandQueue;
+
         public ObservableCollection<string> CommunicationLog { get; } = new ObservableCollection<string>();
 
         public event EventHandler<Response> ResponseReceived;

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Runtime.InteropServices.WindowsRuntime;
     using System.Threading;
 
     public class GrblSettings : NotifyPropertyChanged
@@ -44,6 +45,11 @@
         public GrblSettings()
         {
             _uiContext = SynchronizationContext.Current;
+        }
+
+        public GrblSetting GetSetting(int index)
+        {
+            return SettingsList != null && SettingsList.Any() ? SettingsList.FirstOrDefault(x=>x.Index == index) : null;
         }
 
         public void AddOrUpdate(GrblSetting setting)

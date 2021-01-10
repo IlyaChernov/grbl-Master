@@ -42,6 +42,7 @@
     <Compile Include="Interfaces\Service\IApplicationSettingsService.cs" />
     <Compile Include="Interfaces\Service\ICommandSender.cs" />
     <Compile Include="Interfaces\Service\ICOMService.cs" />
+    <Compile Include="Interfaces\Service\IGCodeParserService.cs" />
     <Compile Include="Interfaces\Service\IGCodeFileService.cs" />
     <Compile Include="Interfaces\Service\IGrblCommandPreProcessor.cs" />
     <Compile Include="Interfaces\Service\IGrblResponseTypeFinder.cs" />

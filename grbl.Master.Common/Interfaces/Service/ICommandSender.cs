@@ -1,6 +1,7 @@
 ﻿namespace grbl.Master.Common.Interfaces.Service
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
 
     using grbl.Master.Model;
@@ -13,6 +14,7 @@
         CommandSource ManualCommands { get; }
         CommandSource MacroCommands { get; }
         CommandSource FileCommands { get; }
+        ConcurrentQueue<Command> WaitingCommandQueue { get; }
 
         int CommandQueueLength { get; }
 

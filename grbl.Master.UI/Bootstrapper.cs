@@ -63,6 +63,7 @@ namespace grbl.Master.UI
             _container.RegisterSingleton(typeof(ICommandSender), null, typeof(CommandSender));
             _container.RegisterSingleton(typeof(IApplicationSettingsService), null, typeof(ApplicationSettingsService));
             _container.RegisterSingleton(typeof(IGCodeFileService), null, typeof(GCodeFileService));
+            _container.RegisterSingleton(typeof(IGCodeParserService), null, typeof(GCodeParserService));
 
             _container.RegisterSingleton(typeof(IGrblPrompt), null, typeof(GrblPrompt));
             _container.RegisterSingleton(typeof(IGrblStatusModel), null, typeof(GrblStatusModel));
