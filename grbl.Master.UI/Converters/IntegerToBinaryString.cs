@@ -1,6 +1,7 @@
 ﻿namespace grbl.Master.UI.Converters
 {
     using System;
+    using System.Globalization;
     using System.Text.RegularExpressions;
     using System.Windows.Data;
 
@@ -8,7 +9,7 @@
     {
         private static readonly Regex Binary = new Regex("^[01]{1,32}$", RegexOptions.Compiled);
 
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var result = 0;
 
@@ -21,10 +22,10 @@
                 result = intS;
             }
 
-            return System.Convert.ToString(result, 2).PadLeft(3, '0');
+            return System.Convert.ToString(result, 2).PadLeft(6, '0');
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is string strVal && Binary.IsMatch(strVal))
             {

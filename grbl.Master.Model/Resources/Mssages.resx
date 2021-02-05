@@ -282,6 +282,15 @@
   <data name="Setting:102:Description" xml:space="preserve">
     <value>Z-axis steps per millimeter</value>
   </data>
+  <data name="Setting:103:Description" xml:space="preserve">
+    <value>A-axis steps per unit</value>
+  </data>
+  <data name="Setting:104:Description" xml:space="preserve">
+    <value>B-axis steps per unit</value>
+  </data>
+  <data name="Setting:105:Description" xml:space="preserve">
+    <value>C-axis steps per unit</value>
+  </data>
   <data name="Setting:10:Description" xml:space="preserve">
     <value>Status report options, mask</value>
   </data>
@@ -293,6 +302,15 @@
   </data>
   <data name="Setting:112:Description" xml:space="preserve">
     <value>Z-axis maximum rate, mm/min</value>
+  </data>
+  <data name="Setting:113:Description" xml:space="preserve">
+    <value>A-axis maximum rate, unit/min</value>
+  </data>
+  <data name="Setting:114:Description" xml:space="preserve">
+    <value>B-axis maximum rate, unit/min</value>
+  </data>
+  <data name="Setting:115:Description" xml:space="preserve">
+    <value>C-axis maximum rate, unit/min</value>
   </data>
   <data name="Setting:11:Description" xml:space="preserve">
     <value>Junction deviation, millimeters</value>
@@ -306,6 +324,15 @@
   <data name="Setting:122:Description" xml:space="preserve">
     <value>Z-axis acceleration, mm/sec^2</value>
   </data>
+  <data name="Setting:123:Description" xml:space="preserve">
+    <value>A-axis acceleration, unit/sec^2</value>
+  </data>
+  <data name="Setting:124:Description" xml:space="preserve">
+    <value>B-axis acceleration, unit/sec^2</value>
+  </data>
+  <data name="Setting:125:Description" xml:space="preserve">
+    <value>C-axis acceleration, unit/sec^2</value>
+  </data>
   <data name="Setting:12:Description" xml:space="preserve">
     <value>Arc tolerance, millimeters</value>
   </data>
@@ -317,6 +344,15 @@
   </data>
   <data name="Setting:132:Description" xml:space="preserve">
     <value>Z-axis maximum travel, millimeters</value>
+  </data>
+  <data name="Setting:133:Description" xml:space="preserve">
+    <value>A-axis maximum travel, units</value>
+  </data>
+  <data name="Setting:134:Description" xml:space="preserve">
+    <value>B-axis maximum travel, units</value>
+  </data>
+  <data name="Setting:135:Description" xml:space="preserve">
+    <value>C-axis maximum travel, units</value>
   </data>
   <data name="Setting:13:Description" xml:space="preserve">
     <value>Report in inches, boolean</value>

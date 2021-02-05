@@ -92,8 +92,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\AxisBitMaskEditor.xaml.cs">
+      <DependentUpon>AxisBitMaskEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\IntegerMask3ToDescription.cs" />
-    <Compile Include="Converters\IntegerMaskToAxisState.cs" />
     <Compile Include="Converters\ListDoubleToString.cs" />
     <Compile Include="Converters\IntegerToBinaryString.cs" />
     <Compile Include="Converters\NonLinearDouble.cs" />
@@ -156,6 +158,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\AxisBitMaskEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\COMConnectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -223,5 +229,6 @@
       <Version>1.1.2</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

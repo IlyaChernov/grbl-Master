@@ -1,8 +1,13 @@
 ﻿namespace grbl.Master.UI.ViewModels
 {
     using Caliburn.Micro;
+    using grbl.Master.Common.Enum;
+    using grbl.Master.Common.Interfaces.BL;
+    using grbl.Master.Common.Interfaces.Service;
     using grbl.Master.Model;
+    using grbl.Master.Model.Attribute;
     using grbl.Master.Model.Enum;
+    using grbl.Master.Model.Interface;
     using grbl.Master.Utilities;
     using ICSharpCode.AvalonEdit.Highlighting;
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -22,14 +27,6 @@
     using System.Threading;
     using System.Windows.Controls;
     using System.Xml;
-
-    using grbl.Master.Common.Enum;
-    using grbl.Master.Common.Interfaces.BL;
-    using grbl.Master.Common.Interfaces.Service;
-    using grbl.Master.Model.Attribute;
-    using grbl.Master.Model.Interface;
-    using grbl.Master.UI.Converters;
-
     using Xceed.Wpf.Toolkit;
 
     public class MasterViewModel : Screen
@@ -54,8 +51,6 @@
         private Macros _macrosSelected;
 
         private string _manualCommand;
-
-        private NonLinearDouble _nonLinearDoubleConverter = new NonLinearDouble();
 
         public MasterViewModel(
             IComService comService,
@@ -228,8 +223,6 @@
         public GCodeFile GCodeFile => _gCodeFileService.File;
 
         public COMConnectionViewModel ComConnectionViewModel { get; }
-
-        public List<string> Mask8Items { get; } = new List<string> { "0", "1", "2", "3", "4", "5", "6", "7" };
 
         public List<string> Mask3Items { get; } = new List<string> { "0", "1", "2" };
 
