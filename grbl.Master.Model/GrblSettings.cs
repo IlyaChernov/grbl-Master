@@ -12,38 +12,49 @@
         private readonly SynchronizationContext _uiContext;
 
         private readonly Dictionary<GrblSettingType, int[]> _typeTable = new Dictionary<GrblSettingType, int[]>
-                                                                     {
-                                                                         {
-                                                                             GrblSettingType.Integer,
-                                                                             new[]{0, 1, 26, 30, 31}
-                                                                         },
-                                                                         {
-                                                                             GrblSettingType.Boolean,
-                                                                             new[]{4, 5, 6, 13, 20, 21, 22, 32}
-                                                                         },
-                                                                         {
-                                                                             GrblSettingType.Decimal,
-                                                                             new[]{
-                                                                                     11, 12, 24, 25, 27, 100, 101, 102,
-                                                                                     110, 111, 112, 120, 121, 122, 130,
-                                                                                     131, 132
+                                                                             {
+                                                                                 {
+                                                                                     GrblSettingType.Integer,
+                                                                                     new[] { 0, 1, 26, 30, 31 }
+                                                                                 },
+                                                                                 {
+                                                                                     GrblSettingType.Boolean,
+                                                                                     new[]
+                                                                                         {
+                                                                                             4, 5, 6, 13, 20, 21, 22, 32
+                                                                                         }
+                                                                                 },
+                                                                                 {
+                                                                                     GrblSettingType.Decimal,
+                                                                                     new[]
+                                                                                         {
+                                                                                             11, 12, 24, 25, 27, 100,
+                                                                                             101, 102, 103, 104, 105,
+                                                                                             110, 111, 112, 113, 114,
+                                                                                             115, 120, 121, 122, 123,
+                                                                                             124, 125, 130, 131, 132,
+                                                                                             133, 134, 135
+                                                                                         }
+                                                                                 },
+                                                                                 {
+                                                                                     GrblSettingType.Mask3, new[] { 10 }
+                                                                                 },
+                                                                                 {
+                                                                                     GrblSettingType.Mask8,
+                                                                                     new[] { 2, 3, 23 }
                                                                                  }
-                                                                         },
-                                                                         {
-                                                                             GrblSettingType.Mask3,
-                                                                             new[]{10}
-                                                                         },
-                                                                         {
-                                                                             GrblSettingType.Mask8,
-                                                                             new[]{2, 3, 23}
-                                                                         }
-                                                                     };
+                                                                             };
 
         public ObservableCollection<GrblSetting> SettingsList { get; } = new ObservableCollection<GrblSetting>();
 
         public GrblSettings()
         {
             _uiContext = SynchronizationContext.Current;
+        }
+
+        public GrblSetting GetSetting(int index)
+        {
+            return SettingsList != null && SettingsList.Any() ? SettingsList.FirstOrDefault(x => x.Index == index) : null;
         }
 
         public void AddOrUpdate(GrblSetting setting)

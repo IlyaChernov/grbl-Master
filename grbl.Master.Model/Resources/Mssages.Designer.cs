@@ -574,6 +574,33 @@ namespace grbl.Master.Model.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A-axis steps per unit.
+        /// </summary>
+        public static string Setting_103_Description {
+            get {
+                return ResourceManager.GetString("Setting:103:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B-axis steps per unit.
+        /// </summary>
+        public static string Setting_104_Description {
+            get {
+                return ResourceManager.GetString("Setting:104:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to C-axis steps per unit.
+        /// </summary>
+        public static string Setting_105_Description {
+            get {
+                return ResourceManager.GetString("Setting:105:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Junction deviation, millimeters.
         /// </summary>
         public static string Setting_11_Description {
@@ -606,6 +633,33 @@ namespace grbl.Master.Model.Resources {
         public static string Setting_112_Description {
             get {
                 return ResourceManager.GetString("Setting:112:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A-axis maximum rate, unit/min.
+        /// </summary>
+        public static string Setting_113_Description {
+            get {
+                return ResourceManager.GetString("Setting:113:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B-axis maximum rate, unit/min.
+        /// </summary>
+        public static string Setting_114_Description {
+            get {
+                return ResourceManager.GetString("Setting:114:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to C-axis maximum rate, unit/min.
+        /// </summary>
+        public static string Setting_115_Description {
+            get {
+                return ResourceManager.GetString("Setting:115:Description", resourceCulture);
             }
         }
         
@@ -646,6 +700,33 @@ namespace grbl.Master.Model.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A-axis acceleration, unit/sec^2.
+        /// </summary>
+        public static string Setting_123_Description {
+            get {
+                return ResourceManager.GetString("Setting:123:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B-axis acceleration, unit/sec^2.
+        /// </summary>
+        public static string Setting_124_Description {
+            get {
+                return ResourceManager.GetString("Setting:124:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to C-axis acceleration, unit/sec^2.
+        /// </summary>
+        public static string Setting_125_Description {
+            get {
+                return ResourceManager.GetString("Setting:125:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Report in inches, boolean.
         /// </summary>
         public static string Setting_13_Description {
@@ -678,6 +759,33 @@ namespace grbl.Master.Model.Resources {
         public static string Setting_132_Description {
             get {
                 return ResourceManager.GetString("Setting:132:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A-axis maximum travel, units.
+        /// </summary>
+        public static string Setting_133_Description {
+            get {
+                return ResourceManager.GetString("Setting:133:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B-axis maximum travel, units.
+        /// </summary>
+        public static string Setting_134_Description {
+            get {
+                return ResourceManager.GetString("Setting:134:Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to C-axis maximum travel, units.
+        /// </summary>
+        public static string Setting_135_Description {
+            get {
+                return ResourceManager.GetString("Setting:135:Description", resourceCulture);
             }
         }
         

@@ -31,7 +31,7 @@
             {
                 foreach (var s in strVal.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    results.Add(double.Parse(s));
+                    results.Add(double.Parse(s.Replace(",", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator).Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)));
                 }
             }
 

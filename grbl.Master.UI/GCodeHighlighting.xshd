@@ -1,7 +1,6 @@
 ﻿<SyntaxDefinition name="GCode" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
   <Color name="Comment" foreground="Gray"/>
   <Color name="G1" foreground="Orange"/>
-  <!--([XxYyZzFfSsRrIiJjKk])((-?\d+)([,.]\d+)?|([,.]\d+))-->
   <RuleSet>
 
     <Rule foreground="Red">
@@ -13,10 +12,6 @@
     <Rule foreground="Blue">
       ([Zz])((-?\d+)([,.]\d+)?|([,.]\d+))
     </Rule>
-
-    <!--<Rule foreground="Orange" fontWeight="bold">
-      ([Gg])(0?(1|2|90|91))
-    </Rule>-->
 
     <Rule foreground="LightSalmon" fontWeight="bold">
       ([Gg])[0-9]+([\,\.][0-9]+)?
@@ -49,10 +44,6 @@
     <Rule foreground="Brown">
       ([Kk])-?[0-9]+([\,\.][0-9]+)?
     </Rule>
-
-    <!--<Rule foreground="Green" fontWeight="bold">
-      ([Gg])(0{1,2})
-    </Rule>-->
 
     <Rule color="Comment">
       \(.*\)

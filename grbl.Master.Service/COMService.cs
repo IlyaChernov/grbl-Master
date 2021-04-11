@@ -121,7 +121,14 @@
         {
             if (IsConnected)
             {
-                _sp.Write(data.RemoveSpace());
+                try
+                {
+                    _sp.Write(data.RemoveSpace());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
         }
 

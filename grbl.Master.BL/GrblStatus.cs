@@ -159,7 +159,7 @@
                                                                                                     Enum.TryParse<MachineState>(parts.FirstOrDefault(), true, out var result);
                                                                                                     GrblStatusModel.MachineState = result;
                                                                                                 }},
-                                                                   new ResponseProcessor{ TagExpression = "^MPos:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^MPos:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -169,7 +169,7 @@
                                                                                                             GrblStatusModel.MachinePosition - GrblStatusModel.WorkOffset);
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^WPos:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^WPos:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -179,7 +179,7 @@
                                                                                                             GrblStatusModel.WorkPosition + GrblStatusModel.WorkOffset);
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^WCO:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^WCO:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -297,7 +297,7 @@
                                                                                                         if (ParseSingleAxisPosition(lineParts[1], out var line))
                                                                                                             GrblStatusModel.ToolLengthOffset = line;
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^PRB:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}:\\d$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^PRB:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}:\\d$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     var lineParts = part.Split(new[] { ':', '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
@@ -311,7 +311,7 @@
                                                                                                         GrblStatusModel.ProbeState = probingResult!= 0;
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^G54:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^G54:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -319,7 +319,7 @@
                                                                                                         GrblStatusModel.G54Position.Update(position);
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^G55:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^G55:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -327,7 +327,7 @@
                                                                                                         GrblStatusModel.G55Position.Update(position);
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^G56:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^G56:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -335,7 +335,7 @@
                                                                                                         GrblStatusModel.G56Position.Update(position);
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^G57:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^G57:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -343,7 +343,7 @@
                                                                                                         GrblStatusModel.G57Position.Update(position);
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^G58:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^G58:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -351,7 +351,7 @@
                                                                                                         GrblStatusModel.G58Position.Update(position);
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^G59:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^G59:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -359,7 +359,7 @@
                                                                                                         GrblStatusModel.G59Position.Update(position);
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^G28:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^G28:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -367,7 +367,7 @@
                                                                                                         GrblStatusModel.G28Position.Update(position);
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^G30:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^G30:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -375,7 +375,7 @@
                                                                                                         GrblStatusModel.G30Position.Update(position);
                                                                                                     }
                                                                                                 } },
-                                                                   new ResponseProcessor{ TagExpression = "^G92:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2}$", Action =
+                                                                   new ResponseProcessor{ TagExpression = "^G92:(-?\\d+(\\.\\d{3})?)(,-?\\d+(\\.\\d{3})?){2,5}$", Action =
                                                                                             part =>
                                                                                                 {
                                                                                                     if (ParsePosition(part, out var position))
@@ -572,7 +572,7 @@
         {
             result = new Position();
             var posParts = data.Split(new[] { '[', ']', ':', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            if (posParts.Length == 4)
+            if (posParts.Length >= 4)
                 if (ParseSingleAxisPosition(posParts[1], out var xPos) &&
                     ParseSingleAxisPosition(posParts[2], out var yPos) &&
                     ParseSingleAxisPosition(posParts[3], out var zPos))
@@ -580,6 +580,22 @@
                     result.X = xPos;
                     result.Y = yPos;
                     result.Z = zPos;
+
+                    if (posParts.Length > 4 && ParseSingleAxisPosition(posParts[4], out var aPos))
+                    {
+                        result.A = aPos;
+                    }
+
+                    if (posParts.Length > 5 && ParseSingleAxisPosition(posParts[5], out var bPos))
+                    {
+                        result.B = bPos;
+                    }
+
+                    if (posParts.Length > 6 && ParseSingleAxisPosition(posParts[6], out var cPos))
+                    {
+                        result.C = cPos;
+                    }
+
                     return true;
                 }
 
